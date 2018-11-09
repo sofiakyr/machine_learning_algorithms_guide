@@ -1,0 +1,9 @@
+bookdown::gitbook:
+  config:
+    toc:
+      before: |
+        <li><a href="./">Machine Learning Algorithms Guide</a></li>
+    sharing:
+      facebook: no
+      github: yes
+      linkedin: yes
