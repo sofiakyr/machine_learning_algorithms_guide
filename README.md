@@ -2,7 +2,7 @@
 
 ## Setup
 
-`packrat::reload()`
+`packrat::restore()`
 
 ## Build
 
