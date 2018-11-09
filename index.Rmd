@@ -1,0 +1,17 @@
+---
+title: "Machine Learning Algorithms Guide"
+author: "Sofia Kyriazidi"
+date: "`r Sys.time()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+github-repo: chicsof/machine_learning_algorithms_guide
+description: "Description."
+---
+
+# Preface {-}
+
+Hello, world!
+
+# About the Author {-}
+
