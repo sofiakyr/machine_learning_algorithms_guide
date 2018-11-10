@@ -3,6 +3,16 @@ PackratVersion: 0.4.9.3
 RVersion: 3.5.1
 Repos: CRAN=https://cran.rstudio.com/
 
+Package: ISLR
+Source: CRAN
+Version: 1.2
+Hash: 548250b957790df34ba5cb9387b740c1
+
+Package: MASS
+Source: CRAN
+Version: 7.3-51.1
+Hash: af8e6922880d7f071829628198cc3f13
+
 Package: Rcpp
 Source: CRAN
 Version: 1.0.0

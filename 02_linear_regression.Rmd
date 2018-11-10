@@ -1,49 +1,63 @@
 # Linear Regression
 
-```R
-################################################## Creating the model ##################################################
+## Creating the Model
 
-########################################################################################################################
-### the linear is usufull for studing the relationship of predictors (dependant variable, x values) to a reaction    ###
-### (independant variable, y value). This is called interference, the coefficiant of each predictor will show the    ###
-### strenght and direction of that predictor (how mach of an effect it has and whether it is a possitive or negative ###
-### relationship). It may also be used for predicting the y for specified x values. It is of the form                ###
-### y= a + bx + cx+...+nx + e, where  a is the intercept to the y axis, c to n are the coefficients, x are the       ###
-### predictors and e is some error. We gather a sample of data wich we use to estimate our coefficients. The         ###
-### coefficents are estimated using the least squared method. We plot a line of the form y= a + bx + cx+...+nx + e,  ###
-### that minimizes the distance of our true y values for each x from the predicted by that line y(basically the line ###
-### that is on average closer to each data point). That line represent the mean/ expected value for each x.          ###
-########################################################################################################################
+Linear regression is useful for studying the the effect of predictors (dependant variable, $x$ values) to a reaction
+(independent variable, $y$ value). This is called interference, the coefficient of each predictor will show the strength
+and direction of that predictor (how much of an effect it has and whether it is a positive or negative relationship). It
+may also be used for predicting the $y$ for specified $x$ values. It is of the form:
+$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n + \epsilon$, where $\beta_0$ is the intercept to the $y$
+axis, $\beta_1$ to $\beta_n$ are the coefficients, $x$ are the predictors and $\epsilon$ is some error. We gather a
+sample of data wich we use to estimate our coefficients. The coefficients are estimated using the least squared method.
+We plot a line of the form $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n + \epsilon$, that minimises
+the distance of our true $y$ values for each $x$ from the predicted by that line $y$ (basically the line that is on
+average closer to each data point). That line represent the mean/expected value for each $x$.
 
+```{r eval=F}
 # We will create a linear model in this example
 # Libraries
 install.packages("MASS")
 install.packages("ISLR")
+```
+
+We will use the Boston dataset, it contains medv, a value for the mean house value and various other attributes such
+as rm rooms in the house and age of the house, we want to make a linear regression model that uses those values as
+predictors to predict the response, value of the house.
+
+```{r}
 library(MASS)
 library(ISLR)
+```
 
-# We will use the Boston dataset, it contains medv, a value for the mean house value and various other attributes such
-# as rm rooms in the house and age of the house, we want to make a linear regression model that uses those values as
-# predictors to predict the response, value of the house.
+You can show the help page for the Boston dataset.
+
+```{r eval=F}
 ?Boston
-# not all the avalable attributes always make for good predictors. For example we might have something like first name of landlord
-# that does not change the price as much. We say that those attributes will not have a significant coefficient, their coefficient
-# will be close to zero.
+```
 
-# To identify the predictors that can give us the best price prediction we can start by bringing in one by one our
-# attributes and comparing performance (forward approach), or starting with all and removing one by one (backward), or even a
-# mix.
+Not all the available attributes always make for good predictors. For example we might have something like the first
+name of the landlord which does not change the price as much. We say that those attributes will not have a significant
+coefficient; their coefficient will be close to zero.
 
+To identify the predictors that can give us the best price prediction we can start by bringing in one by one our
+attributes and comparing performance (forward approach), or starting with all and removing one by one (backward), or
+even a mix.
+
+```{r}
 # We will start with the first approach and analyse our model
 # We are bringing in rm (rooms)
 # This creates a linear model for medv as a function of rm
 lm.rm_fit <- lm(medv~rm, data = Boston)
-# This will give as the basic information of the model, such us the coefficient of our predictors and the intercept
-summary(lm.rm_fit )
-# We can see that rm is of high significance, it has a very small p-value
-# (this means there is only a very small probability that the H0, rm has no effect on price is true).
-# We also get the intercept and coefficient of the fit line so we can see that the approximated line is of the form:
-# y = 9x - 35
+# This will give us the basic information of the model, such as the coefficient of our
+# predictors and the intercept
+summary(lm.rm_fit)
+```
+
+We can see that rm is of high significance, it has a very small p-value (this means there is only a very small
+probability that the H0, rm has no effect on price is true). We also get the intercept and coefficient of the fit line
+so we can see that the approximated line is of the form: $y = 9x - 35$
+
+```R
 
 ###################################################### R-squared #######################################################
 
