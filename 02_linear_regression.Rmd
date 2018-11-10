@@ -57,61 +57,73 @@ We can see that rm is of high significance, it has a very small p-value (this me
 probability that the H0, rm has no effect on price is true). We also get the intercept and coefficient of the fit line
 so we can see that the approximated line is of the form: $y = 9x - 35$
 
-```R
+## R-squared
 
-###################################################### R-squared #######################################################
+We can use the R-square value (coefficient of determination), as a performance indicator. It measures the percentage of
+variance of our points, that can be described by the regression line. To find that value we calculate the total
+variation not decribed by the line: by deviding a meause of the disctance of our points to the line, to a measure of the
+distance of our points from the mean. The rest of the variation whill be discribed by our model so we can simple take 1
+minus the result. This basicly will show how much better our model is from just predicting using the mean.
 
-########################################################################################################################
-### We can use the R-square value (coefficient of determination), as a performance indicator. It measures the        ###
-### percentage of variance of our points, that can be described by the regression line.                              ###
-### To find that value we calculate the total variation not decribed by the line: by deviding a meause of the        ###
-### disctance of our points to the line, to a measure of the distance of our points from the mean.The rest of the    ###
-### variation whill be discribed by our model so we can simple take 1 minus the result. This basicly will show       ###
-### how much better our model is from just predicting using the mean.                                                ###
-########################################################################################################################
-
-
-
-# We can get the meausere of the disctance of our points to the line by calculating the sum of squared error.
-# That is how far our points are by the line (how far the true y for each x is from estimated by the line y):
-# Since we previously calculated our coeefients for the line we can use the following to get the y estimated by the line
+```{r}
+# We can get the measure of the disctance of our points to the line by calculating the
+# sum of squared error.
+# That is how far our points are by the line (how far the true y for each x is from
+# estimated by the line y):
+# Since we previously calculated our coeefients for the line we can use the following to
+# get the y estimated by the line
 yForX <- function(x){
   9 * x - 35
-}# we could also use the build in function 'predict' but this makes it simpler for now
+}
+# We could also use the build in function 'predict' but this makes it simpler for now
 
 # The squared error would be their squared sum, where Boston$medv is the actual y
 SELine <- sum( (Boston$medv - yForX(Boston$rm) ) ^ 2)
 SELine
 
-# The measure of the distance of our points from the mean is given by the squared difference of each y from the mean of y
+# The measure of the distance of our points from the mean is given by the squared
+# difference of each y from the mean of y
 meanOfY <- mean(Boston$medv)
 SEy <- sum( (Boston$medv - meanOfY ) ^ 2)
 SEy
 
-# Now we can calculate the percentage of the total variation not described by our line,
+# Now we can calculate the percentage of the total variation not described by our line
 DescribedByLine <- SELine / SEy
 DescribedByLine
-# So the R-square, the percentage not described would be :
+# So the R-square, the percentage not described would be:
 rSquared <- 1 - DescribedByLine
 rSquared
 # We can see this matches the number calculated by R
 summary(lm.rm_fit )$r.squared
+```
 
-# If about 40% of the mean is described by the rm, the rest is various other predictors that we have not accounted for
-# and the fact that the actual relation may not exactly be linear. This is described partially by e (the unreducible
-# error) where Y(the house value) = F(x)(some function that described it ) + e (some random error).
+If about $40\%$ of the mean is described by the rm, the rest is various other predictors that we have not accounted for
+and the fact that the actual relation may not exactly be linear. This is described partially by (the unreducible error)
+where $y$ (the house value) $= f(x)$ (some function that described it) $+ \epsilon$ (some random error).
+
+```{r}
 # To check how linear the actual relation is we can plot the graph
-plot(Boston$medv, Boston$rm)
-# So if we bring more variable we expect this to increase
-# This is a multivariant regression which would like : y= b1*x1 + b2*x2 + b3*x3 ... + bn*xn + c
-lm.fitAll <- lm(medv~., data = Boston)
-# We can see that the model now described about 74% of the variation, using a couple more significant coefficients, such
-# as crime in the area, taxes and so on.
-summary(lm.fitAll)
-# we should note that a multivariate model is far superior than regressing each predictor with the price using
-# individual models, since a change in price could be the result of other predictors or combinations of predictors.
-# Separate models could result in inaccurate calculations of significant coefficients.
+plot(
+  Boston$medv,
+  Boston$rm,
+  xlab = "rm",
+  ylab = "mev"
+)
 
+# So if we bring more variable we expect this to increase
+# This is a multivariant regression which would like:
+# y = b1*x1 + b2*x2 + b3*x3 ... + bn*xn + c
+lm.fitAll <- lm(medv~., data = Boston)
+# We can see that the model now described about 74% of the variation, using a couple
+# more significant coefficients, such as crime in the area, taxes and so on.
+summary(lm.fitAll)
+```
+
+We should note that a multivariate model is far superior than regressing each predictor with the price using individual
+models, since a change in price could be the result of other predictors or combinations of predictors. Separate models
+could result in inaccurate calculations of significant coefficients.
+
+```R
 ################################################# CONFIDENCE INTERVALS #################################################
 
 ########################################################################################################################
