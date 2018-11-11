@@ -22,9 +22,16 @@ install:
   - R -e "packrat::restore(restart = FALSE)"
 
 script:
-  - ls -al
   - Rscript _build.R
-  - ls -al
 
 after_success:
   - Rscript _lint_all.R
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: _book
+  on:
+    branch: master

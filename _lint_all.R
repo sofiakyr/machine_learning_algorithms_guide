@@ -33,6 +33,7 @@ for(file in files) {
     }
   },
   warning = warning_handler)
+  message("")
 }
 
 message("Matched ", length(files), " files.")
