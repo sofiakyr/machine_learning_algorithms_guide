@@ -4,5 +4,6 @@
 .Ruserdata
 _book
 _bookdown_files
+libs/
 packrat/lib*/
 packrat/src/
