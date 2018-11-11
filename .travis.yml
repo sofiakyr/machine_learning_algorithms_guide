@@ -1,0 +1,30 @@
+language: r
+sudo: false
+
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/packrat/src
+    - $TRAVIS_BUILD_DIR/packrat/lib
+  packages: true
+
+env:
+  - LINTR_COMMENT_BOT=false
+
+addons:
+  apt:
+    packages:
+      - libjpeg-dev
+      - libxml2-dev
+      - libz-dev
+
+install:
+  - R -e "0" --args --bootstrap-packrat
+  - R -e "packrat::restore(restart = FALSE)"
+
+script:
+  - ls -al
+  - Rscript _build.R
+  - ls -al
+
+after_success:
+  - Rscript _lint_all.R
