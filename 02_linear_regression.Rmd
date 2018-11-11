@@ -114,7 +114,7 @@ plot(
 )
 
 # So if we bring more variable we expect this to increase
-# This is a multivariant regression which would like:
+# This is a multi-variant regression which would like:
 # y = b1*x1 + b2*x2 + b3*x3 ... + bn*xn + c
 lm.fitAll <- lm(medv~., data = Boston)
 # We can see that the model now described about 74% of the variation, using a
@@ -338,19 +338,21 @@ abline(lm.rm_fit, col = "red")
 # Simple way to find outliers on a set of a single variable is the univariate
 # approach.
 # Outliers are defined as values below or above 1.5*IQR (Inter Quartile Range =
-# Q3 -Q1).
+# Q3 - Q1).
 # We can visualise that in a boxplot where everything out of the whiskers is
 # treated as an outlier.
-boxplot(Boston$rm)
+boxplot(Boston$rm, horizontal = TRUE)
 # We can list them using the following code
 outlier_values <- boxplot.stats(Boston$rm)$out
 
-# There are also a few multivariant approaches in defining outliers. For example
-# the Cooks Distance which measures the influence of a row on the sample to the
-# line. In general, points that have about 4 times the mean may be classified as
-# influential. Those are also called leverage points, they may not affect the
-# R-square value as much as other outlier but affect the fit of the regression
-# line.
+```
+
+There are also a few multi-variant approaches in defining outliers. For example the Cooks Distance which measures the
+influence of a row on the sample to the line. In general, points that have about 4 times the mean may be classified as
+influential. Those are also called leverage points, they may not affect the R-square value as much as other outlier but
+affect the fit of the regression line.
+
+```{r}
 
 # We can calculate them in R using the following code, for 2 or more variables
 cooksd <- cooks.distance(lm.rm_fit)
@@ -422,9 +424,9 @@ cor.test(Boston$crim, Boston$tax)
 # What the cor.test does is it calculates a p-value for the cor coefficient we
 # have just calculated, to show what would the probability of getting such a
 # number at random (if the H0 was true and there is no correlation) if that
-# probability is very small usually less than 0.05 we can reject the H0. We can
-# calculate it using the following steps (see project hypothesis testing for the
-# theory):
+# probability is very small usually less than 0.05 we can reject the H0.
+# We can calculate it using the following steps (see project hypothesis testing
+# for the theory):
 t <- (r * sqrt(nrow(Boston) - 2)) / sqrt(1 - r ^ 2)
 # Area > t and Area < t
 p <- pt(q = t / 2, df = (nrow(Boston) - 1), lower.tail = FALSE) +
