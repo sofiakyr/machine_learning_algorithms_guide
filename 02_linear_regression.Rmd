@@ -48,8 +48,8 @@ even a mix.
 # We are bringing in rm (rooms)
 # This creates a linear model for medv as a function of rm
 lm.rm_fit <- lm(medv~rm, data = Boston)
-# This will give us the basic information of the model, such as the coefficient of our
-# predictors and the intercept
+# This will give us the basic information of the model, such as the coefficient
+# of our predictors and the intercept
 summary(lm.rm_fit)
 ```
 
@@ -67,34 +67,37 @@ the distance of our points from the mean. The rest of the variation will be desc
 1 minus the result. This basically will show how much better our model is from just predicting using the mean.
 
 ```{r}
-# We can get the measure of the disctance of our points to the line by calculating the
-# sum of squared error.
-# That is how far our points are from the line (how far the true y for each x is from
-# estimated by the line y):
-# Since we previously calculated our coefficients for the line we can use the following
-# to get the y estimated by the line.
+# We can get the measure of the disctance of our points to the line by
+# calculating the sum of squared error.
+# That is how far our points are from the line (how far the true y for each x is
+# from estimated by the line y):
+# Since we previously calculated our coefficients for the line we can use the
+# following to get the y estimated by the line.
 yForX <- function(x){
   9 * x - 35
 }
-# (We could also use the built in function 'predict' but this makes it simpler for now.)
+# (We could also use the built in function 'predict' but this makes it simpler
+# for now.)
 
-# The squared error would be their squared sum, where Boston$medv is the actual y
-SELine <- sum( (Boston$medv - yForX(Boston$rm) ) ^ 2)
+# The squared error would be their squared sum, where Boston$medv is the actual
+# y.
+SELine <- sum((Boston$medv - yForX(Boston$rm)) ^ 2)
 SELine
 
-# The measure of the distance of our points from the mean is given by the squared
-# difference of each y from the mean of y
+# The measure of the distance of our points from the mean is given by the
+# squared difference of each y from the mean of y.
 meanOfY <- mean(Boston$medv)
-SEy <- sum( (Boston$medv - meanOfY ) ^ 2)
+SEy <- sum((Boston$medv - meanOfY) ^ 2)
 SEy
 
-# Now we can calculate the percentage of the total variation not described by our line
+# Now we can calculate the percentage of the total variation not described by
+# our line.
 DescribedByLine <- SELine / SEy
 DescribedByLine
 # So the R-square, the percentage not described would be:
 rSquared <- 1 - DescribedByLine
 # We can easily extract this calculation with R using the following:
-summary(lm.rm_fit )$r.squared
+summary(lm.rm_fit)$r.squared
 ```
 
 If about $40\%$ of the mean is described by the rm, the rest is various other predictors that we have not accounted for
@@ -114,8 +117,9 @@ plot(
 # This is a multivariant regression which would like:
 # y = b1*x1 + b2*x2 + b3*x3 ... + bn*xn + c
 lm.fitAll <- lm(medv~., data = Boston)
-# We can see that the model now described about 74% of the variation, using a couple
-# more significant coefficients, such as crime in the area, taxes and so on.
+# We can see that the model now described about 74% of the variation, using a
+# couple more significant coefficients, such as crime in the area, taxes and so
+# on.
 summary(lm.fitAll)
 ```
 
@@ -133,43 +137,47 @@ the confidence interval for each of our estimated coefficients in order to deter
 are (how far from zero).
 
 ```{r}
-# The intercept and coefficient are approximated using a sample of nrow(Boston) samples
-# We cannot say that those values equal the true ones. There is an error in using a
-# sample to draw conclusions, called the standard error. The true value would be our
-# coefficient +/- the error, this is given by the confidence interval.
+# The intercept and coefficient are approximated using a sample of nrow(Boston)
+# samples. We cannot say that those values equal the true ones. There is an
+# error in using a sample to draw conclusions, called the standard error. The
+# true value would be our coefficient +/- the error, this is given by the
+# confidence interval.
 # In R we can get this by:
 confint(lm.rm_fit)
 
-# Lets see how this is calculated for the coefficient of rm
-# First we need to calculate the residual standard error
-# (residual means, what is left after we are done explaining the value of a point using
-# our regression line, so the error)
-# It measures how far our actual values are from the regression line so it is given by:
-# the square root of the sum of all the differences of the estimated y values to the
-# actual y values squared, divided by total values minus 1, lets apply this:
-standError <- sqrt(sum( (yForX(Boston$rm) - Boston$medv ) ^ 2) / (nrow(Boston) - 1))
-# We can see this value matches the one given by R on the summery statistics of our
-# model
+# Lets see how this is calculated for the coefficient of rm.
+# First we need to calculate the residual standard error.
+# (Residual means, what is left after we are done explaining the value of a
+# point using our regression line, so the error.)
+# It measures how far our actual values are from the regression line so it is
+# given by: the square root of the sum of all the differences of the estimated y
+# values to the actual y values squared, divided by total values minus 1, lets
+# apply this:
+standError <- sqrt(sum((yForX(Boston$rm) - Boston$medv) ^ 2) /
+                       (nrow(Boston) - 1))
+# We can see this value matches the one given by R on the summery statistics of
+# our model.
 standError
-# In order to get the specific standard error due to the rm coefficient we need to
-# divide by the difference due to x for rm
+# In order to get the specific standard error due to the rm coefficient we need
+# to divide by the difference due to x for rm.
 xFory <- function(y){
   (y + 35) / 9
 }
 # Given by this formula
-COSE <- standError / (sqrt(sum( (xFory(Boston$medv) - Boston$rm) ^ 2)) )
+COSE <- standError / (sqrt(sum((xFory(Boston$medv) - Boston$rm) ^ 2)))
 # This matches the value calculated from R by:
 coef(summary(lm.rm_fit))[, "Std. Error"]
 
 
-# Knowing that we can construct a confidence interval, we will use a 97.5% to match the
-# one used by R for the coefficient true value. This would be our value 9 +/- a critical
-# value (driven by the confidence interval selected) multiplied by the standard error.
+# Knowing that we can construct a confidence interval, we will use a 97.5% to
+# match the one used by R for the coefficient true value. This would be our
+# value 9 +/- a critical value (driven by the confidence interval selected)
+# multiplied by the standard error.
 
-# We use a t value for our critical value since we do not know standard deviation, our
-# error is an estimate, the t value can be found in a table, or using software. To find
-# it we need to know the degrees of freedom (total rows -2) and our selected confidence
-# interval.
+# We use a t value for our critical value since we do not know standard
+# deviation, our error is an estimate, the t value can be found in a table, or
+# using software. To find it we need to know the degrees of freedom (total rows
+# -2) and our selected confidence interval.
 t <- qt(0.975, df = nrow(Boston) - 2)
 t
 # So the confidence interval would be:
@@ -205,12 +213,12 @@ given by the regression) is not accurate and our point is not guaranteed to be e
 is given by adding those to up.
 
 ```{r}
-# We already have the standard error, so we can find the total error relevant to our
-# specific x point given by SEpedY.
+# We already have the standard error, so we can find the total error relevant to
+# our specific x point given by SEpedY.
 # We will use the example where rm = 8:
 rooms <- as.numeric(Boston$rm)
-SEpedY <- sqrt(standError ^ 2 * (1 + (1 / nrow(Boston)) + ( (8 - mean(rooms) ) ^ 2) /
-          sum( (rooms - mean(rooms) ) ^ 2) ))
+SEpedY <- sqrt(standError ^ 2 * (1 + (1 / nrow(Boston)) +
+               ((8 - mean(rooms)) ^ 2) / sum((rooms - mean(rooms)) ^ 2)))
 SEpedY
 
 # We can now get the prediction intervals for rm = 2 by:
@@ -225,7 +233,7 @@ Left and right matches the prediction intervals given by R
 ### we can plot prediction and confidence intervals
 
 ```{r eval=FALSE}
-install.packages('ggplot2')
+install.packages("ggplot2")
 ```
 ```{r message=FALSE}
 library(ggplot2)
@@ -263,8 +271,9 @@ changing. We have heteroscedasticity, when that change is systematic, follows a 
 distinctive fan or cone shape in residual plots. It can also impact the accuracy of the coefficients.
 
 ```{r eval=FALSE}
-# For this example we will use the cars dataset instead, as our data does not have clear
-# indications of heteroscedasticity not enough variance to justify changes in data.
+# For this example we will use the cars dataset instead, as our data does not
+# have clear indications of heteroscedasticity not enough variance to justify
+# changes in data.
 install.packages("Ecdat")
 ```
 ```{r message=FALSE}
@@ -276,15 +285,16 @@ data("Bwages", package = "Ecdat")
 ?Bwages
 ```
 ```{r}
-lm.het_fit <- lm(wage ~ school, data=Males)
+lm.het_fit <- lm(wage ~ school, data = Males)
 # We can use the following visualizations
 # Scatterplot
-# We can see a cone shape which may indicate heteroscedasticity
-plot( Bwages$edu, Bwages$wage)
+# We can see a cone shape which may indicate heteroscedasticity.
+plot(Bwages$edu, Bwages$wage)
 # Residuals/fitted is of interest
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 plot(lm.het_fit)
-# It indicates heteroscedasticity, as there is a curve, the X values do not look random
+# It indicates heteroscedasticity, as there is a curve, the X values do not look
+# random.
 ```
 ```{r eval=FALSE}
 # Breusch-Pagan test for a more algorithmic approach
@@ -325,19 +335,22 @@ interpret the outcomes, we could potentially just remove them or adjust them tow
 plot(Boston$rm, Boston$medv)
 abline(lm.rm_fit, col = "red")
 
-# Simple way to find outliers on a set of a single variable is the univariate approach.
-# Outliers are defined as values below or above 1.5*IQR (Inter Quartile Range = Q3 -Q1).
-# We can visualise that in a boxplot where everything out of the whiskers is treated as
-# an outlier.
+# Simple way to find outliers on a set of a single variable is the univariate
+# approach.
+# Outliers are defined as values below or above 1.5*IQR (Inter Quartile Range =
+# Q3 -Q1).
+# We can visualise that in a boxplot where everything out of the whiskers is
+# treated as an outlier.
 boxplot(Boston$rm)
 # We can list them using the following code
 outlier_values <- boxplot.stats(Boston$rm)$out
 
-# There are also a few multivariant approaches in defining outliers. For example the
-# Cooks Distance which measures the influence of a row on the sample to the line. In
-# general, points that have about 4 times the mean may be classified as influential.
-# Those are also called leverage points, they may not affect the R-square value as much
-# as other outlier but affect the fit of the regression line.
+# There are also a few multivariant approaches in defining outliers. For example
+# the Cooks Distance which measures the influence of a row on the sample to the
+# line. In general, points that have about 4 times the mean may be classified as
+# influential. Those are also called leverage points, they may not affect the
+# R-square value as much as other outlier but affect the fit of the regression
+# line.
 
 # We can calculate them in R using the following code, for 2 or more variables
 cooksd <- cooks.distance(lm.rm_fit)
@@ -359,9 +372,9 @@ predictors.
 ### Correlation
 
 ```{r eval=FALSE}
-# We can first look at some bivariate approaches (measuring the correlation of each pair
-# of two predictors) the correlation factor is a simple way of doing this, a value from
-# -1 to 1 showing direction and strength of the relationship.
+# We can first look at some bivariate approaches (measuring the correlation of
+# each pair of two predictors) the correlation factor is a simple way of doing
+# this, a value from -1 to 1 showing direction and strength of the relationship.
 ?cor
 ```
 ```{r}
@@ -382,40 +395,40 @@ y <- Boston$tax
 meanX <- mean(x)
 meanY <- mean(y)
 
-nominator <- sum( (x - meanX) * (y - meanY) )
-denominator <- sum( (x - meanX) ^ 2) * sum((y - meanY) ^ 2 )
-r <- nominator/sqrt(denominator)
+nominator <- sum((x - meanX) * (y - meanY))
+denominator <- sum((x - meanX) ^ 2) * sum((y - meanY) ^ 2)
+r <- nominator / sqrt(denominator)
 # We can see this matches exactly with the value given by cor() function
 r
 # A few things to note about the formula:
 # The equation is bound by 1
-# If there is a positive correlation where xi > meanX and yi > meanY then, form the
-# formula we can see that we will
-# have some positive outcome, the other way around we will get a negative value.
-# If there is no relationship, the x is not described by the y then the sum of
-# (x - meanX) will approximately cancel out with the sum of ( y - meanY) and we will get
-# a very small value.
+# If there is a positive correlation where xi > meanX and yi > meanY then, form
+# the formula we can see that we will have some positive outcome, the other way
+# around we will get a negative value. If there is no relationship, the x is not
+# described by the y then the sum of (x - meanX) will approximately cancel out
+# with the sum of (y - meanY) and we will get a very small value.
 ```
 
 ### Sample Correlation Coefficient to True Value
 
 ```{r}
-# We have calculated a the correlation coefficient of a sample, we need to test if that
-# is enough evidence to prove that the true correlation coefficient is far from
-# zero (Ha)
+# We have calculated a the correlation coefficient of a sample, we need to test
+# if that is enough evidence to prove that the true correlation coefficient is
+# far from zero (Ha).
 
 # In R we can easily complete a two tail test on our Hypothesis
 cor.test(Boston$crim, Boston$tax)
 
-# What the cor.test does is it calculates a p-value for the cor coefficient we have just
-# calculated, to show what would the probability of getting such a number at random (if
-# the H0 was true and there is no correlation) if that probability is very small usually
-# less than 0.05 we can reject the H0. We can calculate it using the following steps
-# (see project hypothesis testing for the theory):
-
-t <- (r * sqrt(nrow(Boston) - 2))/sqrt(1 - r ^ 2)
+# What the cor.test does is it calculates a p-value for the cor coefficient we
+# have just calculated, to show what would the probability of getting such a
+# number at random (if the H0 was true and there is no correlation) if that
+# probability is very small usually less than 0.05 we can reject the H0. We can
+# calculate it using the following steps (see project hypothesis testing for the
+# theory):
+t <- (r * sqrt(nrow(Boston) - 2)) / sqrt(1 - r ^ 2)
 # Area > t and Area < t
-p <- pt(q = t/2, df = (nrow(Boston) - 1), lower.tail = FALSE) + pt(q = -t/2, df = (nrow(Boston) - 1), lower.tail = TRUE)
+p <- pt(q = t / 2, df = (nrow(Boston) - 1), lower.tail = FALSE) +
+     pt(q = -t / 2, df = (nrow(Boston) - 1), lower.tail = TRUE)
 ```
 
 ### Correlation Matrix
@@ -432,8 +445,9 @@ install.packages("corrplot")
 library(corrplot)
 corrplot(cor(Boston))
 
-# We can also see each scatter plot using the following
-# We will study correlation between the following predictors, to not overflow the graphs
+# We can also see each scatter plot using the following:
+# We will study correlation between the following predictors, to not overflow
+# the graphs.
 lm.fitMultivariet <- lm(medv~ rm + crim + tax + crim, data = Boston)
 ```
 ```{r eval=FALSE}
@@ -457,16 +471,18 @@ fit then that predictor is well described by the rest of the predictors and we h
 ```{r}
 # Lets take the example of tax
 # First we regress the tax as a function of the rest of the predictors
-lm.tax <- lm(tax~ . -medv, data = Boston)
+lm.tax <- lm(tax~ . - medv, data = Boston)
 # We can then get the r squared
 Rsquared <- summary(lm.tax)$r.squared
-# The variance inflation value is given by the following equation, where if VIF is
-# large, usually greater than 5 we can say there is multicollinearity present.
+# The variance inflation value is given by the following equation, where if VIF
+# is large, usually greater than 5, we can say there is multicollinearity
+# present.
 VIF <- 1 / (1 - Rsquared)
-# We can see that in this case the VIF is quite large, this is explained by the fact
-# that predictors that are location related ones, rooms and house age, how green the
-# area is, criminal activity, surrounding population social/economical statues and so
-# on, that are used for predicting house price are also ideal for predicting tax.
+# We can see that in this case the VIF is quite large, this is explained by the
+# fact that predictors that are location related ones, rooms and house age, how
+# green the area is, criminal activity, surrounding population social/economical
+# statues and so on, that are used for predicting house price are also ideal for
+# predicting tax.
 VIF
 ```
 ```{r eval=FALSE}
@@ -478,7 +494,7 @@ library(car)
 vif(lm.fitAll)
 
 # Lets see what happens to our original line if we remove tax
-lm.fitAllMinusTax <- update(lm.fitAll, ~ . -tax)
+lm.fitAllMinusTax <- update(lm.fitAll, ~ . - tax)
 summary(lm.fitAll)$r.squared
 summary(lm.fitAllMinusTax)$r.squared
 ```
@@ -498,17 +514,17 @@ without tax) is significant using the F-statistic.
 # unrestricted and restricted model.
 summary(lm.fitAll)
 SSRun <- anova(lm.fitAll)["Residuals", "Sum Sq"]
-SSRre <- anova(lm.fitAllMinusTax)["Residuals"," Sum Sq"]
+SSRre <- anova(lm.fitAllMinusTax)["Residuals", " Sum Sq"]
 # The f stat is given by:
 n <- nrow(Boston)
 p <- length(Boston)
-Fstat <- ((SSRre - SSRun)/p) / (SSRun/(n - p - 1))
+Fstat <- ((SSRre - SSRun) / p) / (SSRun / (n - p - 1))
 # From the f distribution we can find a critical value that represents the point
-# separating the curve to the rejection area of a = 0.05 like we do with t distribution
-# (see hypothesis testing repo).
+# separating the curve to the rejection area of a = 0.05 like we do with t
+# distribution (see hypothesis testing repo).
 Fcrit <- qf(.95, p, n - p - 1)
-# The Fstat falls under the rejection area and so we can accept the H0, removing the tax
-# does produce a significant change.
+# The Fstat falls under the rejection area and so we can accept the H0, removing
+# the tax does produce a significant change.
 # We can do this in r simply using the following code.
 anova(lm.fitAll, lm.fitAllMinusTax)
 ```
@@ -526,15 +542,15 @@ most profitable one. To measure such affects, interaction terms are necessary.
 ```{r}
 # Simple way to do this in R for interaction of crim and tax
 lm.simpleInteraction <- lm(medv~ crim + tax + crim * tax, data = Boston)
-# We get the coefficient of the interaction and its significance the same way we get any
-# other coefficient.
+# We get the coefficient of the interaction and its significance the same way we
+# get any other coefficient.
 summary(lm.simpleInteraction)
 # Easier way to write the above
-lm.simpleInteraction2 <- lm(medv~crim*tax, data = Boston)
+lm.simpleInteraction2 <- lm(medv~crim * tax, data = Boston)
 summary(lm.simpleInteraction2)
 # This returns all two-way interactions
-lm.allPairsInteractions <- lm(medv~ .*., data = Boston)
-# We can see that the R-squared when using the 2-way interactions has increased
+lm.allPairsInteractions <- lm(medv~ . * ., data = Boston)
+# We can see that the R-squared when using the 2-way interactions has increased.
 summary(lm.allPairsInteractions)
 ```
 
@@ -559,23 +575,24 @@ is useful since often a relationship between variables is non linear, and this m
 ```{r}
 # Lets use the example of lstat and medv
 plot(Boston$lstat, Boston$medv)
-# We can see that the scatterplot follows a curve, which indicates that polynomials
-# would be effective.
-# Lets compare the two
-
+# We can see that the scatterplot follows a curve, which indicates that
+# polynomials would be effective.
+# Lets compare the two:
 lm.linearRegression <- lm(medv~ lstat, data = Boston)
-lm.PolynomialRegression <- lm(medv~ lstat + I(lstat^2), data = Boston)
+lm.PolynomialRegression <- lm(medv~ lstat + I(lstat ^ 2), data = Boston)
 anova(lm.linearRegression, lm.PolynomialRegression)
-# The anova tested the H0 where the models both fit the data equally(as explained
-# above). The F-statistic associated produced a very small providing enough evidence to
-# reject the H0.
+# The anova tested the H0 where the models both fit the data equally(as
+# explained above). The F-statistic associated produced a very small providing
+# enough evidence to reject the H0.
 
 # We can visualise this:
-newdat = data.frame(lstat = seq(min(Boston$lstat), max(Boston$lstat), length.out = 100))
-newdat$pred = predict(lm.PolynomialRegression, newdata = newdat)
+newdat <- data.frame(lstat = seq(min(Boston$lstat),
+                                 max(Boston$lstat),
+                                 length.out = 100))
+newdat$pred <- predict(lm.PolynomialRegression, newdata = newdat)
 plot(medv ~ lstat, data = Boston)
 with(newdat, lines(x = lstat, y = pred))
-abline(lm(medv~ lstat, data = Boston), col="red")
+abline(lm(medv~ lstat, data = Boston), col = "red")
 # It is clear from the graph that the black line fits the data much better
 ```
 
@@ -585,7 +602,7 @@ Up until now we have dealt with numbers; what if one of our predictors was quali
 satisfaction)? To use such a variable in LR we have to assign a dummy number/factor/enumeration, just some sort of
 number that will always be associated with one particular response (e.g female $= 1$, male $= 0$).
 
-```{r eval=FALSE)
+```{r eval=FALSE}
 ?Carseats
 ```
 ```{r}
