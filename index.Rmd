@@ -9,9 +9,6 @@ github-repo: chicsof/machine_learning_algorithms_guide
 description: "Description."
 ---
 
-# Preface {-}
-
-Hello, world!
-
 # About the Author {-}
 
+Contact me at sophia.97@windowslive.com if you have any queries :)
