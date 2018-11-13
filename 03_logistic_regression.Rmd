@@ -12,11 +12,11 @@ on one (e.g if $p > 0.5$ a transaction is fraud). It assigns those probabilities
 we have provided and their approximated coefficients as calculated from the data, that we have trained the model with.
 For example location of the transaction, time or money.
 
-As with linear regression, quantitative data is handled by assigning a dummy variable boolean (e.g isFraud = 1,
-isNotFraud = 0). We are interested in finding how close a point is to $1$ (in other words its probability of success
-(fraud in this case) plotted on the $y$ axis), as measured by the predictors ($x$, $z$ ... axis). The issue is that we
-can get any value between $0$ and $1$, as well as values above and bellow that (e.g if the amount of money used in a
-transaction is extremely large we might get something like $p = 2.3$ according to whatever coefficients in
+As with linear regression, quantitative data is handled by assigning a dummy variable boolean (e.g $\text{isFraud} = 1$,
+$\text{isNotFraud} = 0$). We are interested in finding how close a point is to $1$ (in other words its probability of
+success (fraud in this case) plotted on the $y$ axis), as measured by the predictors ($x$, $z$ ... axis). The issue is
+that we can get any value between $0$ and $1$, as well as values above and bellow that (e.g if the amount of money used
+in a transaction is extremely large we might get something like $p = 2.3$ according to whatever coefficients in
 $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_nx_n + \epsilon$ are calculated). This is not as useful and
 sometimes does not make sense, that's why we use a transformation to fit our data exactly between $0$ and $1$.
 
@@ -31,8 +31,8 @@ $\frac{P(x)}{1 - P(x)} = e^{\beta_0 + \beta_1x}$
 $\frac{P(x)}{1 - P(x)}$, is called the the odds. It is the probability of success over the probability of failure. It is
 used for example in horse-racing where if the odds are $\frac{1}{3}$ the horse is likely to win one race but loose $3$.
 To make our equation more linear we can take the log. We notice that this is basically a linear equation using the log
-of the odds on y-axis $log(\frac{P(x)}{1 - P(x)}) = \beta_0 + \beta_1x$, this makes things a lot easier (see more about
-why it's helpful later on)
+of the odds on $y$-axis $log(\frac{P(x)}{1 - P(x)}) = \beta_0 + \beta_1x$, this makes things a lot easier (see more
+about why it's helpful later on)
 
 ## Maximum Likelihood
 
@@ -56,7 +56,7 @@ line to the S-shaped curve that plots the probability from $0$ to $1$ for each o
 we can get the 'predicted' by the curve $y$ ($P(x)$), which in this case is also called the 'likelihood' (in this case)
 
 4. We then calculate the likelihood for ALL of the success cases ($P(x)$) and unsuccessful cases ($1 - P(x)$) (e.g
-probability, given by y value, of a fraud transaction actually been fraud, and probability, again as calculated by our
+probability, given by $y$ value, of a fraud transaction actually been fraud, and probability, again as calculated by our
 model of a legit transaction been not fraud). Whether a point is a success of not, we know from the data we have already
 collected. To get the total, we just need to multiply everything. In a way this calculates 'how likely we are' to
 predicting everything correctly, so the higher that is the better.
@@ -65,7 +65,8 @@ predicting everything correctly, so the higher that is the better.
 maximum of the $\log$ of the likelihood is the same as the maximum of the likelihood. The reason why the $\log$ is
 favoured stems from the fact that it is easier to differentiate a product. When looking for the max of an equation, we
 differentiate that equation and look for where it is equal to $0$. If we take the $\log$ of the equation we turn a
-difficult differentiation of products to a addition ($\log(a \times b) = \log(a) + \log(b)$), which is easy to solve.
+difficult problem of differentiating into differentiating a sum since $\log(a \times b) = \log(a) + \log(b)$, which is
+easy to solve.
 
 6. Finally, we choose the candidate line (which has our coefficients), that results in the higher $\log$ likelihood.
 (Software like R does this very very easily using 'smart algorithms')
@@ -83,7 +84,7 @@ dividing a measure of the distance of our points to the line, to the distance of
 minus the outcome. This basically will show how much better our model is from just predicting using the mean, no
 predictors involved. So all we need to do is find a different way of calculating how fit the model is to the data and
 what the predictions would be if we used the mean instead. Well we already have the first, the $\log$ of the likelihood
-for our curve (LL(fit)), exactly explains how close our predictions are to the true y. We can get the probability of a
+for our curve (LL(fit)), exactly explains how close our predictions are to the true $y$. We can get the probability of a
 case been successful, without accounting for any predictors, simple by the definition of probabilities
 $P(\text{of success}) = \frac{\text{successful cases}}{\text{total cases}}$.
 
@@ -116,7 +117,7 @@ example the mean in the linear regression), we already used that as the lower bo
 measure the performance of by comparing it to the null and saturated is called the Proposed model.
 
 The general form of R-squared can be described by
-$1 - \frac\text{a measure of bad fit - a measure of fit of our model}}\text{a measure of bad fit - a measure of perfect fit}}$,
+$1 - \frac{\text{a measure of bad fit} - \text{a measure of fit of our model}}{\text{a measure of bad fit} - \text{a measure of perfect fit}}$,
 which will always result is $0$ to $1$, since Null model is the minimum and Saturated the Maximum. 'it just so happened'
 that up to now the measure of perfect fit was zero so it could be omitted.
 
@@ -168,17 +169,19 @@ for (i in c("Survived","Pclass","Sex","Embarked")){
   data[,i] = as.factor(data[,i])
 }
 
-# Creates a general linear model (family = binomial specifies logistic regression)
+# Creates a general linear model (family = binomial specifies logistic
+# regression)
 gml.fit = glm(Survived~., data = data, family = binomial(link ='logit'))
 # We can see our estimated coefficients and associated p-values
 summary(gml.fit)
 
 
-# getting the R-squared
+# Getting the R-squared
 install.packages("DescTools")
 library('DescTools')
-# you will notice this is relatively low, it not easy to predict the survival of a passenger only given a few details about them
-# a lot of random factors are involved. There are also a lot of limitations in our model.
+# You will notice this is relatively low, it not easy to predict the survival of
+# a passenger only given a few details about them a lot of random factors are
+# involved. There are also a lot of limitations in our model.
 PseudoR2(gml.fit)
 ```
 
@@ -191,6 +194,7 @@ $log(\frac{p(x)}{1 - p(x)}) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta
 
 We often use logistic regression (and other models) to study the effects of various variables on an the occurrence of an
 event. We will use the following examples:
+
 * How does smoking affect the probability of a patient developing lung diseases
 * How does the fact that an individual is a student affect their probability of defaulting in the bank account
 
@@ -219,6 +223,7 @@ https://www.youtube.com/watch?v=hNZVFMVKVlc
 
 For reference, if we were to strictly define what a confounder is, it would be a variable that satisfies the following
 conditions:
+
 * Confounders has to be related to one of the significant predictors (e.g older people tend to be smokers more than
 younger)
 * It has to able be independently related to the reaction (e.g. age is also on its own a significant predictor of
