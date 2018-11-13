@@ -20,17 +20,19 @@ transaction is extremely large we might get something like $p = 2.3$ according t
 $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_nx_n + \epsilon$ are calculated). This is not as useful and
 sometimes does not make sense, that's why we use a transformation to fit our data exactly between $0$ and $1$.
 
-Formula
+## Formula
 There are various transformation for that, in logistic regression we use the logistic function:
-$P(x) = e^{(b0 + b1X)} \div (1 + e^{(b0 + b1X)})$, where $b0$ and $b1$ are our coefficients, this makes an S-shaped curve where
-the edges are $0$ and $1$.
-We want to try and bring this in a more linear form, after manipulation we can see that:
-$P(x) \div (1 - P(x))=e^{(b0 + b1X)}$
-$P(x) \div (1 - P(x))$, is called the the odds. It is the probability of success over the probability of failure. It is
+$P(x) = e^{(b0 + b1X)} \div (1 + e^{(b0 + b1X)})$, where $b0$ and $b1$ are our coefficients, this makes an S-shaped
+curve where the edges are $0$ and $1$. We want to try and bring this in a more linear form, after manipulation we can
+see that:
+
+$\frac{P(x)}{1 - P(x)} = e^{(\beta_0 + \beta_1x)}$
+
+$\frac{P(x)}{1 - P(x)}$, is called the the odds. It is the probability of success over the probability of failure. It is
 used for example in horse-racing where if the odds are $\frac{1}{3}$ the horse is likely to win one race but loose $3$.
-To make our equation more linear we can take the log. We notice that this is basically a linear equation using
-the log of the odds on y-axis $log(P(x) \div (1-P(x))) = b0 + b1X$, this makes things a lot easier (see more about why
-its helpful later on)
+To make our equation more linear we can take the log. We notice that this is basically a linear equation using the log
+of the odds on y-axis $log(\frac{P(x)}{1 - P(x)}) = \beta_0 + \beta_1x$, this makes things a lot easier (see more about
+why it's helpful later on)
 
 Best fit using maximum likelihood
 Another issue is how we can find the 'best fit line', that best describes all our data points. In linear
