@@ -1,23 +1,24 @@
-Usage
-Similar to linear regression (part of the family of Generalized Linear Models). However it is part of a group of models called classifiers (tries to group elements/events) and this most often involves qualitative rather than quantitative data.  
-Unlike linear regression, which is used mostly chosen for inference(studying the relationship between variables, effects
-of each other, strength and direction), we usually use logistic regression for predicting (or sometimes studying) a
-binary outcome (has only two outcomes, patient has diabetes or not, transaction is fraud or legit).  
-The model does that by measuring the probability associated with each of the two and based on a chosen threshold will
-decide on one (e.g if $p > 0.5$ a transaction is fraud).
-It assigns those probabilities by taking into account the predictors we have provided and their approximated
-coefficients as calculated from the data, that we have trained the model with.
-For example location of the transaction, time or money.  
+# Logistic Regression
+
+## Usage
+
+Similar to linear regression (part of the family of Generalized Linear Models). However it is part of a group of models
+called classifiers (tries to group elements/events) and this most often involves qualitative rather than quantitative
+data. Unlike linear regression, which is used mostly chosen for inference (studying the relationship between variables,
+effects of each other, strength and direction), we usually use logistic regression for predicting (or sometimes
+studying) a binary outcome (has only two outcomes, patient has diabetes or not, transaction is fraud or legit). The
+model does that by measuring the probability associated with each of the two and based on a chosen threshold will decide
+on one (e.g if $p > 0.5$ a transaction is fraud). It assigns those probabilities by taking into account the predictors
+we have provided and their approximated coefficients as calculated from the data, that we have trained the model with.
+For example location of the transaction, time or money.
 
 As with linear regression, quantitative data is handled by assigning a dummy variable boolean (e.g isFraud = 1,
-isNotFraud = 0).
-We are interested in finding how close a point is to $1$ (in other words its probability of success (fraud in this case)
-plotted on the $y$ axis), as measured by the predictors (x, z ... axis).  
-The issue is that we can get any value between $0$ and $1$, as well as values above and bellow that (e.g if the amount of
-money used in a transaction is extremely large we might get something like p = 2.3 according to whatever coefficients
-in $y = a + bx + cx + \ldots + e$ are calculated).
-This is not as useful and sometimes does not make sense, that's why we use a transformation to fit our data exactly
-between $0$ and $1$.
+isNotFraud = 0). We are interested in finding how close a point is to $1$ (in other words its probability of success
+(fraud in this case) plotted on the $y$ axis), as measured by the predictors ($x$, $z$ ... axis). The issue is that we
+can get any value between $0$ and $1$, as well as values above and bellow that (e.g if the amount of money used in a
+transaction is extremely large we might get something like $p = 2.3$ according to whatever coefficients in
+$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_nx_n + \epsilon$ are calculated). This is not as useful and
+sometimes does not make sense, that's why we use a transformation to fit our data exactly between $0$ and $1$.
 
 Formula
 There are various transformation for that, in logistic regression we use the logistic function:
