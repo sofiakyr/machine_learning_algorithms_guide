@@ -7,3 +7,4 @@ _bookdown_files
 libs/
 packrat/lib*/
 packrat/src/
+.vscode

@@ -2,7 +2,7 @@
 
 ## Usage
 
-Similar to linear regression (part of the family of Generalized Linear Models). However it is part of a group of models
+Similar to linear regression (part of the family of Generalised Linear Models). However it is part of a group of models
 called classifiers (tries to group elements/events) and this most often involves qualitative rather than quantitative
 data. Unlike linear regression, which is used mostly chosen for inference (studying the relationship between variables,
 effects of each other, strength and direction), we usually use logistic regression for predicting (or sometimes
@@ -38,7 +38,7 @@ about why it's helpful later on)
 
 Another issue is how we can find the 'best fit line', that best describes all our data points. In linear regression we
 used the least squares approach. This required measuring the residuals (distance of our points to the line) and trying
-to minimize that value by moving the line. However the distance of the points from a random line (close to the real) in
+to minimise that value by moving the line. However the distance of the points from a random line (close to the real) in
 linear regression is somehow constant, the error has a constant standard deviation. In logistic regression when a
 predictor reaches extreme points the distance will tend to $\pm \infty$. For example if we try and fit a line for the
 probability of a transaction been fraud based on the money involved; a line close to the best fit would have very large
@@ -107,12 +107,12 @@ would always result having a zero as the nominator and giving us a R-squared of 
 However this is not always the case, in many other models the calculation of R-squared could result in any number, and
 this would not provide any clear indication of whether our model is doing well or not. This is why we need an upper
 bound. That upper bound is just a model that fits perfectly all our data points and is called the Saturated model. It
-requires all the data points as parameters to be able to make a model that perfectly fits them all and maximizes the
-likelihood. If you are wondering why don't we just use that model, if it maximizes the likelihood, the answer is that it
+requires all the data points as parameters to be able to make a model that perfectly fits them all and maximises the
+likelihood. If you are wondering why don't we just use that model, if it maximises the likelihood, the answer is that it
 usually does not follow the format we are looking for. It is not genericised (it suffers from overfitting) and will not
 allow us to make any accurate predictions or study relationships. In a way, it is just a random line that crosses all
 the data points and does not really show any patterns, cannot be described by an algorithm and may result in unnecessary
-overcomplications. The opposite of the saturated model is the Null model, a model that uses only one parameter (for
+over-complications. The opposite of the saturated model is the Null model, a model that uses only one parameter (for
 example the mean in the linear regression), we already used that as the lower bound. The model that we are trying to
 measure the performance of by comparing it to the null and saturated is called the Proposed model.
 
@@ -139,7 +139,7 @@ and optimise our model by adding and removing predictors we should take note of 
 For p-values we can simply use the chi-square distribution (see chapter chi-square test). The chi-square value equals
 2(LL(fit)-LL(overall)) and the degrees of freedom are the difference in the parameters of LL(fit) and LL(overall). From
 those you can calculate the area under the graph which will give the probability of getting such values randomly, if
-there is no correlation between your predictors and reaction. 
+there is no correlation between your predictors and reaction.
 
 ## Introductory Demonstration in R
 
@@ -198,7 +198,7 @@ event. We will use the following examples:
 * How does smoking affect the probability of a patient developing lung diseases
 * How does the fact that an individual is a student affect their probability of defaulting in the bank account
 
-When we conduct such a study measuring how many smokers have developed lung dieses versus how many non smokers, and how
+When we conduct such a study measuring how many smokers have developed lung disease versus how many non smokers, and how
 many students have defaulted versus how many non-students, we will most probably find a positive relationship. We cannot
 however, blindly trust the bivariate analysis, I mean unless we managed to get a perfectly random and balanced across
 all ages, sexes, incomes ... sample there is a good chance that our results are partially the result of other variables
@@ -266,7 +266,7 @@ and get a $%$ accuracy. We will see how this is done in detail, as well as how w
 our specific problem.
 
 ```R
-# We can use a csv that is avalable online for our data, we can load this in R
+# We can use a csv that is available online for our data, we can load this in R
 # using the following code:
 
 data <- read.csv(file = "http://www2.compute.dtu.dk/courses/02819/pima.csv",
@@ -297,8 +297,8 @@ testingData <- subset(data, split == FALSE)
 model <- glm(type ~., trainingData, family = binomial(link = 'logit'))
 # Review our model
 summary(model)
-# As expected BMI ang glu are significant (you can try and remove the predictors
-# with a larger p-value but do this intrementally and note the effect it has on
+# As expected BMI and glu are significant (you can try and remove the predictors
+# with a larger p-value but do this incrementally and note the effect it has on
 # the Null and Deviance residuals (see above) )
 ```
 
@@ -309,14 +309,14 @@ summary(model)
 gml.fitGlu = glm(type ~ glu,
                  data = trainingData,
                  family = binomial(link ='logit'))
-summary(gml.fitGlu) 
+summary(gml.fitGlu)
 # First we will plot the best fitting line of probability of survival over age
-# We need to get the propabilities for each row 
+# We need to get the probabilities for each row
 p <- predict(gml.fitGlu, trainingData, type = "response")
 # Get the log of the odds, which is our y
 y <- log(p/(1 - p))
 # Substitute with our calculated coefficients for the x axis
-x <- -5.940285 + 0.042616  * trainingData$glu 
+x <- -5.940285 + 0.042616  * trainingData$glu
 plot(x, y)
 # Now let's transform it to the S-shaped curve with y from 0 to 1.
 # This is just the logistic function where i have substituted the coefficient
@@ -324,7 +324,7 @@ plot(x, y)
 f <- function(x) {
   1 / (1 + exp(-5.940285 + (0.042616 * x )))}
 x <- trainingData$glu
-# This scales the grapth
+# This scales the graph
 x <- -500 : 700
 plot(x, f(x), type = "l")
 ```
@@ -376,7 +376,7 @@ cm
 # | False     | False  | True Negative (TN)  |
 # | False     | True   | False Negative (FN) |
 #
-# If predict a patient is diabettic when they are not that's a False Positive,
+# If predict a patient is diabetic when they are not that's a False Positive,
 # also known as a type 1 error
 #
 # If we predict a patient is not diabetic when they are that's a False Negative;
@@ -432,7 +432,7 @@ positive value either from the total predicted positive or the total actually po
 totalFALSE <- 47 + 15
 # TP +TN
 totalTRUE <- 5 + 7
-# NT + NF 
+# NT + NF
 totalNegative <- 47 + 5
 # PT + PF
 totalPositive <- 15 + 7
