@@ -3,11 +3,12 @@
 the application we will be referring to can be found here: <https://datasupport.site>
 
 ## Recommending similar books. Content based filtering
+
 Fist we will create the algorithm that is used to recommend 'similar books' to the one the user just bought. That
 algorithm will simply look at how similar the book we just bought is, to other books available, according to the given
 attributes (author, genre, age). This approach is called Content based filtering.
 
-### What is similarity ?
+### What is similarity?
 
 For us humans, distinguishing similar items is a simple task. We look at the properties of the item (in this case the
 book's author, theme and age) and we can group together books by the same author, same theme and similar age. If we want
@@ -210,8 +211,6 @@ that we need feedback from the users in order to recommend items. Not all users 
 give feedback only on extreme cases such as very good or very bad, leading to models missing out on valuable insight for
 a lot of products.
 
-[//]: TODO: Continue cleanup work line 207
-
 ```R
 
 # We load the data, this is a list that i have prepared, it contains the user,
@@ -242,18 +241,20 @@ readers.data <- data.frame(readers, book1, book2, book3, book4, book5, book6,
                            book14, book15, book17, book18, book19, book20)
 
 # This library contains the function knnImputation, which can fill in the
-# missing ratings, using the process we discussed previously
+# missing ratings, using the process we discussed previously.
 install.packages("DMwR")
 library(DMwR)
 
-# This is the function that is called every time a users submits a new rating on our website
-# it receives all the ratings as parameters (some may be null and this is fine)
+# This is the function that is called every time a users submits a new rating on
+# our website.
+# It receives all the ratings as parameters (some may be null and this is fine)
 getRecommendations <- function(book1, book2, book3, book4, book5, book6, book7,
                                book8, book9, book10, book11, book12, book13,
                                book14, book15, book16, book17, book18, book19,
                                book20) {
 
-  # Since we don't have a log in page, we don't know who the user is. For now we can just assume this ratings are coming from a new user
+  # Since we don't have a log in page, we don't know who the user is. For now we
+  # can just assume this ratings are coming from a new user.
   # So we need to add this new user number to our rating matrix
   newUserId <- nrow(readers.data) + 1
 
@@ -267,7 +268,10 @@ getRecommendations <- function(book1, book2, book3, book4, book5, book6, book7,
 
   # We fill in the gaps from missing ratings, as explained before using the
   # function provided by the library
-  completeMatrix <- knnImputation(newMatrix, k = 3, scale = T, meth = "weighAvg",
+  completeMatrix <- knnImputation(newMatrix,
+                                  k = 3,
+                                  scale = T,
+                                  meth = "weighAvg",
                                   distData = NULL)
 
   # Capture the users ratings after we filled in the gaps
@@ -275,7 +279,8 @@ getRecommendations <- function(book1, book2, book3, book4, book5, book6, book7,
   # Capture the books that the user has not rated
   readersRatingsMissing <- which(is.na(newEntry))
 
-  # Recommend books that the user has not rated and for which the predicted ratings are more than 3.4
+  # Recommend books that the user has not rated and for which the predicted
+  # ratings are more than 3.4.
   recommended <- integer()
   for (i in 2:20){
   if (i %in%  readersRatingsMissing){
@@ -286,52 +291,88 @@ getRecommendations <- function(book1, book2, book3, book4, book5, book6, book7,
   }
 
   # Return the books that satisfy that :)
-  return( recommended)
+  return(recommended)
 
 }
 ```
 
 ## Recommending items that are often bought together (mining item association rules)
 
-We want to look at the transaction history and recommend items that users tend to buy together or over a short period of time. This approach to recommendation systems is called association rules learning. Given that a user just bough an item we want to find out how likely he is to buy other 'associated' items and recommend the ones we are most confident that the user will be interested in.
+We want to look at the transaction history and recommend items that users tend to buy together or over a short period of
+time. This approach to recommendation systems is called association rules learning. Given that a user just bough an item
+we want to find out how likely he is to buy other 'associated' items and recommend the ones we are most confident that
+the user will be interested in.
 
-To understand how this works, lets use the example where we want to find out if we should recommend book 2 to a user that just bought book 1 (only by looking at the transaction history of our shop). In other words, we want to find out if the association rule of buying 2 given that we bough 1 is strong enough.
+To understand how this works, lets use the example where we want to find out if we should recommend book 2 to a user
+that just bought book 1 (only by looking at the transaction history of our shop). In other words, we want to find out
+if the association rule of buying 2 given that we bough 1 is strong enough.
 
 To measure the strength of 'association' between some items, we se use the following metrics:
 
-* First we identify what proportion of all the transactions include both book 1 and book 2, this is called the SUPPORT of this rule.
-A high support means that there are a lot of transitions were both items have been bought together.
+* First we identify what proportion of all the transactions include both book 1 and book 2, this is called the SUPPORT
+  of this rule. A high support means that there are a lot of transitions were both items have been bought together.
 
-* This is some evidence that there is a strong relationship. However there is a chance that book 2 just happens to be very popular is found in various transactions, including the ones where book 1 is also bought. We want to be able to deal with such cases, this is what CONFIDENCE measures.
-We want to measure how often book 1 and 2 are sold together as opposed to how often book 2 is sold. This is given by the ratio of the proportion of all transactions that included both 1,2 (support) over the proportion of transactions that include book 2. It is nothing more than the conditional probability of 2 given 1.
+* This is some evidence that there is a strong relationship. However there is a chance that book 2 just happens to be
+  very popular is found in various transactions, including the ones where book 1 is also bought. We want to be able to
+  deal with such cases, this is what CONFIDENCE measures. We want to measure how often book 1 and 2 are sold together as
+  opposed to how often book 2 is sold. This is given by the ratio of the proportion of all transactions that included
+  both 1, 2 (support) over the proportion of transactions that include book 2. It is nothing more than the conditional
+  probability of 2 given 1.
 
-* Last we want to find out how much the probability of a user buying book 2 has increased once he bought book 1. This is called LIFT. We know the original probability of buying book 2, is just the proportion of all transactions that include book 2. The probability of buying 2 given that we have just bought 1 is what we just measured above, the confidence. If we divide the original probability of buying 2 to the conditional probability of 2 given 1, we can measure what is called Lift. A hight lift measurement means that the likelihood of the reader buying 2 once he bought 1 has increased.
+* Last we want to find out how much the probability of a user buying book 2 has increased once he bought book 1. This is
+  called LIFT. We know the original probability of buying book 2, is just the proportion of all transactions that
+  include book 2. The probability of buying 2 given that we have just bought 1 is what we just measured above, the
+  confidence. If we divide the original probability of buying 2 to the conditional probability of 2 given 1, we can
+  measure what is called Lift. A hight lift measurement means that the likelihood of the reader buying 2 once he bought
+  1 has increased.
 
-For an association rule to be considered we want to have a hight Support Confidence and Lift
+For an association rule to be considered we want to have a hight Support Confidence and Lift.
 
-We now have an understanding of how we measure 'association' between products. But how do we go about selecting which products to measure that association for, in the first place. Well one approach is to brute force it. Measure all the associations for every 2 possible pairs between our products, then the 3 pairs, the 4 pairs until we reach n pairs of products that are possible. From all those measurements we then pick the associations with the highest strengths. This is clearly computationally expensive.
+We now have an understanding of how we measure 'association' between products. But how do we go about selecting which
+products to measure that association for, in the first place. Well one approach is to brute force it. Measure all the
+associations for every 2 possible pairs between our products, then the 3 pairs, the 4 pairs until we reach n pairs of
+products that are possible. From all those measurements we then pick the associations with the highest strengths. This
+is clearly computationally expensive.
 
-There are various approaches to this problem, a popular one, which we will use is the Apriori algorithm. This algorithm investigates associations incrementally, it starts from single variables, pairs of 2, 3 and so on. Every time it checks if the pairs satisfy a minimum support value, the pairs that do are used to generate rules. It then moves to the next pairs, using only the items that were left out previously. It repeats until no items are left, that can satisfy that minimum support threshold.
+There are various approaches to this problem, a popular one, which we will use is the Apriori algorithm. This algorithm
+investigates associations incrementally, it starts from single variables, pairs of 2, 3 and so on. Every time it checks
+if the pairs satisfy a minimum support value, the pairs that do are used to generate rules. It then moves to the next
+pairs, using only the items that were left out previously. It repeats until no items are left, that can satisfy that
+minimum support threshold.
 
 ```R
-#this package will help us impliment Apriori to mine association rules
+
+# This package will help us implement Apriori to mine association rules
 install.packages("arules")
 library(arules)
 
-#our first step is, as always, to load the data. I have prepared a transaction history of 43 transactions, in a normilized 'sigle' transactionId-item format.
-#we want R to recognise the file as a transaction history, in order to be able to impliment Apriori with ease. There are two formats that R can work with for
-#transactions. One is single, the one we use (you can view the file for details), where each entry contains the transaction id and the item bought, if there are #multiple items bought in the same transaction, there would be multiple entries with the same transaction id.
-#The alternative is basket format, where each entry contains the id and all the products bought in that transaction in a single entry.
-trans = read.transactions("transactionsNoUserName.txt", format = "single", sep = ",", cols = c(1,2))
+# Our first step is, as always, to load the data. I have prepared a transaction
+# history of 43 transactions, in a normalised 'single' transactionId-item
+# format. We want R to recognise the file as a transaction history, in order to
+# be able to implement Apriori with ease. There are two formats that R can work
+# with for transactions. One is single, the one we use (you can view the file
+# for details), where each entry contains the transaction id and the item
+# bought, if there are multiple items bought in the same transaction, there
+# would be multiple entries with the same transaction id.
+# The alternative is basket format, where each entry contains the id and all the
+# products bought in that transaction in a single entry.
+trans <- read.transactions("transactionsNoUserName.txt",
+                           format = "single",
+                           sep = ",",
+                           cols = c(1,2))
 
-#Now we can impliment Apriori, we can set the threshold for support and confidence as shown bellow
-assoc_rules <- apriori(trans, parameter = list(sup = 0.03, conf = 0.6,target="rules"));
-#We can inspect rules that were found
+# Now we can implement Apriori, we can set the threshold for support and
+# confidence as shown bellow:
+assoc_rules <- apriori(trans,
+                       parameter = list(sup = 0.03, conf = 0.6,target="rules"))
+# We can inspect rules that were found
 inspect(assoc_rules)
 
 
-#last we only need to impliment those rules. This is the function that is called every time a user submits a book purchase.
-#Since the user is only buying one book, we only only the rules that are relevnt to single item purchase.
+# Last we only need to implement those rules. This is the function that is
+# called every time a user submits a book purchase.
+# Since the user is only buying one book, we only only the rules that are
+# relevant to single item purchase.
 useRules <- function(bookNumber){
   message("/rules")
   switch(
@@ -347,54 +388,114 @@ useRules <- function(bookNumber){
     {0}
   )
 }
-
-
 ```
 
 ## Further Discussions:
 
 ### Optimisations
 
-Although our models are currently doing their job pretty good, they would not scale well. For example, if the users increased from 15 to 100.000 and our books from 20 to 100.000.000.000 we would be having a lot of trouble. Let's see why...
+Although our models are currently doing their job pretty good, they would not scale well. For example, if the users
+increased from 15 to 100.000 and our books from 20 to 100.000.000.000 we would be having a lot of trouble. Let's see
+why...
 
-At the moment, our content based filtering algorithm requires all the attributes of the book that we just bough to be checked against all the attributes of all the books that are available. There could be countless books, and in a more complex scenario the attributes we are comparing them to, would not only be three (e.g. we might include book title, popularity, publisher, city and so on). Why might really need check every attribute of every book, but we might be able to reduce the percentage of books we want to compute the precise distance to. For example if a user just bought a book about aliens, is it really worth comparing that book to love stories? Could we before applying the algorithm to every single book, filter out ones that we think are completely irrelevant. Even better could we have built some pre-defined groups of books that share similar attributes and use them as a guide.
+At the moment, our content based filtering algorithm requires all the attributes of the book that we just bough to be
+checked against all the attributes of all the books that are available. There could be countless books, and in a more
+complex scenario the attributes we are comparing them to, would not only be three (e.g. we might include book title,
+popularity, publisher, city and so on). Why might really need check every attribute of every book, but we might be able
+to reduce the percentage of books we want to compute the precise distance to. For example if a user just bought a book
+about aliens, is it really worth comparing that book to love stories? Could we before applying the algorithm to every
+single book, filter out ones that we think are completely irrelevant. Even better could we have built some pre-defined
+groups of books that share similar attributes and use them as a guide.
 
-In the case of collaborative filtering, at the moment every time a user is providing some ratings, we need to update the ratings' matrix and then re-fill the gaps, using the new information. That is very expensive and not maintainable, in a system where we are receiving hundreds of rating per day. What we could do instead is store the new ratings daily in some temporary storage and update the permanent rating matrix in batches. Moreover, if we have thousands of books, predicting the rating for each user may not be ideal, so we might consider some filtering here as well.
+In the case of collaborative filtering, at the moment every time a user is providing some ratings, we need to update the
+ratings matrix and then re-fill the gaps, using the new information. That is very expensive and not maintainable, in a
+system where we are receiving hundreds of rating per day. What we could do instead is store the new ratings daily in
+some temporary storage and update the permanent rating matrix in batches. Moreover, if we have thousands of books,
+predicting the rating for each user may not be ideal, so we might consider some filtering here as well.
 
-Generally, a lot of effective predictive systems will choose to employ a combination of methods. For example, we might choose to cluster books in certain groups according using content based filtering, those could be very inclusive clusters (they would still include multiple books). We could then use collaborate filtering, within each cluster, to get more specific recommendations. This would save a lot of computational overhead, as the clusters could be pre-defined and the collaborate filtering would require only a portion of the original data (as it would use a rating matrix that refers to books only within the cluster).
-Another example would be to use both collaborate filtering and association rules on each case. We could then compare the recommendations returned from both the chosen algorithms and only return the ones found in both.
+Generally, a lot of effective predictive systems will choose to employ a combination of methods. For example, we might
+choose to cluster books in certain groups according using content based filtering, those could be very inclusive
+clusters (they would still include multiple books). We could then use collaborate filtering, within each cluster, to
+get more specific recommendations. This would save a lot of computational overhead, as the clusters could be pre-defined
+and the collaborate filtering would require only a portion of the original data (as it would use a rating matrix that
+refers to books only within the cluster).
+Another example would be to use both collaborate filtering and association rules on each case. We could then compare the
+recommendations returned from both the chosen algorithms and only return the ones found in both.
 
 
-A last note is to try and use pre-built packages and algorithms when appropriate, as they have been optimised for perform-ace. Make sure however, you understand how those algorithms function in order to be able to provide them with the most appropriate data, and correct parameters. Furthermore, you need to be able to make adjustments when required, interpret their outcomes and measure their performance as objectively as possible.
+A last note is to try and use pre-built packages and algorithms when appropriate, as they have been optimised for
+performance. Make sure however, you understand how those algorithms function in order to be able to provide them with
+the most appropriate data, and correct parameters. Furthermore, you need to be able to make adjustments when required,
+interpret their outcomes and measure their performance as objectively as possible.
 
 ### Alternatives
 
-Another approach to optimisations could be looking at alternative algorithms that may be more 'accurate' or efficient or maybe just more appropriate for your case. As an example let's find out about some alternative algorithms on collaborate filtering.
+Another approach to optimisations could be looking at alternative algorithms that may be more 'accurate' or efficient or
+maybe just more appropriate for your case. As an example let's find out about some alternative algorithms on collaborate
+filtering.
 
-Previously we used Euclidean method, through a library provided by R, to identify similar users through their ratings. There are other well-known methods for identifying 'similar' users, such as the Pearson method or Jaccard method. In the Pearson method each series of rating for every user is treated as a vector. The difference between two vectors is their angle which can be found by taking the cosine of their magnitudes.
+Previously we used Euclidean method, through a library provided by R, to identify similar users through their ratings.
+There are other well-known methods for identifying 'similar' users, such as the Pearson method or Jaccard method. In the
+Pearson method each series of rating for every user is treated as a vector. The difference between two vectors is their
+angle which can be found by taking the cosine of their magnitudes.
 
-In the Jaccard similarity, the values of the ratings do not matter. Similar user's are just users that have read the same books/clicked on the same websites/seen the same movies et cetera, this has some clear drawbacks (just cause they read a book it doesn't necessarily mean they liked it) but it does not explicitly require users' to have given out feedback.
+In the Jaccard similarity, the values of the ratings do not matter. Similar user's are just users that have read the
+same books/clicked on the same websites/seen the same movies et cetera, this has some clear drawbacks (just cause they
+read a book it doesn't necessarily mean they liked it) but it does not explicitly require users' to have given out
+feedback.
 
-Last you might want to consider taking the correlation distance (mentioned on content based filtering) for something like ratings. In this case, association is described by whether or not the users have rated the same items above or bellow their average.
+Last you might want to consider taking the correlation distance (mentioned on content based filtering) for something
+like ratings. In this case, association is described by whether or not the users have rated the same items above or
+bellow their average.
 
-Up to now we have discussed collaborate filtering by looking at similar users. There is however an alternative approach, called Latent Factor Analysis.This method attempts to identify the underlaying factors that caused each user to rate each film the way the did, we then use those factors to extrapolate (predict) what their rating would be for the rest of the films.
+Up to now we have discussed collaborate filtering by looking at similar users. There is however an alternative approach,
+called Latent Factor Analysis.This method attempts to identify the underlaying factors that caused each user to rate
+each film the way the did, we then use those factors to extrapolate (predict) what their rating would be for the rest
+of the films.
 
-To achieve this, we need to assume that there is a factor/combination of factors for each reader that makes them rate books a specific way. (e.g. a reader is into drama books). We also need to assume that there is a factor/combination of factors relevant to each book that result in bad/good rating (e.g. the author is very popular).
+To achieve this, we need to assume that there is a factor/combination of factors for each reader that makes them rate
+books a specific way. (e.g. a reader is into drama books). We also need to assume that there is a factor/combination of
+factors relevant to each book that result in bad/good rating (e.g. the author is very popular).
 
-Those underling factors can be identified using PCA. I have dedicated a previous chapter for PCA, but for now all you need to know is that we can somehow tell which are the main factors motivating reader to give certain ratings and books to receive certain ratings.
-We do not, however, have the values associated with those factors. We only have the outcomes that were produced by combining the factors of each user with each product (those are the ratings!). So for every rating we know that rating = F_reader * F_book
+Those underling factors can be identified using PCA. I have dedicated a previous chapter for PCA, but for now all you
+need to know is that we can somehow tell which are the main factors motivating reader to give certain ratings and books
+to receive certain ratings.
+We do not, however, have the values associated with those factors. We only have the outcomes that were produced by
+combining the factors of each user with each product (those are the ratings!). So for every rating we know that
+rating = F reader * F book
 
-Each user has its own set of equations, and all we need to do is solve for F_reader and F_book. The issue is, that not all the ratings are available for each user, meaning that we will not be able to find the exact numbers. There will always be an error,
-In other words rating - (F_reader * F_book) will not be zero.
+Each user has its own set of equations, and all we need to do is solve for F reader and F book. The issue is, that not
+all the ratings are available for each user, meaning that we will not be able to find the exact numbers. There will
+always be an error,
+In other words rating - (F reader * F book) will not be zero.
 
-To estimates the factors in the best way we can, we will attempt to find some F_reader F_book, that minimises the error. (There
-are various techniques for that such as the stochastic gradient dissent that attempts to find a local minimum by trial... )
+To estimates the factors in the best way we can, we will attempt to find some F reader F book, that minimises the error.
+(There are various techniques for that such as the stochastic gradient dissent that attempts to find a local minimum by
+trial... )
 
-Once we have those values we can simply use them to fill in any gap in the matrix. For example, lets say we didn't know the rating reader 1 gave for book 12. We had however enough data to calculate a factor 2 for that user and a factor 2 for that book. The rating would be 4, and so we should recommend book 12 to reader 1. (of course this is a very simplified example to describe the underlying mechanics. In reality a lot more factors would be involved and we would also need to account for other issues such as overfitting in our equations)
+Once we have those values we can simply use them to fill in any gap in the matrix. For example, lets say we didn't know
+the rating reader 1 gave for book 12. We had however enough data to calculate a factor 2 for that user and a factor 2
+for that book. The rating would be 4, and so we should recommend book 12 to reader 1. (of course this is a very
+simplified example to describe the underlying mechanics. In reality a lot more factors would be involved and we would
+also need to account for other issues such as overfitting in our equations)
 
-Apart from measuring our alternatives in terms of algorithms, we should also consider alternatives in terms of data. Aside from explicit ratings, costumer feedback takes on many forms such as comments in either the provider's platform or social media. It is possible, through sentimental analysis to capture the essence of those comments and use them to train our models and give more precise recommendations. A lot of those methods look at the presence and frequency of words and attempt to classify comments as positive or negative. For example the naive Bayer's algorithm will measure the probability of a comment been positive and the probability of it been negative and decide on the one with the highest probability. Those probabilities are assigned by compering the presence and frequency of certain words compared to their average frequency and the label(negative/positive) available from the training sets (past data, labeled by humans used to train the algorithm). There is a lot more to sentimental analysis and its value on recommendation systems. It can often be used to deduce additional features/attributes, in the case of books, we could classify books depending on the frequency of certain words (e.g. vampires, fairy, solders).
+Apart from measuring our alternatives in terms of algorithms, we should also consider alternatives in terms of data.
+Aside from explicit ratings, costumer feedback takes on many forms such as comments in either the provider's platform or
+social media. It is possible, through sentimental analysis to capture the essence of those comments and use them to
+train our models and give more precise recommendations. A lot of those methods look at the presence and frequency of
+words and attempt to classify comments as positive or negative. For example the naive Bayer's algorithm will measure the
+probability of a comment been positive and the probability of it been negative and decide on the one with the highest
+probability. Those probabilities are assigned by compering the presence and frequency of certain words compared to their
+average frequency and the label(negative/positive) available from the training sets (past data, labeled by humans used
+to train the algorithm). There is a lot more to sentimental analysis and its value on recommendation systems. It can
+often be used to deduce additional features/attributes, in the case of books, we could classify books depending on the
+frequency of certain words (e.g. vampires, fairy, solders).
 
-Last we should not exclude the option of classifying customers themselves. Although, it is generally preferred to adopt a product oriented approach, as the product is less complicated and more well defined, we can always recommend products that were bought by users that share similar attributes (e.g. sex, age, interests).
+Last we should not exclude the option of classifying customers themselves. Although, it is generally preferred to adopt
+a product oriented approach, as the product is less complicated and more well defined, we can always recommend products
+that were bought by users that share similar attributes (e.g. sex, age, interests).
 
 ## Conclusion
-This is by no means a complete guide on recommendation systems but i hope you were able to understand the concepts and appreciate the potential advantages as well as the challenges around them.
+
+This is by no means a complete guide on recommendation systems but i hope you were able to understand the concepts and
+appreciate the potential advantages as well as the challenges around them.
