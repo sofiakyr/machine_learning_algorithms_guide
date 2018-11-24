@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+the application we will be refering to can be found here: <https://datasupport.site>
 
 # Recomending similar books. Content based filtering
 Fist we will create the algorithm that is used to recomend 'similar books' to the one the user just bought. That algorithm will simply look at how similar the book we just bought is, to ather books avalable, acorsing to the given attributes
