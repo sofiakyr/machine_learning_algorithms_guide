@@ -8,6 +8,12 @@ Source: CRAN
 Version: 1.66.0-1
 Hash: 4cc8883584b955ed01f38f68bc03af6d
 
+Package: DescTools
+Source: CRAN
+Version: 0.99.26
+Hash: b3e02803e5e23989f9c0ad344ad29e7c
+Requires: BH, MASS, Rcpp, expm, manipulate, mvtnorm
+
 Package: Ecdat
 Source: CRAN
 Version: 0.3-1
@@ -104,6 +110,17 @@ Source: CRAN
 Version: 0.1-3
 Hash: c590d29e555926af053055e23ee79efb
 
+Package: bindr
+Source: CRAN
+Version: 0.1.1
+Hash: 76578c5f543a6ecbc1365d6445f9ebf7
+
+Package: bindrcpp
+Source: CRAN
+Version: 0.2.2
+Hash: 8ce499301f0dc5c7ff69f0b42e33f5c1
+Requires: Rcpp, bindr, plogr
+
 Package: bitops
 Source: CRAN
 Version: 1.0-6
@@ -174,10 +191,27 @@ Source: CRAN
 Version: 0.6.18
 Hash: 65f62365ec69ddd17230d2ffe891a6ab
 
+Package: dplyr
+Source: CRAN
+Version: 0.7.8
+Hash: d6e576944199cba782a471015a822848
+Requires: BH, R6, Rcpp, assertthat, bindrcpp, glue, magrittr,
+    pkgconfig, plogr, rlang, tibble, tidyselect
+
+Package: e1071
+Source: CRAN
+Version: 1.7-0
+Hash: 54c6b974d385e3c0961eb4cefc9ea0c5
+
 Package: evaluate
 Source: CRAN
 Version: 0.12
 Hash: c32505adba4f6eca5aa20dd32300b019
+
+Package: expm
+Source: CRAN
+Version: 0.999-3
+Hash: eca86de576f8b2a2661c79100cfbf647
 
 Package: fansi
 Source: CRAN
@@ -308,6 +342,11 @@ Source: CRAN
 Version: 1.5
 Hash: bdc4d48c3135e8f3b399536ddf160df4
 
+Package: manipulate
+Source: CRAN
+Version: 1.0.1
+Hash: b59f52b7038af1609a823e0a876d7225
+
 Package: maptools
 Source: CRAN
 Version: 0.9-4
@@ -336,6 +375,11 @@ Source: CRAN
 Version: 0.5.0
 Hash: 247d1c1d72f3072563912ef860758624
 Requires: colorspace
+
+Package: mvtnorm
+Source: CRAN
+Version: 1.0-8
+Hash: 09985635b09071a1d81d6811b92846ea
 
 Package: nloptr
 Source: CRAN
@@ -375,6 +419,11 @@ Source: CRAN
 Version: 2.0.2
 Hash: b0fd6ed908e150b77e5f00c6478bd58c
 
+Package: plogr
+Source: CRAN
+Version: 0.2.0
+Hash: 81a8008a5e7858552503935f1abe48aa
+
 Package: plyr
 Source: CRAN
 Version: 1.8.4
@@ -397,6 +446,12 @@ Source: CRAN
 Version: 1.2.0
 Hash: 0ff5f631b66daf57857f28062f3e6f30
 Requires: R6, crayon, hms, prettyunits
+
+Package: purrr
+Source: CRAN
+Version: 0.2.5
+Hash: 8b0c16db10c7e20b70cd37779a673a8b
+Requires: magrittr, rlang, tibble
 
 Package: quantreg
 Source: CRAN
@@ -507,6 +562,12 @@ Version: 1.4.2
 Hash: 83895360ce4f8d2ce92eee00526b5b0b
 Requires: cli, crayon, pillar, rlang
 
+Package: tidyselect
+Source: CRAN
+Version: 0.2.5
+Hash: fad1cf10c5c4996fca6ca68e0716d2e6
+Requires: Rcpp, glue, purrr, rlang
+
 Package: tinytex
 Source: CRAN
 Version: 0.9
@@ -517,6 +578,11 @@ Package: tis
 Source: CRAN
 Version: 1.34
 Hash: 03089c9b40bfdfb0e58eb21811de7d3a
+
+Package: titanic
+Source: CRAN
+Version: 0.1.0
+Hash: 52436a578e18e7b1dc6ef90bb16cbd16
 
 Package: utf8
 Source: CRAN

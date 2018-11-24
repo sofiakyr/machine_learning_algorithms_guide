@@ -146,10 +146,10 @@ there is no correlation between your predictors and reaction.
 We will use the Titanic data to see if we can use the given attributes as predictors that determine whether or not a
 passenger survived.
 
-[//]: TODO: Convert R block below to useful Rmd chunks
-
-```R
+```{r eval=FALSE}
 install.packages("titanic")
+```
+```{r}
 library(titanic)
 data("titanic_train")
 
@@ -157,10 +157,13 @@ data("titanic_train")
 data <- titanic_train
 
 # Replace missing values for Age with mean
-data$Age[is.na(Test$Age)] = mean(Test$Age, na.rm = TRUE)
-
+data$Age[is.na(data$Age)] = mean(data$Age, na.rm = TRUE)
+```
+```{r eval=FALSE}
 # Remove attributes that are not valuable
 install.packages("dplyr")
+```
+```{r}
 library(dplyr)
 data <- data %>% select(-c(Cabin, PassengerId, Ticket, Name))
 
@@ -174,10 +177,12 @@ for (i in c("Survived","Pclass","Sex","Embarked")){
 gml.fit = glm(Survived~., data = data, family = binomial(link ='logit'))
 # We can see our estimated coefficients and associated p-values
 summary(gml.fit)
-
-
+```
+```{r eval=FALSE}
 # Getting the R-squared
 install.packages("DescTools")
+```
+```{r}
 library('DescTools')
 # You will notice this is relatively low, it not easy to predict the survival of
 # a passenger only given a few details about them a lot of random factors are
@@ -219,7 +224,7 @@ weighted averaging (if it made sense) to get an overall estimation of the coeffi
 
 [//]: TODO: Convert to proper reference
 If you are interested to learn more about this you can watch this video from a Harvard lecture:
-https://www.youtube.com/watch?v=hNZVFMVKVlc
+<https://www.youtube.com/watch?v=hNZVFMVKVlc>
 
 For reference, if we were to strictly define what a confounder is, it would be a variable that satisfies the following
 conditions:
@@ -249,8 +254,6 @@ fitting line on the first place, since the residuals (distance of our points to 
 
 ## Measuring Performance Using Confusion matrix
 
-[//]: TODO: Continue
-
 Let's use another example. Predicting whether or not a patient is diabetic. Our sample data set contains attributes such
 as BMI, age and measurements of glucose concentration, as well as a boolean that indicates whether or not each patient
 is diabetic. We hope to use those attributes as predictors for the patients diabetic condition. This time we will use
@@ -265,7 +268,7 @@ actually know if the patients in the test data are diabetic or not, we can compa
 and get a $%$ accuracy. We will see how this is done in detail, as well as how we can optimise the chosen threshold for
 our specific problem.
 
-```R
+```{r}
 # We can use a csv that is available online for our data, we can load this in R
 # using the following code:
 
@@ -275,19 +278,18 @@ data <- read.csv(file = "http://www2.compute.dtu.dk/courses/02819/pima.csv",
 ```
 ### Splitting the Data
 
-```R
+```{r}
 # First we need to split our data, we do this with the use of caTools library
 # (there are other ways too).
 # The following creates an array of TRUE/FALSE values for every row in our data
 # set, where TRUE is 80% of the data. It does this 'randomly', later on we will
 # see techniques for spreading the success and failure rates proportionally
 # across training and testing data.
-install.packages("caTools")
 library(caTools)
 split <- sample.split(data, SplitRatio = 0.8)
 split
 # Transform to factors
-data$type <- af.factor(data$type)
+data$type <- as.factor(data$type)
 # We then split the data using that array, where TRUE is for the training and
 # FALSE is for the testing
 trainingData <- subset(data, split == TRUE)
@@ -304,7 +306,7 @@ summary(model)
 
 ### Visualisations
 
-```R
+```{r}
 # We will use only glu to plot our graphs easier
 gml.fitGlu = glm(type ~ glu,
                  data = trainingData,
@@ -331,7 +333,7 @@ plot(x, f(x), type = "l")
 
 ### Confusion Matrix Calculations
 
-```R
+```{r}
 # The predict() function allows us to feed new data in the trained model and
 # receive a probability of each patient being diabetic; we will use this on our
 # testing data.
@@ -345,9 +347,12 @@ pdata <- predict(model, testingData, type = "response")
 # compare the outcomes to the real values. We already know if those patients are
 # actually diabetic. We will compare the predicted to the actual values using a
 # confusion matrix.
-
+```
+```{r eval=FALSE}
 # We will use the Caret library for that
 install.packages("caret")
+```
+```{r}
 library(caret)
 
 
@@ -361,9 +366,12 @@ predicted <- as.factor(pdata > 0.55)
 # For the actual data, either or not a patient is diabetic is given by yes or
 # no, so true is yes
 real <- as.factor(testingData$type == "Yes")
-
+```
+```{r eval=FALSE}
 # use caret to compute a confusion matrix
 install.packages("e1071")
+```
+```{r}
 cm <- confusionMatrix(data = predicted, reference = real)
 cm
 # We can see that this has outputted a table describing the following in each
@@ -426,7 +434,7 @@ False when False. In the sample (confusion matrix), we could select a false valu
 or the total actual false. So we need to multiply the probabilities associated with both. Similarly we could select a
 positive value either from the total predicted positive or the total actually positive.
 
-```R
+```{r}
 # From our confusion matrix table we can get:
 # FN + FP
 totalFALSE <- 47 + 15
@@ -486,10 +494,12 @@ that a patient is not diabetic when they are (having more TN), referred to as ty
 would be more concerned for the type 2 errors, since failing to diagnose a diabetes can have a greater impact on the
 patients health, so we might choose a $p$ somewhere lower than $0.5$ maybe $0.4$.
 
-```R
+```{r eval=FALSE}
 # We can visualise how changing our threshold affects the true and false
 # positive rate to help us choose the right p
 install.packages("ROCR")
+```
+```{r}
 library(ROCR)
 
 resForTraining <- predict(model, trainingData, type = "response")
