@@ -4,4 +4,5 @@ In this guide we will analyse some of the most commonly used and powerfull machi
 
 This guide refers to anyone who is intersted in machine learning, from any backroud. We will go far beyon the basics of use cases and implimentation of each algorithm, however at no point will there be anything presented that assumes previous knowledge and is not accompanied by real case examples and implimentations. 
 
-My inspiration for creating this, was the book 'An introduction to Statistical Learning' written by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, which I whould highly recomend. It contains labs and exersises for your learning, as well as an aproachable explanation of machine learning algorithms. 
+My inspiration for creating this, was the book 'An introduction to Statistical Learning' written by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, which I whould highly recomend. It contains labs and exersises for your learning, as well as an aproachable explanation of machine learning algorithms. We will be refering to that book and other resources throught the guide.
+
