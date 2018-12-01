@@ -1,0 +1,56 @@
+# Advanced techniques for linear algorithms
+
+## Introduction
+
+In this chapter we will look into some more advanced ways of measuring the performace of our models as well improving it. 
+
+Up to now we have been relating performance with how well our algorithm descibes the variation in our training data (remember how we defined R-squred).There is a major issue with this, the more predictors we add the more our model will become 'better' according to this definition. Remember we are only using a SAMPLE of TRAINING data, both for designing the model and for measuring its performance. This sample of training data will contain some noise (some randomness), and when we add a new predictor, even if its completly irrerevant, a weak relationship (either possitive or negative) will be found between that predictor and this randomness. The more of those irrelevant predictors we add, incrementally, we will start to describe this random variation better (in reality you can imagine this as shear luck). However this randomness is ONLY relavant to the sample data set that we happened to have, if we select another sample from the population we whould have a different noise and all those predictors that we though are adding value to our model whould only be causing issues. In this capter we will look into how we can mitigate this issue and optimize our models as well us measure their performance more accuratly. In this chapter we will look at doing so, while still building a linear-based model, you chould also mitigate this by using algorithms that are non-linear such us tree based ones.
+
+### Bias Variance Trade Off
+
+The issue above is part off a majour concerd in machine learning, described as the _the bias variance trade off_ . Where bias describes how well a model fits in the training data, and variance how well it fits to the future/test data. In most cases there is a point where optimizing the model for the training data will start to cause overfiting. In other words, it will make the model very specific to that training sample and not genaralized enough to fit future samples. 
+
+In this chapter We will also look into alternatives to using the least square technique, in order to fit our line better, as well as other approaches to fitting linear-based models on non-linear problems.The reasone we really want to dive deep and try to optimize a linear model in that extend, instead of just using a non-linear one is because of its interpretability. Linear models, in real-life scenarios are superior in solving interference problems (finding relasionships between predictors and reaction).
+
+### Goals and expectations
+
+Like always, we will be explaining those aproaches in simple and comprehensive matter with code examples. However, it is beyone the goals of this guide to go into too much details. This chapter will be summirizing the techniques analyzed by gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any backround in statistics or computer sience) to be able to understand when they are nessasry and how to apply them. For more details, I whould advise you to refer to that book, or online resources. 
+
+## Improved performance indicators
+
+As we mentioned before the R-squared, for measuring the performance of our linear model will continiously increase with the addition of relevant or irrelevnt predictors, resulting in overstimation of the models' fitness. A very simple but popular aproach in mitigating this, is the use of the _adjusted R-squared_ instead, wich adds a penalty for increased predictors in the formula. If we recall the formula for R-squared is $R^2 = 1- \frac{sum squared error}{total variation}$. For the adjusted R-suared we want this to be decreasing as the number of predictors are increasing. It is given by 
+$R^2 = 1- \frac{\text{sum squared error/(n-d-1)}}{\text{total variation/(n-1)}}$, where n is the total number of samples and d is the degrees of freedom (total number of predictors -1). 
+
+Why are we accounting for the number of samples? A simple explanation is that the more samples we have, the more confident we can be that the accuracy we measured on this bigger sample will be the closer for the total population. As the number of samples ($n$) increases , we can see that the adjusted R-squared also increases, as we whould expect from our intuition.This increase however, is relevant to how many predictors we have (since the nominator is divided by $n-d-1$). For example, if we take the case where d>n (we have more predictors than samples) the R-squared will decrease. Lets see more about the relationship between predictors and samples.
+
+### The curse of dimentionality
+
+This relationship between number of predictors and samples, is actually very crusial in measuring the performance of a linear model. Remember that each predictor is a dimention in the space which our samples are placed. The more dimenetions that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two models with the same number of samples, but different number of predictors, the model for which we chould be more confident on its accuracy, whould be the one with the least number of predictors! 
+
+For the extreme case where the number of predictors are equall or less than the number of samples, the linear model is usless, as it whould result in extremely overconfident results. Let's see an example. Let's imagine with have two predictors (this means we have a 2 dimentional space drawn in the x and a y axis).
+We have an equal amount of samples (2 points) from which we will create our linear model, using the least squares fit. To draw a straigt line on the x and y axis we only need 2 points anyway, so our line fits perfectly the training data, we have 0 sum of squared error and therefore our classic R-squared is 1. Now we add another 100 samples from the same population on that plot and we see that the sum of squared error for those new points to the previously perfectly fit line is massive!
+
+The problems caused by high dimentions is refered to us the curse of dimentionality. A high dimentional problem is usually one where number of predictors is close to or less than the number of samples. In order to perform linear regression on such problems we usually result in techniques for reducing the number of dimentions. We will look into those teqniques later on. For now we need to understand how the adjusted R-squred attempts to be a better measurment for model fitness, by accounting for this relationship between number of predictors and number of samples used. 
+
+### Alternatives
+
+Although the motivation behind the adjusted R-squred is logical and it is a very popular aproach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
+
+ * $C_p$ 
+ 
+ * Akaike information critirion (AIC)
+ 
+ * Bayesian information critirion (BIC)
+
+### Implimentation in R
+
+#### Adjusted R-squared
+The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have propably already noticed it.
+
+
+
+
+
+
+  
+  
