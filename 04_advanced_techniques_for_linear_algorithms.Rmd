@@ -16,7 +16,7 @@ In this chapter We will also look into alternatives to using the least square te
 
 Like always, we will be explaining those aproaches in simple and comprehensive matter with code examples. However, it is beyone the goals of this guide to go into too much details. This chapter will be summirizing the techniques analyzed by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any backround in statistics or computer sience) to be able to understand when they are nessasry and how to apply them. For more details, I whould advise you to refer to that book, or online resources. 
 
-## Improved performance indicators
+## Improved performance indicators (adjusted R-squared and alternatives)
 
 As we mentioned before the R-squared, for measuring the performance of our linear model will continiously increase with the addition of relevant or irrelevnt predictors, resulting in overstimation of the models' fitness. A very simple but popular aproach in mitigating this, is the use of the _adjusted R-squared_ instead, wich adds a penalty for increased predictors in the formula. If we recall the formula for R-squared is $R^2 = 1- \frac{sum squared error}{total variation}$. For the adjusted R-suared we want this to be decreasing as the number of predictors are increasing. It is given by 
 $R^2 = 1- \frac{\text{sum squared error/(n-d-1)}}{\text{total variation/(n-1)}}$, where n is the total number of samples and d is the degrees of freedom (total number of predictors -1). 
@@ -37,12 +37,28 @@ The problems caused by high dimentions is refered to us the curse of dimentional
 Although the motivation behind the adjusted R-squred is logical and it is a very popular aproach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
 
  * $C_p$, computed by: 
- $C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)$ 
  
+$C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)$, where $d$ is the degrees of freedom and $\sigma^2$ is the approximated, using the training sample, population variance. 
+
+A high $C_p$ measure means that the model is not a good fit. _This aproach tries to account for bias (overfitting due to additional irrelevant predictors) by looking at how spread out the data is whitin those predictors (remeber each predictor can be seen as a dimention)_. It uses the measure of unreducable error $\epsilon$ as a penanlty, $\epsilon = 2d \sigma^2$.
+
+Again the more the predictors increase ($d$ will increase) the higher the penalty will be. As for the $\sigma^2$ we can think of it as a regulator for that penatly. $\sigma^2$ meaures how spread out the data is, it makes sence that the more variation there is, the more spread out the data will be and the more the error will increase. While when $n$ icreases $C_p$ decreases, indicating better performance when more samples are avalable.
+
+Since $\sigma^2$ is estimated using the sample's $\sigma^2$, this critirium requires enought data to get a good aproximation and it will not perform well using small datasets. Furthmore, we have mentioned that the $\epsilon$ is underestimated when there are complications in the relationship of the predictors and the reaction (e.g. multicolinearity), in such cases $C_p$ will also not provide usufull insight.
+
+ * Akaike information critirion (AIC), computed by: 
  
- * Akaike information critirion (AIC)
+ $AIC = 2k - 2ln(L)$, where k is the number of predictor plus one, and L is the maximum value of the likelihood function for the model.
+
+Again a small AIC, like a small $C_p$ indicated a good fit.
+
+As we know the maximum likelihood function is a way to find optimum fit. The higher that number is the more fit our model will be, resultingin a smaller AIC. However we still have a penalty related to how many predictors are used, this is the role of $2k$ in the equation.We will not go into too much details, but it has been found that AIC has an overall good performance in any model and data avalable, and quite often outperforms other methods when used for choosing predictors and finding the best model. 
  
- * Bayesian information critirion (BIC)
+ * Bayesian information critirion (BIC), computed by: 
+ 
+ $BIC = ln(n)k - 2ln(L)$
+ 
+This is very similar to AIC, with the main deference been that a heavier penalty is given for models with increasing predictors, resulting in defining optimulal models those with less predictors.
 
 ### Implimentation in R
 
