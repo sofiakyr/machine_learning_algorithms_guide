@@ -14,7 +14,7 @@ In this chapter We will also look into alternatives to using the least square te
 
 ### Goals and expectations
 
-Like always, we will be explaining those aproaches in simple and comprehensive matter with code examples. However, it is beyone the goals of this guide to go into too much details. This chapter will be summirizing the techniques analyzed by gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any backround in statistics or computer sience) to be able to understand when they are nessasry and how to apply them. For more details, I whould advise you to refer to that book, or online resources. 
+Like always, we will be explaining those aproaches in simple and comprehensive matter with code examples. However, it is beyone the goals of this guide to go into too much details. This chapter will be summirizing the techniques analyzed by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any backround in statistics or computer sience) to be able to understand when they are nessasry and how to apply them. For more details, I whould advise you to refer to that book, or online resources. 
 
 ## Improved performance indicators
 
@@ -36,7 +36,9 @@ The problems caused by high dimentions is refered to us the curse of dimentional
 
 Although the motivation behind the adjusted R-squred is logical and it is a very popular aproach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
 
- * $C_p$ 
+ * $C_p$, computed by: 
+ $C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)$ 
+ 
  
  * Akaike information critirion (AIC)
  
