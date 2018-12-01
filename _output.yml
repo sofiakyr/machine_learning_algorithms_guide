@@ -1,4 +1,6 @@
 bookdown::gitbook:
+  includes:
+    in_header: [ ./html/analytics.html ]
   config:
     toc:
       collapse: section
