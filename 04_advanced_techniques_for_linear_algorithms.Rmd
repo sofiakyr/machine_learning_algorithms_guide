@@ -32,11 +32,25 @@ We have an equal amount of samples (2 points) from which we will create our line
 
 The problems caused by high dimentions is refered to us the curse of dimentionality. A high dimentional problem is usually one where number of predictors is close to or less than the number of samples. In order to perform linear regression on such problems we usually result in techniques for reducing the number of dimentions. We will look into those teqniques later on. For now we need to understand how the adjusted R-squred attempts to be a better measurment for model fitness, by accounting for this relationship between number of predictors and number of samples used. 
 
+
+The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have propably already noticed it.
+
+```{r}
+
+library(MASS)
+library(ISLR)
+#let's use our previous linear model of house values as a function of the Boston dataset attributes
+lm.rm_fit <- lm(medv~., data = Boston)
+# we can see that the R-squared and the adjusted R-squared are not too far off. The adjusted number is less, as expected it has paid the price of using multiple predictors, but we have enought samples to support most predictors. If we started removing predictors of less significance, we whould notice that the Adjusted R-squared and R-squared whould be closer to each other.
+summary(lm.rm_fit)
+
+```
+
 ### Alternatives
 
 Although the motivation behind the adjusted R-squred is logical and it is a very popular aproach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
 
- * $C_p$, computed by: 
+ * Mallows' $C_p$, computed by: 
  
 $C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)$, where $d$ is the degrees of freedom and $\sigma^2$ is the approximated, using the training sample, population variance. 
 
@@ -60,15 +74,40 @@ As we know the maximum likelihood function is a way to find optimum fit. The hig
  
 This is very similar to AIC, with the main deference been that a heavier penalty is given for models with increasing predictors, resulting in defining optimulal models those with less predictors.
 
-### Implimentation in R
+## Cross Validation
 
-#### Adjusted R-squared
-The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have propably already noticed it.
+We now have a way to account for overfitting, when accessing our model. However, we are still only assesing our model on how well it is performing on the same data that it was trained with. We do not have any way of assessing how it whould do when new data comes in. 
+
+You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just need to calculate the R-squared, adjusted R-suered, $C_p$ or any other chosen critirum on the trained model, for that testing data. We now have a performance measument for a testing data! 
+
+Yes but if we split the data, how do we split it. Any random 70-80% sample will result in different estimates for our coefficients, since it will randomly contain different values for each predictors/reaction. Similarly any random 20-30% sample will result in varing mesearurments for our performance critiria. Those variations can be quite significant, especially when we do not have enough samples.
+
+If we want more accuracy we need to take more measurments. This is where a new method of assesment comes in, Cross-Validation. Instead of spliting the data in two blocks, we will split it in $k$ number of blocks containg an equall portion of the data. For each of those blocks we will:
+
+* Use all the remaining data (not contained in that block) to train the model
+* Use the data contained in that block to test the trained model. We calculate the chosen performance indicator (e.g. R-squared for) for the test data (found in the block).
+
+We will repeat that for all the $k$ blocks. We then take the avarage performance indicator from all the $k$ indicators. This is our CV value.
+We can choose whatever value for k we want, to perform what is called k-fold cross validetion. It is usually advised to choose 5-fold or 10-fold depending on how much data and resources are available.
+
+Apart from assisting in choosing the optimum coeficints for linear models, cross validention is also a great to way to compare the performance of different machine learning algorithms. We can perform cross validation in any model, in a similar manner to what was previously described. It also has other applications, which we will look at later on.
+
+I whould recommend cross validention when you need to compare the performance of different machine learning algorithms on the same problem, when you do not have a lot of samples to simply trust the other methods, if computational power and complexity are not an issue, or if performance is crucial for your model. 
+
+### Cross Validation in action
+
+## Selecting the optimal predictors for the model
+
+We have seen how to measure the model's fitness and account for overfiting (using any or combinations of the methods we have been discussing), so we can compare various models with different sets of predictors and see which ones are more effective. In this section we will present various automated approaches for performing feature selection, in order to uncover which set of predictors will yield the optimal result. 
 
 
 
 
 
 
-  
+
+
+
+
+
   
