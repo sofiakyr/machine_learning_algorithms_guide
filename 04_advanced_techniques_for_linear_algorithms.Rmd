@@ -168,6 +168,50 @@ STEPS:
 
 * We then take all our best models for each combination $M_0$, $M_1$, $M_2$, $M_3$...$M_p$ and perform cross validetion or meaure their adjusted R-square, the AIC or BIC critirium (or a combination of those performance indicators). And of cource, we choose the one with the least error.
 
+
+```{r}
+# This lab, is again by ISLR, and uses the dataset Hitters. It contains various statistics for the performance of Baseball players such us number of Hits and Homeruns, as well as their salary. We will try and fit a linear model that studies the relationship between their performance and salary.
+library(ISLR)
+
+# The salary field for some of the playes is empty. We will remove those players from the dataset, as they are not valable and will cause issues when attempting to make the model.  
+Hitters <- na.omit(Hitters)
+#leaps contain functions for subset selection
+install.packages("leaps")
+library(leaps)
+
+# by default the regsubsets() selections looks up to pairs of 8, you can change this by adding the following paramter: nvmax = <number>
+#we chose 19 since we have 19 predictors
+regfit.full <- regsubsets(Salary~., Hitters, nvmax = 19 )
+# the out put show with an asterix the predictors that yield the optimal model for each pair
+summary(regfit.full)
+
+#you can viwe performance indicators for each model such us:
+#adjusted R-squred 
+summary(regfit.full)$adjr2
+#the C_p value
+summary(regfit.full)$cp
+#BIC critirium
+summary(regfit.full)$bic
+
+
+#using that you can choose your optimul model
+# for example the model with hiest adjuster R-squared
+which.max(summary(regfit.full)$adjr2)
+# or the model with lowest C_p
+which.min(summary(regfit.full)$cp)
+
+# or if we want to combine various critiria, it may be usufull to  visulise
+par(mfrow = c(2, 2))
+plot(summary(regfit.full)$adjr2, xlab= "Number of virables contained in the model", ylab="Adjasted R-squared")
+plot(summary(regfit.full)$cp, xlab= "Number of virables contained in the model", ylab="C_p")
+plot(summary(regfit.full)$bic, xlab= "Number of virables contained in the model", ylab="BIC")
+
+#we can see that propably something close to 10 whould be optimal, let's see the selected 10 variables and their coefficiants
+coef(regfit.full,10)
+
+```
+
+
 As you can see this is a very inclusive process, which is very usufull when you have only a few predictors to choose from. It is not however, computentionally light. For $p$ number of predictors, we have $p!$ possible combinations. So even if we have something like 10 features, we end up with having to train 3628800 models!This is why the following aproach was developed.
 
 ### Stepwise Selection
