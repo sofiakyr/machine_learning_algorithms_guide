@@ -85,7 +85,7 @@ Yes but if we split the data, how do we split it. Any random 70-80% sample will 
 If we want more accuracy we need to take more measurments. This is where a new method of assesment comes in, Cross-Validation. Instead of spliting the data in two blocks, we will split it in $k$ number of blocks containg an equall portion of the data. For each of those blocks we will:
 
 * Use all the remaining data (not contained in that block) to train the model
-* Use the data contained in that block to test the trained model. We calculate the chosen performance indicator (e.g. R-squared for) for the test data (found in the block).
+* Use the data contained in that block to test the trained model. We calculate the chosen performance indicator (e.g. sum of squared error (residuals)) for the test data (found in the block).
 
 We will repeat that for all the $k$ blocks. We then take the avarage performance indicator from all the $k$ indicators. This is our CV value.
 We can choose whatever value for k we want, to perform what is called k-fold cross validetion. It is usually advised to choose 5-fold or 10-fold depending on how much data and resources are available.
@@ -94,11 +94,112 @@ Apart from assisting in choosing the optimum coeficints for linear models, cross
 
 I whould recommend cross validention when you need to compare the performance of different machine learning algorithms on the same problem, when you do not have a lot of samples to simply trust the other methods, if computational power and complexity are not an issue, or if performance is crucial for your model. 
 
+
 ### Cross Validation in action
 
+For this example, which is also given by the book, we will use another dataset made by ISLR, the Auto dataset. The dataset consists of various car's consuption of fuel per mile and a few features that chould be related with this, such us their weight, horsepower and number of cylinder's. We will try an analyse this relationship using a linear model (We will only use horsepower to keep things simple and to the point). We will use k-fold validation to assess our model's performance. In particular we will look at two cases for CV:
+
+* LOOCV (Leave One Out Cross Validation), which is just an extreme case of normal CV where the number of block (k) selected are equall to the number of samples avalable. In other words each time our model will be trained using all the samples apart from one, that one will be used to asses it. This is a clearly computational expensive method, but mayight be usufull if we have very few samples to train our model with.
+
+* 10-k fold validation, where k=10
+
+```{r}
+#this library has functions that will allow us to perform k-fold validation
+install.packages('boot')
+library(boot)
+
+# Setting the seet to the same number will reproduce 'randomness' 
+# we need randomness in spliting the data to our blocks for k-fold cross validation
+set.seed(24)
+
+# gml() function withoud additional parameter will produce a linear model the same way lm() whould
+# gml() however works with the k-fold function we need to use later
+glm.fit <- glm(mpg~horsepower, data = Auto)
+# perform cv using the cv.gml function, if you dont specify how many blocks you want to split your data to, the function performs LOOCV by default
+cv <- cv.glm(Auto, glm.fit)
+# the delta is parameter from above that contains the average error calculated after performing CV for each sample
+cv$delta[1]
+
+# on its own an error does really show us samething, it is valable when we compare it with errors from other models so that we can see wich model is doing better.
+# To illustrate this, we will try and compare the errors given when we perform polynomial regression. Using a for() loop we will perform CV on mpg as a function of: # horsepower, horspower^2, horspower^3, horspower^4, horspower^5.
+
+#initialize a vector of 5 elements that will contain the errors for each model
+cv.error = c(1,2,3,4,5)
+#loop 5 times, each time for every model and add the error calculated to cv.error
+for (i in 1:5){
+  glm.fit = glm(mpg~poly(horsepower, i), data=Auto)
+  cv.error[i] = cv.glm(Auto, glm.fit)$delta[1]
+}
+#if we print out the errors we can see a significant improvement from the linear to the quatratic model (horspower^2)
+cv.error
+
+#Now we will repeat the evaluation of the same models, but using a 10-k fold CV.
+cv.error = c(1,2,3,4,5)
+for (i in 1:5){
+  glm.fit = glm(mpg~poly(horsepower, i), data=Auto)
+  #the only additional parameter is K, which we chose to set to 10 since we are looking to perform a 10-k fold cv
+  cv.error[i] = cv.glm(Auto, glm.fit, K=10)$delta[1]
+}
+
+#we can see that the results are quite similar (also the 10-k fold completed a lot faster, this is important especially if we had more data)
+cv.error
+
+```
 ## Selecting the optimal predictors for the model
 
 We have seen how to measure the model's fitness and account for overfiting (using any or combinations of the methods we have been discussing), so we can compare various models with different sets of predictors and see which ones are more effective. In this section we will present various automated approaches for performing feature selection, in order to uncover which set of predictors will yield the optimal result. 
+
+As we know, we want our model to have the lowest possible test error (which we can measure with cross validation) as well as a good balance beetween underfitting and overfitting (which we can measure using critira such us AIC or BIC). So one chould produce various models for his problem, using a deferent subset of the predictors each time. He chould them cross validate each or measure their AIC and choose the one with the smallest error. A more methodical way of doing so is the _best subset selection_ approach.
+
+### Best subset selection
+In this approach we will fit a models for every single possible combination of predictors, measure their performance and choose the optimal one. We will do so in a more orginized and efficient way, while choosing the wright performance critiria in each step of the selection process.
+
+STEPS:
+
+* First we define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total avarage of the reaction to give a prediction (this is nessasasry since all of the predictors chould be irrevant, it acts as a measurment of comparison)
+
+* Then we take every singe predictor and make a model containing only that predictor and the reaction. We meaure their performance using the R-squared. The best out of them is called the $M_1$ model, since it only contains a single predictor.
+
+* Then we take every combination of 2 predictors and fit a model out of each pair, we meaure all of their performance using the R-squared, the best out of them is called the  $M_2$ model.
+
+* Then we take every combination of 3 predictors and fit a model out of each 3 pairs, we meaure all of their performance using the R-squared, the best out of them is called the  $M_3$ model.
+
+* we repeat until there are no more combinations posible, we have reached the total number of predictors, let's call this the $M_p$ model.
+
+* We then take all our best models for each combination $M_0$, $M_1$, $M_2$, $M_3$...$M_p$ and perform cross validetion or meaure their adjusted R-square, the AIC or BIC critirium (or a combination of those performance indicators). And of cource, we choose the one with the least error.
+
+As you can see this is a very inclusive process, which is very usufull when you have only a few predictors to choose from. It is not however, computentionally light. For $p$ number of predictors, we have $p!$ possible combinations. So even if we have something like 10 features, we end up with having to train 3628800 models!This is why the following aproach was developed.
+
+### Stepwise Selection
+
+In this aproach we either start from the null model and incrementally add predictors (forward), or start with all the predictors and incrementally reduce them (backward).The computetional advantages from reducing the amount of models required comes from maintaining the previously selected best model, and only adding the most valuable predictor from the remaining ones, per iteration.
+
+Forward Stepwise Selection
+
+* Again, we will define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total avarage of the reaction to give a prediction
+
+* And start with considering all models that use one single predictor. Meaure their R-squared and choose the best one, this is the $M_1$ (up to know its the same as above)
+
+* Now we will start, one by one adding more predictors to $M_1$, each time measuring their performance and choosing to add the predictor that is adding the most value (increases the R-squared the most). First we create the $M_2$ model, which has two predictors. The one predictor comes from $M_1$ and the other will be selected form the remaing ones.To select that we need to add each remaining predictor to $M_1$ and choose the one that yields the hiest R-squared . 
+
+* Similarly we create the $M_3$ model. We keep the two predictors from $M_2$ and select onother one from the remaining, which will add the most value (as found from fitting a model for all the remaining predictors and measuring their R-squared)
+
+* We repeat until we have used all the predictors in the $M_p$ model
+
+* Just like before, we will choose to cross validate $M_0$, $M_1$, $M_2$, $M_3$...$M_p$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
+
+
+Backward Stepwise Selection
+
+* This time we start from the $M_p$ model, which contains all the predictors
+
+* We remove one predictor from $M_p$ and meaure the R-squared. We do this for all the predictors in $M_p$. Now we have measurments for all posible combinations with predictors p-1. We choose the one with the hiest R-squared, this is the $M_p-1$ model. Note that since we removed a predictor the R-squared of the new model will be smaller (we have explained that additional predictors will improve these measurment even if they are irelevant). However, this does not meaan it is not potentially a better model, when we compute its BIC, AIC or adjusted R-squared or if we choose to cross validate, the issues of overfitting will taken into account.
+
+* We repeat the process until we reach $M_0$, until all the predictors have been removed
+
+* Like always, we will choose to cross validate $M_p$, $M_p-1$, $M_p-2$, $M_p-3$....$M_0$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
+
+Forawrd and Backward selection will require a lot less copmutational power for larger p. However, since they do not check all posible combinations there is a risk that the concluding model may be not the most optimal. When having to choose between forward and backword, you should consider how much data is avalale. If you do not have samples that are greater than your predictors, backwards propagaton will not perform well. Since it starts with a model using all the predictors, a lot of issues with dimentionality will ocure (as we previously discussed). You may also want to consider whether you think most of your predictors are valuable (i whould go with backwards) or only some of them are (i whould go with forward). You may be able to stop the selection if at some point you do not see improvments, in order to be more resorce and time efficient.
 
 
 
