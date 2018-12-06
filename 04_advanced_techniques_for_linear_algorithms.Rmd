@@ -78,7 +78,7 @@ This is very similar to AIC, with the main deference been that a heavier penalty
 
 We now have a way to account for overfitting, when accessing our model. However, we are still only assesing our model on how well it is performing on the same data that it was trained with. We do not have any way of assessing how it whould do when new data comes in. 
 
-You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just need to calculate the R-squared, adjusted R-suered, $C_p$ or any other chosen critirum on the trained model, for that testing data. We now have a performance measument for a testing data! 
+You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just need to calculate the R-squared, adjusted R-suered, $C_p$ or any other chosen critirum on the trained model, for that testing data (this method is called validation). We now have a performance measument for a testing data! 
 
 Yes but if we split the data, how do we split it. Any random 70-80% sample will result in different estimates for our coefficients, since it will randomly contain different values for each predictors/reaction. Similarly any random 20-30% sample will result in varing mesearurments for our performance critiria. Those variations can be quite significant, especially when we do not have enough samples.
 
@@ -206,8 +206,68 @@ plot(summary(regfit.full)$adjr2, xlab= "Number of virables contained in the mode
 plot(summary(regfit.full)$cp, xlab= "Number of virables contained in the model", ylab="C_p")
 plot(summary(regfit.full)$bic, xlab= "Number of virables contained in the model", ylab="BIC")
 
-#we can see that propably something close to 10 whould be optimal, let's see the selected 10 variables and their coefficiants
+# We can see that propably something close to 10 whould be optimal, let's see the selected 10 variables and their coefficiants
 coef(regfit.full,10)
+
+library(leaps)
+# Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using critira such us adjusted R-squared, whould be cross validation. We will see how this chould be done here. We choose to perform a 10-k fold cv.
+
+# Let's set the seed again to ensure someone can repeat the test and get the same 'randomness'
+set.seed(1)
+
+# To perform 10-k fold cross validation, we first need to split the data in 10 folds (10 equall sized blockes).
+k <- 10
+# The way we split the data is we make a vector of size equall to nrow(Hitters) (the rows contained in the dataset Hitters), and each row will be assigned to a fold from 1 to 10 (sample 1:10). Since we want multibple rows to be part of the same fols we set replace=TRUE. Also because we haven't defined any paricular split ration, by default the split will be equall across the folds.
+folds <- sample(1:k, nrow(Hitters), replace=TRUE)
+#we can see that each row of the Hitters dataset has been assigned to one of the 10 k folds, in an equall manner
+folds
+# we also need a variable that will store all the calculated erros. In this case we will have 10 models (one for each fold) for every 19 different sets of variables (M0, M1, M2, ....M19 after performing best subset selection). If we want to be able to keep track of which model came from which fold and subset we need a matrix instead of a simple vector.
+cv.errors <- matrix(NA,k,19, dimnames = list(NULL, paste(1:19)))
+# we will fill this with the actualls erros later
+cv.errors
+
+# Now we need to create 10 models for each of the 19 subsets, using a different combination of 9 out of the 10 blocks each time (leaving one for testing). We will call the testing one j, in order to be able to destingues it and only use it for testing. Let's see this in practice:
+
+# for every j in k (we define j as a single fold. First it will be all the rows who where assigned with 1, then 2, 3 ...)
+for (j in 1:k) {
+  # create the 19 models using all the data apart from j (!=j)
+  best.fit <- regsubsets(Salary ~., data=Hitters[folds!=j,], nvmax = 19)
+# Now all we have to do, is for each 10 sets of models with the same params calculate the avarage testing error.
+for (i in 1:19) {
+  # first we need to find ou the values for salary that each model whould predict for our testing j fold
+   pred = predict(best.fit, Hitters[folds == j, ], id = i)
+  # then we measure the squared difference of the actuall salary from the predicted for each point, and we store their mean in our matrix
+  cv.errors[j,i] <- mean((Hitters$Salary[folds==j]-pred)^2)
+ }
+}
+# we can see the difference of the mean squared errors from the predicted to the actuall points. That is for every of the 10 folds for each of 19 subsets used.
+cv.errors
+
+# we want to get one arage value for each of 19 models so we can compare then and choose the optimal
+# the function apply will hepls in that
+mean.cv.error <- apply(cv.errors,2,mean)
+mean.cv.error
+
+#let plot them to see which models have the loest errors
+par(mflow=c(1,1))
+plot(mean.cv.error, type='b')
+
+# Please know the library for regsubsets did not have a build in function for predict, so we had to built one ourselfs
+# here is the code
+predict.regsubsets = function(object, newdata, id, ...) {
+    form = as.formula(object$call[[2]])
+    mat = model.matrix(form, newdata)
+    coefi = coef(object, id = id)
+    mat[, names(coefi)] %*% coefi
+}
+  
+# we can see that 10 and 11 are the smallest ones ( with 11 been the smalest), which is quite close to what we got from using critiria like the adjusted R-squared
+   
+   
+# Note:
+# An alternative to CV, that whould be more computationaly advatagious, is simple validation. We have mentioned that when introducting cross validation. Basicly we only split the data in two, a training and testing data set. We create all our models until Mp (by best selection or ather methods) using the training data. We then use the testing data to measure the sum of squared errors, or R-squared of that test data. We choose the one with the smallest test error. Of cource this calculation whould be highly dependant on how the data was split, and there is risk in not getting accurate measurments for the error.
+
+
 
 ```
 
@@ -233,6 +293,12 @@ Forward Stepwise Selection
 * Just like before, we will choose to cross validate $M_0$, $M_1$, $M_2$, $M_3$...$M_p$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
 
 
+```{r}
+forward <- regsubsets(Salary~., data=Hitters, nvmax = 19, method = "forward")
+summary(forward)
+```
+
+
 Backward Stepwise Selection
 
 * This time we start from the $M_p$ model, which contains all the predictors
@@ -243,7 +309,14 @@ Backward Stepwise Selection
 
 * Like always, we will choose to cross validate $M_p$, $M_p-1$, $M_p-2$, $M_p-3$....$M_0$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
 
+```{r}
+backward <- regsubsets(Salary~., data=Hitters, nvmax = 19, method = "backward")
+summary(backward)
+```
+
 Forawrd and Backward selection will require a lot less copmutational power for larger p. However, since they do not check all posible combinations there is a risk that the concluding model may be not the most optimal. When having to choose between forward and backword, you should consider how much data is avalale. If you do not have samples that are greater than your predictors, backwards propagaton will not perform well. Since it starts with a model using all the predictors, a lot of issues with dimentionality will ocure (as we previously discussed). You may also want to consider whether you think most of your predictors are valuable (i whould go with backwards) or only some of them are (i whould go with forward). You may be able to stop the selection if at some point you do not see improvments, in order to be more resorce and time efficient.
+
+If you want some middle ground between computational efficiency and getting closer to the optimal model, you can try a hybrit of forward and backward stepwise selection. In this case you whould start in a similar manner to forward selection, however after adding a new predictior each itteration (or in some of the itterations) you chould also check to see which predictor you could remove. By constantly adding and removing predictors you get to see more variations of the models. This whould start approaching the best subset selection while at the same time keep the focus only on incremental changes that offere the most value.
 
 
 
