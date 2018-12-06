@@ -318,6 +318,84 @@ Forawrd and Backward selection will require a lot less copmutational power for l
 
 If you want some middle ground between computational efficiency and getting closer to the optimal model, you can try a hybrit of forward and backward stepwise selection. In this case you whould start in a similar manner to forward selection, however after adding a new predictior each itteration (or in some of the itterations) you chould also check to see which predictor you could remove. By constantly adding and removing predictors you get to see more variations of the models. This whould start approaching the best subset selection while at the same time keep the focus only on incremental changes that offere the most value.
 
+## Shrinkage/Reguralization methods
+
+Such methods are used when we want to focus on reducing the variance of a linear mode (remember variance is assosiated with overfitting, when our model has a lower training error but high testing error). Some reaones why you need to further reduce variance chould be:
+
+* you have only a few training samples. As we discussed in 'curse of dimentionality' when we have only a few samples in ralation to how much predictors we have, our models will tend to be ovecondidenct and do well with training data but not testing data. Even in the case of having less samples than predictors, those methods will be able to prodide a working model.
+
+* you are more intersted in the predictive abilities of your model rather than its inference. In this case you are more interested on reducing the variance rather than the bias of the model. You want your model to do well on testing/new data
+
+* Multicolinearity is present on your model. Corelation between predictors causes your model to take into accound the same effects (from predictors) multiple times, as a result your model is oveconfidenct. You will have increased measurment of training error, but again a significantly worse measurment for testing error.
+
+Those methods are very similar to least squares, as we know it, however they will try to 'shrink' the estimates of the coefficients (move them more towards zero).
+Why whould that cause a reduction in variance? If we remember the linear equation $y= b_0 + b_1x_1 + b_2x_2..$, where $b_1$, $b_2$ are our coefficiants, the more they get closer to zero the more $x_1$ and $x_2$ will tend to zero. In other words the effect of the presdictors $x_1$ and $x_2$ (as it is measured from the given test sample) will have less of an effect to $y$ (the reaction). So if our current sample will have less of an effect in defining the line, then that line is more genaralized and (since it is less determined by just one sample) potentially it will perform better on testing/new data.
+
+There are a few ways to shrink (or as it also refered to as 'regularize') the coeficiants, which we will be looking at in this chapter.
+
+### Ridge regression
+
+As we know this methods are all close to linear regression. Ridge regresion will indeed, try to minimize the function of the leat squared error. However, it also wants to minimize the coefficients for our predictors. So we will also add the cofficient estimations to that function as a peanlty. The weight that this penalty will have is going to be specific to the particular problem, but is genarally represented as $\lambda$.
+In auther words least regresion attempts to minimize:
+
+$\sum RSS +\lambda (b_1^2 + b_2^2 + ...)$
+
+To claculate the $\lambda$ we use cross validation, we simply try out different values for it, and pick the one that yields the model with the least error. Generally, the closser the $\lambda$ is to zero, the less of an affect the penalty will have (e.g. if it is zero we are baasicly just minimizing the least squares), while the grater it is the more the coeficients will tend to zero.
+
+```{r}
+# this library has the function glmnet, which allows us to perform ridge regression and other such methods
+install.packages("glmnet")
+library(glmnet)
+
+# for our ridge regression we will need to choose some values for lambda, in order to compare the models they yield and find out the optimul value for lamda
+# a standart inclusive set, that we will use, is from 10^-2 until 10^10 
+grid <- 10^seq(10,-2,length = 100)
+
+# this function requires the parameter given a bit deferent that the usual y~.
+# for the predictors it wants them as a matrix, model.matrix() turns then in the required format and also deals with quantitative features
+x <- model.matrix(Salary~.,Hitters)[,-1]
+# the reaction needs to also be clearly defined
+y <- Hitters$Salary
+
+# Now that we have everything we can perform ridge regression:
+# altha means we want to perform ridge regression (glmnet also perform other methods)
+ridge.model <- glmnet(x,y, alpha = 0, lambda = grid)
+# we can see the coeficiants of a model with certain lamdba using the following
+# this returns the coefficiants with lamnbda=50 (the intercept and the following 19 coeficiants)
+coef(ridge.model)[,50]
+#or using the predict() function
+predict(ridge.model, s=50, type="coefficients")[1:20]
+
+# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We chould also compare our results to linear regression where lambda simple equals zero.
+```
+
+### Lasso regression
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
