@@ -210,6 +210,15 @@ plot(summary(regfit.full)$bic, xlab= "Number of virables contained in the model"
 coef(regfit.full,10)
 
 library(leaps)
+# Please know the library for regsubsets did not have a build in function for predict, so we had to built one ourselfs
+# here is the code
+predict.regsubsets = function(object, newdata, id, ...) {
+    form = as.formula(object$call[[2]])
+    mat = model.matrix(form, newdata)
+    coefi = coef(object, id = id)
+    mat[, names(coefi)] %*% coefi
+}
+
 # Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using critira such us adjusted R-squared, whould be cross validation. We will see how this chould be done here. We choose to perform a 10-k fold cv.
 
 # Let's set the seed again to ensure someone can repeat the test and get the same 'randomness'
@@ -251,15 +260,6 @@ mean.cv.error
 #let plot them to see which models have the loest errors
 par(mflow=c(1,1))
 plot(mean.cv.error, type='b')
-
-# Please know the library for regsubsets did not have a build in function for predict, so we had to built one ourselfs
-# here is the code
-predict.regsubsets = function(object, newdata, id, ...) {
-    form = as.formula(object$call[[2]])
-    mat = model.matrix(form, newdata)
-    coefi = coef(object, id = id)
-    mat[, names(coefi)] %*% coefi
-}
   
 # we can see that 10 and 11 are the smallest ones ( with 11 been the smalest), which is quite close to what we got from using critiria like the adjusted R-squared
    
@@ -366,7 +366,15 @@ coef(ridge.model)[,50]
 #or using the predict() function
 predict(ridge.model, s=50, type="coefficients")[1:20]
 
-# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We chould also compare our results to linear regression where lambda simple equals zero.
+# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We chould also compare our results to linear regression where lambda simple equals zero. Let's see an example:
+
+set.seed(1)
+train <- sample(1:nrow(x), nrow(x)/2)
+train
+test <- (-train)
+y.test = y[test]
+
+
 ```
 
 ### Lasso regression
