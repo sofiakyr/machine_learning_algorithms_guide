@@ -1,10 +1,11 @@
-.Rproj.user
-.Rhistory
+.DS_Store
 .RData
+.Rhistory
+.Rproj.user
 .Ruserdata
+.vscode
 _book
 _bookdown_files
 libs/
 packrat/lib*/
 packrat/src/
-.vscode
