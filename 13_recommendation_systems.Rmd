@@ -1,10 +1,10 @@
 # Recommendation Systems
 
-the application we will be referring to can be found here: <https://datasupport.site>
+The application we will be referring to can be found here: <https://datasupport.site>
 
 ## Recommending similar books. Content based filtering
 
-Fist we will create the algorithm that is used to recommend 'similar books' to the one the user just bought. That
+First we will create the algorithm that is used to recommend 'similar books' to the one the user just bought. That
 algorithm will simply look at how similar the book we just bought is, to other books available, according to the given
 attributes (author, genre, age). This approach is called Content based filtering.
 
@@ -59,7 +59,7 @@ intuition of what similarity is, let's see how it works!
 
 ```R
 
-# First we load the dataset i have prepared, it contains the following
+# First we load the dataset I have prepared, it contains the following
 # observations:
 # Books, which contain the book number (from 1 to 20), author (a, b, c, d), the
 # genre (pirate, alien, love, drama) and how many years ago the book was written
@@ -213,7 +213,7 @@ a lot of products.
 
 ```R
 
-# We load the data, this is a list that i have prepared, it contains the user,
+# We load the data, this is a list that I have prepared, it contains the user,
 # the book and the rating per row.
 # Each user has rated some of our books from 1 to 5 (where 5 is perfect)
 # Not every users has rated every book
@@ -497,5 +497,5 @@ that were bought by users that share similar attributes (e.g. sex, age, interest
 
 ## Conclusion
 
-This is by no means a complete guide on recommendation systems but i hope you were able to understand the concepts and
+This is by no means a complete guide on recommendation systems but I hope you were able to understand the concepts and
 appreciate the potential advantages as well as the challenges around them.
