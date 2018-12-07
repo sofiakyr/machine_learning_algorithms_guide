@@ -2,104 +2,100 @@
 
 ## Introduction
 
-In this chapter we will look into some more advanced ways of measuring the performace of our models as well improving it.
+In this chapter we will look into some more advanced ways of measuring the performance of our models as well improving it.
 
-Up to now we have been relating performance with how well our algorithm descibes the variation in our training data (remember how we defined R-squred).There is a major issue with this, the more predictors we add the more our model will become 'better' according to this definition. Remember we are only using a SAMPLE of TRAINING data, both for designing the model and for measuring its performance. This sample of training data will contain some noise (some randomness), and when we add a new predictor, even if its completly irrerevant, a weak relationship (either possitive or negative) will be found between that predictor and this randomness. The more of those irrelevant predictors we add, incrementally, we will start to describe this random variation better (in reality you can imagine this as shear luck). However this randomness is ONLY relavant to the sample data set that we happened to have, if we select another sample from the population we whould have a different noise and all those predictors that we though are adding value to our model whould only be causing issues. In this capter we will look into how we can mitigate this issue and optimize our models as well us measure their performance more accuratly. In this chapter we will look at doing so, while still building a linear-based model, you chould also mitigate this by using algorithms that are non-linear such us tree based ones.
+Up to now we have been relating performance with how well our algorithm describes the variation in our training data (remember how we defined R-squared).There is a major issue with this, the more predictors we add the more our model will become 'better' according to this definition. Remember we are only using a SAMPLE of TRAINING data, both for designing the model and for measuring its performance. This sample of training data will contain some noise (some randomness), and when we add a new predictor, even if its completely irrelevant, a weak relationship (either positive or negative) will be found between that predictor and this randomness. The more of those irrelevant predictors we add, incrementally, we will start to describe this random variation better (in reality you can imagine this as shear luck). However this randomness is ONLY relevant to the sample data set that we happened to have, if we select another sample from the population we would have a different noise and all those predictors that we though are adding value to our model would only be causing issues. In this chapter we will look into how we can mitigate this issue and optimise our models as well us measure their performance more accurately. In this chapter we will look at doing so, while still building a linear-based model, you could also mitigate this by using algorithms that are non-linear such us tree based ones.
 
 ### Bias Variance Trade Off
 
-The issue above is part off a majour concerd in machine learning, described as the _the bias variance trade off_ . Where bias describes how well a model fits in the training data, and variance how well it fits to the future/test data. In most cases there is a point where optimizing the model for the training data will start to cause overfiting. In other words, it will make the model very specific to that training sample and not genaralized enough to fit future samples.
+The issue above is part off a major concern in machine learning, described as the _the bias variance trade off_. Where bias describes how well a model fits in the training data, and variance how well it fits to the future/test data. In most cases there is a point where optimising the model for the training data will start to cause over-fitting. In other words, it will make the model very specific to that training sample and not generalised enough to fit future samples.
 
-In this chapter We will also look into alternatives to using the least square technique, in order to fit our line better, as well as other approaches to fitting linear-based models on non-linear problems.The reasone we really want to dive deep and try to optimize a linear model in that extend, instead of just using a non-linear one is because of its interpretability. Linear models, in real-life scenarios are superior in solving interference problems (finding relasionships between predictors and reaction).
+In this chapter We will also look into alternatives to using the least square technique, in order to fit our line better, as well as other approaches to fitting linear-based models on non-linear problems. The reason we really want to dive deep and try to optimise a linear model in that extend, instead of just using a non-linear one is because of its interpretability. Linear models, in real-life scenarios are superior in solving interference problems (finding relationships between predictors and reaction).
 
 ### Goals and expectations
 
-Like always, we will be explaining those aproaches in simple and comprehensive matter with code examples. However, it is beyone the goals of this guide to go into too much details. This chapter will be summirizing the techniques analyzed by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any backround in statistics or computer sience) to be able to understand when they are nessasry and how to apply them. For more details, I whould advise you to refer to that book, or online resources.
+Like always, we will be explaining those approaches in simple and comprehensive matter with code examples. However, it is beyond the goals of this guide to go into too much details. This chapter will be summarising the techniques analysed by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, in their book 'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any background in statistics or computer science) to be able to understand when they are necessary and how to apply them. For more details, I would advise you to refer to that book, or online resources.
 
 ## Improved performance indicators (adjusted R-squared and alternatives)
 
-As we mentioned before the R-squared, for measuring the performance of our linear model will continiously increase with the addition of relevant or irrelevnt predictors, resulting in overstimation of the models' fitness. A very simple but popular aproach in mitigating this, is the use of the _adjusted R-squared_ instead, wich adds a penalty for increased predictors in the formula. If we recall the formula for R-squared is $R^2 = 1- \frac{sum squared error}{total variation}$. For the adjusted R-suared we want this to be decreasing as the number of predictors are increasing. It is given by
+As we mentioned before the R-squared, for measuring the performance of our linear model will continuously increase with the addition of relevant or irrelevant predictors, resulting in overestimation of the models' fitness. A very simple but popular approach in mitigating this, is the use of the _adjusted R-squared_ instead, which adds a penalty for increased predictors in the formula. If we recall the formula for R-squared is $R^2 = 1- \frac{sum squared error}{total variation}$. For the adjusted R-squared we want this to be decreasing as the number of predictors are increasing. It is given by
 $R^2 = 1- \frac{\text{sum squared error/(n-d-1)}}{\text{total variation/(n-1)}}$, where n is the total number of samples and d is the degrees of freedom (total number of predictors -1).
 
-Why are we accounting for the number of samples? A simple explanation is that the more samples we have, the more confident we can be that the accuracy we measured on this bigger sample will be the closer for the total population. As the number of samples ($n$) increases , we can see that the adjusted R-squared also increases, as we whould expect from our intuition.This increase however, is relevant to how many predictors we have (since the nominator is divided by $n-d-1$). For example, if we take the case where d>n (we have more predictors than samples) the R-squared will decrease. Lets see more about the relationship between predictors and samples.
+Why are we accounting for the number of samples? A simple explanation is that the more samples we have, the more confident we can be that the accuracy we measured on this bigger sample will be the closer for the total population. As the number of samples ($n$) increases , we can see that the adjusted R-squared also increases, as we would expect from our intuition.This increase however, is relevant to how many predictors we have (since the nominator is divided by $n-d-1$). For example, if we take the case where d>n (we have more predictors than samples) the R-squared will decrease. Lets see more about the relationship between predictors and samples.
 
-### The curse of dimentionality
+### The curse of dimensionality
 
-This relationship between number of predictors and samples, is actually very crusial in measuring the performance of a linear model. Remember that each predictor is a dimention in the space which our samples are placed. The more dimenetions that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two models with the same number of samples, but different number of predictors, the model for which we chould be more confident on its accuracy, whould be the one with the least number of predictors!
+This relationship between number of predictors and samples, is actually very crucial in measuring the performance of a linear model. Remember that each predictor is a dimension in the space which our samples are placed. The more dimensions that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two models with the same number of samples, but different number of predictors, the model for which we could be more confident on its accuracy, would be the one with the least number of predictors!
 
-For the extreme case where the number of predictors are equall or less than the number of samples, the linear model is usless, as it whould result in extremely overconfident results. Let's see an example. Let's imagine with have two predictors (this means we have a 2 dimentional space drawn in the x and a y axis).
-We have an equal amount of samples (2 points) from which we will create our linear model, using the least squares fit. To draw a straigt line on the x and y axis we only need 2 points anyway, so our line fits perfectly the training data, we have 0 sum of squared error and therefore our classic R-squared is 1. Now we add another 100 samples from the same population on that plot and we see that the sum of squared error for those new points to the previously perfectly fit line is massive!
+For the extreme case where the number of predictors are equal or less than the number of samples, the linear model is useless, as it would result in extremely overconfident results. Let's see an example. Let's imagine with have two predictors (this means we have a 2 dimensional space drawn in the x and a y axis).
+We have an equal amount of samples (2 points) from which we will create our linear model, using the least squares fit. To draw a straight line on the x and y axis we only need 2 points anyway, so our line fits perfectly the training data, we have 0 sum of squared error and therefore our classic R-squared is 1. Now we add another 100 samples from the same population on that plot and we see that the sum of squared error for those new points to the previously perfectly fit line is massive!
 
-The problems caused by high dimentions is refered to us the curse of dimentionality. A high dimentional problem is usually one where number of predictors is close to or less than the number of samples. In order to perform linear regression on such problems we usually result in techniques for reducing the number of dimentions. We will look into those teqniques later on. For now we need to understand how the adjusted R-squred attempts to be a better measurment for model fitness, by accounting for this relationship between number of predictors and number of samples used.
+The problems caused by high dimensions is referred to us the curse of dimensionality. A high dimensional problem is usually one where number of predictors is close to or less than the number of samples. In order to perform linear regression on such problems we usually result in techniques for reducing the number of dimensions. We will look into those techniques later on. For now we need to understand how the adjusted R-squared attempts to be a better measurement for model fitness, by accounting for this relationship between number of predictors and number of samples used.
 
 
-The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have propably already noticed it.
+The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have probably already noticed it.
 
 ```{r}
-
 library(MASS)
 library(ISLR)
 #let's use our previous linear model of house values as a function of the Boston dataset attributes
 lm.rm_fit <- lm(medv~., data = Boston)
-# we can see that the R-squared and the adjusted R-squared are not too far off. The adjusted number is less, as expected it has paid the price of using multiple predictors, but we have enought samples to support most predictors. If we started removing predictors of less significance, we whould notice that the Adjusted R-squared and R-squared whould be closer to each other.
+# we can see that the R-squared and the adjusted R-squared are not too far off. The adjusted number is less, as expected it has paid the price of using multiple predictors, but we have enought samples to support most predictors. If we started removing predictors of less significance, we would notice that the Adjusted R-squared and R-squared would be closer to each other.
 summary(lm.rm_fit)
-
 ```
 
 ### Alternatives
 
-Although the motivation behind the adjusted R-squred is logical and it is a very popular aproach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
+Although the motivation behind the adjusted R-squared is logical and it is a very popular approach, it can not really be supported by any statistical theory. This why there are other alternatives available such us:
 
- * Mallows' $C_p$, computed by:
+* Mallows' $C_p$, computed by:
 
 $C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)$, where $d$ is the degrees of freedom and $\sigma^2$ is the approximated, using the training sample, population variance.
 
-A high $C_p$ measure means that the model is not a good fit. _This aproach tries to account for bias (overfitting due to additional irrelevant predictors) by looking at how spread out the data is whitin those predictors (remeber each predictor can be seen as a dimention)_. It uses the measure of unreducable error $\epsilon$ as a penanlty, $\epsilon = 2d \sigma^2$.
+A high $C_p$ measure means that the model is not a good fit. _This approach tries to account for bias (over-fitting due to additional irrelevant predictors) by looking at how spread out the data is within those predictors (remember each predictor can be seen as a dimension)_. It uses the measure of uneducable error $\epsilon$ as a penalty, $\epsilon = 2d \sigma^2$.
 
-Again the more the predictors increase ($d$ will increase) the higher the penalty will be. As for the $\sigma^2$ we can think of it as a regulator for that penatly. $\sigma^2$ meaures how spread out the data is, it makes sence that the more variation there is, the more spread out the data will be and the more the error will increase. While when $n$ icreases $C_p$ decreases, indicating better performance when more samples are avalable.
+Again the more the predictors increase ($d$ will increase) the higher the penalty will be. As for the $\sigma^2$ we can think of it as a regulator for that penalty. $\sigma^2$ measures how spread out the data is, it makes sense that the more variation there is, the more spread out the data will be and the more the error will increase. While when $n$ increases $C_p$ decreases, indicating better performance when more samples are available.
 
-Since $\sigma^2$ is estimated using the sample's $\sigma^2$, this critirium requires enought data to get a good aproximation and it will not perform well using small datasets. Furthmore, we have mentioned that the $\epsilon$ is underestimated when there are complications in the relationship of the predictors and the reaction (e.g. multicolinearity), in such cases $C_p$ will also not provide usufull insight.
+Since $\sigma^2$ is estimated using the sample's $\sigma^2$, this criterium requires enough data to get a good approximation and it will not perform well using small datasets. Furthermore, we have mentioned that the $\epsilon$ is underestimated when there are complications in the relationship of the predictors and the reaction (e.g. multicollinearity), in such cases $C_p$ will also not provide useful insight.
 
- * Akaike information critirion (AIC), computed by:
-
- $AIC = 2k - 2ln(L)$, where k is the number of predictor plus one, and L is the maximum value of the likelihood function for the model.
+* Akaike information criterion (AIC), computed by:
+  $AIC = 2k - 2ln(L)$, where k is the number of predictor plus one, and L is the maximum value of the likelihood function for the model.
 
 Again a small AIC, like a small $C_p$ indicated a good fit.
 
-As we know the maximum likelihood function is a way to find optimum fit. The higher that number is the more fit our model will be, resultingin a smaller AIC. However we still have a penalty related to how many predictors are used, this is the role of $2k$ in the equation.We will not go into too much details, but it has been found that AIC has an overall good performance in any model and data avalable, and quite often outperforms other methods when used for choosing predictors and finding the best model.
+As we know the maximum likelihood function is a way to find optimum fit. The higher that number is the more fit our model will be, resulting in a smaller AIC. However we still have a penalty related to how many predictors are used, this is the role of $2k$ in the equation.We will not go into too much details, but it has been found that AIC has an overall good performance in any model and data available, and quite often outperforms other methods when used for choosing predictors and finding the best model.
 
- * Bayesian information critirion (BIC), computed by:
+* Bayesian information criterion (BIC), computed by:
+  $BIC = ln(n)k - 2ln(L)$
 
- $BIC = ln(n)k - 2ln(L)$
-
-This is very similar to AIC, with the main deference been that a heavier penalty is given for models with increasing predictors, resulting in defining optimulal models those with less predictors.
+This is very similar to AIC, with the main deference been that a heavier penalty is given for models with increasing predictors, resulting in defining optimal models those with less predictors.
 
 ## Cross Validation
 
-We now have a way to account for overfitting, when accessing our model. However, we are still only assesing our model on how well it is performing on the same data that it was trained with. We do not have any way of assessing how it whould do when new data comes in.
+We now have a way to account for over-fitting, when accessing our model. However, we are still only assessing our model on how well it is performing on the same data that it was trained with. We do not have any way of assessing how it would do when new data comes in.
 
-You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just need to calculate the R-squared, adjusted R-suered, $C_p$ or any other chosen critirum on the trained model, for that testing data (this method is called validation). We now have a performance measument for a testing data!
+You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just need to calculate the R-squared, adjusted R-squared, $C_p$ or any other chosen criterion on the trained model, for that testing data (this method is called validation). We now have a performance measurement for a testing data!
 
-Yes but if we split the data, how do we split it. Any random 70-80% sample will result in different estimates for our coefficients, since it will randomly contain different values for each predictors/reaction. Similarly any random 20-30% sample will result in varing mesearurments for our performance critiria. Those variations can be quite significant, especially when we do not have enough samples.
+Yes but if we split the data, how do we split it. Any random 70-80% sample will result in different estimates for our coefficients, since it will randomly contain different values for each predictors/reaction. Similarly any random 20-30% sample will result in varying measurements for our performance criteria. Those variations can be quite significant, especially when we do not have enough samples.
 
-If we want more accuracy we need to take more measurments. This is where a new method of assesment comes in, Cross-Validation. Instead of spliting the data in two blocks, we will split it in $k$ number of blocks containg an equall portion of the data. For each of those blocks we will:
+If we want more accuracy we need to take more measurements. This is where a new method of assessment comes in, Cross-Validation. Instead of splitting the data in two blocks, we will split it in $k$ number of blocks containing an equal portion of the data. For each of those blocks we will:
 
 * Use all the remaining data (not contained in that block) to train the model
 * Use the data contained in that block to test the trained model. We calculate the chosen performance indicator (e.g. sum of squared error (residuals)) for the test data (found in the block).
 
-We will repeat that for all the $k$ blocks. We then take the avarage performance indicator from all the $k$ indicators. This is our CV value.
-We can choose whatever value for k we want, to perform what is called k-fold cross validetion. It is usually advised to choose 5-fold or 10-fold depending on how much data and resources are available.
+We will repeat that for all the $k$ blocks. We then take the average performance indicator from all the $k$ indicators. This is our CV value.
+We can choose whatever value for k we want, to perform what is called k-fold cross validation. It is usually advised to choose 5-fold or 10-fold depending on how much data and resources are available.
 
-Apart from assisting in choosing the optimum coeficints for linear models, cross validention is also a great to way to compare the performance of different machine learning algorithms. We can perform cross validation in any model, in a similar manner to what was previously described. It also has other applications, which we will look at later on.
+Apart from assisting in choosing the optimum coefficients for linear models, cross validation is also a great to way to compare the performance of different machine learning algorithms. We can perform cross validation in any model, in a similar manner to what was previously described. It also has other applications, which we will look at later on.
 
-I whould recommend cross validention when you need to compare the performance of different machine learning algorithms on the same problem, when you do not have a lot of samples to simply trust the other methods, if computational power and complexity are not an issue, or if performance is crucial for your model.
+I would recommend cross validation when you need to compare the performance of different machine learning algorithms on the same problem, when you do not have a lot of samples to simply trust the other methods, if computational power and complexity are not an issue, or if performance is crucial for your model.
 
 
 ### Cross Validation in action
 
-For this example, which is also given by the book, we will use another dataset made by ISLR, the Auto dataset. The dataset consists of various car's consuption of fuel per mile and a few features that chould be related with this, such us their weight, horsepower and number of cylinder's. We will try an analyse this relationship using a linear model (We will only use horsepower to keep things simple and to the point). We will use k-fold validation to assess our model's performance. In particular we will look at two cases for CV:
+For this example, which is also given by the book, we will use another dataset made by ISLR, the Auto dataset. The dataset consists of various car's consumption of fuel per mile and a few features that could be related with this, such us their weight, horsepower and number of cylinder's. We will try an analyse this relationship using a linear model (We will only use horsepower to keep things simple and to the point). We will use k-fold validation to assess our model's performance. In particular we will look at two cases for CV:
 
-* LOOCV (Leave One Out Cross Validation), which is just an extreme case of normal CV where the number of block (k) selected are equall to the number of samples avalable. In other words each time our model will be trained using all the samples apart from one, that one will be used to asses it. This is a clearly computational expensive method, but mayight be usufull if we have very few samples to train our model with.
+* LOOCV (Leave One Out Cross Validation), which is just an extreme case of normal CV where the number of block (k) selected are equal to the number of samples available. In other words each time our model will be trained using all the samples apart from one, that one will be used to asses it. This is a clearly computational expensive method, but might be useful if we have very few samples to train our model with.
 
 * 10-k fold validation, where k=10
 
@@ -114,7 +110,7 @@ library(boot)
 # we need randomness in spliting the data to our blocks for k-fold cross validation
 set.seed(24)
 
-# gml() function withoud additional parameter will produce a linear model the same way lm() whould
+# gml() function withoud additional parameter will produce a linear model the same way lm() would
 # gml() however works with the k-fold function we need to use later
 glm.fit <- glm(mpg~horsepower, data = Auto)
 # perform cv using the cv.gml function, if you dont specify how many blocks you want to split your data to, the function performs LOOCV by default
@@ -122,7 +118,7 @@ cv <- cv.glm(Auto, glm.fit)
 # the delta is parameter from above that contains the average error calculated after performing CV for each sample
 cv$delta[1]
 
-# on its own an error does really show us samething, it is valable when we compare it with errors from other models so that we can see wich model is doing better.
+# on its own an error does really show us samething, it is valable when we compare it with errors from other models so that we can see which model is doing better.
 # To illustrate this, we will try and compare the errors given when we perform polynomial regression. Using a for() loop we will perform CV on mpg as a function of: # horsepower, horspower^2, horspower^3, horspower^4, horspower^5.
 
 #initialize a vector of 5 elements that will contain the errors for each model
@@ -149,26 +145,26 @@ cv.error
 ```
 ## Selecting the optimal predictors for the model
 
-We have seen how to measure the model's fitness and account for overfiting (using any or combinations of the methods we have been discussing), so we can compare various models with different sets of predictors and see which ones are more effective. In this section we will present various automated approaches for performing feature selection, in order to uncover which set of predictors will yield the optimal result.
+We have seen how to measure the model's fitness and account for over-fitting (using any or combinations of the methods we have been discussing), so we can compare various models with different sets of predictors and see which ones are more effective. In this section we will present various automated approaches for performing feature selection, in order to uncover which set of predictors will yield the optimal result.
 
-As we know, we want our model to have the lowest possible test error (which we can measure with cross validation) as well as a good balance beetween underfitting and overfitting (which we can measure using critira such us AIC or BIC). So one chould produce various models for his problem, using a deferent subset of the predictors each time. He chould them cross validate each or measure their AIC and choose the one with the smallest error. A more methodical way of doing so is the _best subset selection_ approach.
+As we know, we want our model to have the lowest possible test error (which we can measure with cross validation) as well as a good balance between under-fitting and over-fitting (which we can measure using criterion such as AIC or BIC). So one could produce various models for his problem, using a deferent subset of the predictors each time. He could them cross validate each or measure their AIC and choose the one with the smallest error. A more methodical way of doing so is the _best subset selection_ approach.
 
 ### Best subset selection
-In this approach we will fit a models for every single possible combination of predictors, measure their performance and choose the optimal one. We will do so in a more orginized and efficient way, while choosing the wright performance critiria in each step of the selection process.
+In this approach we will fit a models for every single possible combination of predictors, measure their performance and choose the optimal one. We will do so in a more organised and efficient way, while choosing the right performance criteria in each step of the selection process.
 
 STEPS:
 
-* First we define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total avarage of the reaction to give a prediction (this is nessasasry since all of the predictors chould be irrevant, it acts as a measurment of comparison)
+* First we define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total average of the reaction to give a prediction (this is necessary since all of the predictors could be irreverent, it acts as a measurement of comparison)
 
-* Then we take every singe predictor and make a model containing only that predictor and the reaction. We meaure their performance using the R-squared. The best out of them is called the $M_1$ model, since it only contains a single predictor.
+* Then we take every singe predictor and make a model containing only that predictor and the reaction. We measure their performance using the R-squared. The best out of them is called the $M_1$ model, since it only contains a single predictor.
 
-* Then we take every combination of 2 predictors and fit a model out of each pair, we meaure all of their performance using the R-squared, the best out of them is called the  $M_2$ model.
+* Then we take every combination of 2 predictors and fit a model out of each pair, we measure all of their performance using the R-squared, the best out of them is called the  $M_2$ model.
 
-* Then we take every combination of 3 predictors and fit a model out of each 3 pairs, we meaure all of their performance using the R-squared, the best out of them is called the  $M_3$ model.
+* Then we take every combination of 3 predictors and fit a model out of each 3 pairs, we measure all of their performance using the R-squared, the best out of them is called the  $M_3$ model.
 
-* we repeat until there are no more combinations posible, we have reached the total number of predictors, let's call this the $M_p$ model.
+* we repeat until there are no more combinations possible, we have reached the total number of predictors, let's call this the $M_p$ model.
 
-* We then take all our best models for each combination $M_0$, $M_1$, $M_2$, $M_3$...$M_p$ and perform cross validetion or meaure their adjusted R-square, the AIC or BIC critirium (or a combination of those performance indicators). And of cource, we choose the one with the least error.
+* We then take all our best models for each combination $M_0$, $M_1$, $M_2$, $M_3$...$M_p$ and perform cross validation or measure their adjusted R-square, the AIC or BIC criterion (or a combination of those performance indicators). And of course, we choose the one with the least error.
 
 ```{r eval=FALSE}
 install.packages("leaps")
@@ -191,27 +187,27 @@ regfit.full <- regsubsets(Salary~., Hitters, nvmax = 19 )
 summary(regfit.full)
 
 #you can viwe performance indicators for each model such us:
-#adjusted R-squred
+#adjusted R-squared
 summary(regfit.full)$adjr2
 #the C_p value
 summary(regfit.full)$cp
-#BIC critirium
+#BIC criterion
 summary(regfit.full)$bic
 
 
 #using that you can choose your optimul model
-# for example the model with hiest adjuster R-squared
+# for example the model with highest adjuster R-squared
 which.max(summary(regfit.full)$adjr2)
 # or the model with lowest C_p
 which.min(summary(regfit.full)$cp)
 
-# or if we want to combine various critiria, it may be usufull to  visulise
+# or if we want to combine various criteria, it may be useful to  visulise
 par(mfrow = c(2, 2))
 plot(summary(regfit.full)$adjr2, xlab= "Number of virables contained in the model", ylab="Adjasted R-squared")
 plot(summary(regfit.full)$cp, xlab= "Number of virables contained in the model", ylab="C_p")
 plot(summary(regfit.full)$bic, xlab= "Number of virables contained in the model", ylab="BIC")
 
-# We can see that propably something close to 10 whould be optimal, let's see the selected 10 variables and their coefficiants
+# We can see that probably something close to 10 would be optimal, let's see the selected 10 variables and their coefficients
 coef(regfit.full,10)
 
 library(leaps)
@@ -224,16 +220,16 @@ predict.regsubsets = function(object, newdata, id, ...) {
     mat[, names(coefi)] %*% coefi
 }
 
-# Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using critira such us adjusted R-squared, whould be cross validation. We will see how this chould be done here. We choose to perform a 10-k fold cv.
+# Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using critira such us adjusted R-squared, would be cross validation. We will see how this could be done here. We choose to perform a 10-k fold cv.
 
 # Let's set the seed again to ensure someone can repeat the test and get the same 'randomness'
 set.seed(1)
 
-# To perform 10-k fold cross validation, we first need to split the data in 10 folds (10 equall sized blockes).
+# To perform 10-k fold cross validation, we first need to split the data in 10 folds (10 equal sized blockes).
 k <- 10
-# The way we split the data is we make a vector of size equall to nrow(Hitters) (the rows contained in the dataset Hitters), and each row will be assigned to a fold from 1 to 10 (sample 1:10). Since we want multibple rows to be part of the same fols we set replace=TRUE. Also because we haven't defined any paricular split ration, by default the split will be equall across the folds.
+# The way we split the data is we make a vector of size equal to nrow(Hitters) (the rows contained in the dataset Hitters), and each row will be assigned to a fold from 1 to 10 (sample 1:10). Since we want multibple rows to be part of the same fols we set replace=TRUE. Also because we haven't defined any paricular split ration, by default the split will be equal across the folds.
 folds <- sample(1:k, nrow(Hitters), replace=TRUE)
-#we can see that each row of the Hitters dataset has been assigned to one of the 10 k folds, in an equall manner
+#we can see that each row of the Hitters dataset has been assigned to one of the 10 k folds, in an equal manner
 folds
 # we also need a variable that will store all the calculated erros. In this case we will have 10 models (one for each fold) for every 19 different sets of variables (M0, M1, M2, ....M19 after performing best subset selection). If we want to be able to keep track of which model came from which fold and subset we need a matrix instead of a simple vector.
 cv.errors <- matrix(NA,k,19, dimnames = list(NULL, paste(1:19)))
@@ -248,7 +244,7 @@ for (j in 1:k) {
   best.fit <- regsubsets(Salary ~., data=Hitters[folds!=j,], nvmax = 19)
 # Now all we have to do, is for each 10 sets of models with the same params calculate the avarage testing error.
 for (i in 1:19) {
-  # first we need to find ou the values for salary that each model whould predict for our testing j fold
+  # first we need to find ou the values for salary that each model would predict for our testing j fold
    pred = predict(best.fit, Hitters[folds == j, ], id = i)
   # then we measure the squared difference of the actuall salary from the predicted for each point, and we store their mean in our matrix
   cv.errors[j,i] <- mean((Hitters$Salary[folds==j]-pred)^2)
@@ -266,36 +262,36 @@ mean.cv.error
 par(mflow=c(1,1))
 plot(mean.cv.error, type='b')
 
-# we can see that 10 and 11 are the smallest ones ( with 11 been the smalest), which is quite close to what we got from using critiria like the adjusted R-squared
+# we can see that 10 and 11 are the smallest ones ( with 11 been the smalest), which is quite close to what we got from using criteria like the adjusted R-squared
 
 
 # Note:
-# An alternative to CV, that whould be more computationaly advatagious, is simple validation. We have mentioned that when introducting cross validation. Basicly we only split the data in two, a training and testing data set. We create all our models until Mp (by best selection or ather methods) using the training data. We then use the testing data to measure the sum of squared errors, or R-squared of that test data. We choose the one with the smallest test error. Of cource this calculation whould be highly dependant on how the data was split, and there is risk in not getting accurate measurments for the error.
+# An alternative to CV, that would be more computationaly advatagious, is simple validation. We have mentioned that when introducting cross validation. Basicly we only split the data in two, a training and testing data set. We create all our models until Mp (by best selection or ather methods) using the training data. We then use the testing data to measure the sum of squared errors, or R-squared of that test data. We choose the one with the smallest test error. Of course this calculation would be highly dependant on how the data was split, and there is risk in not getting accurate measurements for the error.
 
 
 
 ```
 
 
-As you can see this is a very inclusive process, which is very usufull when you have only a few predictors to choose from. It is not however, computentionally light. For $p$ number of predictors, we have $p!$ possible combinations. So even if we have something like 10 features, we end up with having to train 3628800 models!This is why the following aproach was developed.
+As you can see this is a very inclusive process, which is very useful when you have only a few predictors to choose from. It is not however, computationally light. For $p$ number of predictors, we have $p!$ possible combinations. So even if we have something like 10 features, we end up with having to train 3628800 models!This is why the following approach was developed.
 
 ### Stepwise Selection
 
-In this aproach we either start from the null model and incrementally add predictors (forward), or start with all the predictors and incrementally reduce them (backward).The computetional advantages from reducing the amount of models required comes from maintaining the previously selected best model, and only adding the most valuable predictor from the remaining ones, per iteration.
+In this approach we either start from the null model and incrementally add predictors (forward), or start with all the predictors and incrementally reduce them (backward).The computational advantages from reducing the amount of models required comes from maintaining the previously selected best model, and only adding the most valuable predictor from the remaining ones, per iteration.
 
 Forward Stepwise Selection
 
-* Again, we will define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total avarage of the reaction to give a prediction
+* Again, we will define the 'null Model', this is a model of 0 predictors $M_0$, that simply uses the total average of the reaction to give a prediction
 
-* And start with considering all models that use one single predictor. Meaure their R-squared and choose the best one, this is the $M_1$ (up to know its the same as above)
+* And start with considering all models that use one single predictor. Measure their R-squared and choose the best one, this is the $M_1$ (up to know its the same as above)
 
-* Now we will start, one by one adding more predictors to $M_1$, each time measuring their performance and choosing to add the predictor that is adding the most value (increases the R-squared the most). First we create the $M_2$ model, which has two predictors. The one predictor comes from $M_1$ and the other will be selected form the remaing ones.To select that we need to add each remaining predictor to $M_1$ and choose the one that yields the hiest R-squared .
+* Now we will start, one by one adding more predictors to $M_1$, each time measuring their performance and choosing to add the predictor that is adding the most value (increases the R-squared the most). First we create the $M_2$ model, which has two predictors. The one predictor comes from $M_1$ and the other will be selected form the remaining ones.To select that we need to add each remaining predictor to $M_1$ and choose the one that yields the highest R-squared.
 
-* Similarly we create the $M_3$ model. We keep the two predictors from $M_2$ and select onother one from the remaining, which will add the most value (as found from fitting a model for all the remaining predictors and measuring their R-squared)
+* Similarly we create the $M_3$ model. We keep the two predictors from $M_2$ and select another one from the remaining, which will add the most value (as found from fitting a model for all the remaining predictors and measuring their R-squared)
 
 * We repeat until we have used all the predictors in the $M_p$ model
 
-* Just like before, we will choose to cross validate $M_0$, $M_1$, $M_2$, $M_3$...$M_p$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
+* Just like before, we will choose to cross validate $M_0$, $M_1$, $M_2$, $M_3$...$M_p$, or measure some other performance criteria that accounts for over-fitting (or take a combination). Then we can choose the optimal model.
 
 
 ```{r}
@@ -308,44 +304,44 @@ Backward Stepwise Selection
 
 * This time we start from the $M_p$ model, which contains all the predictors
 
-* We remove one predictor from $M_p$ and meaure the R-squared. We do this for all the predictors in $M_p$. Now we have measurments for all posible combinations with predictors p-1. We choose the one with the hiest R-squared, this is the $M_p-1$ model. Note that since we removed a predictor the R-squared of the new model will be smaller (we have explained that additional predictors will improve these measurment even if they are irelevant). However, this does not meaan it is not potentially a better model, when we compute its BIC, AIC or adjusted R-squared or if we choose to cross validate, the issues of overfitting will taken into account.
+* We remove one predictor from $M_p$ and measure the R-squared. We do this for all the predictors in $M_p$. Now we have measurements for all possible combinations with predictors p-1. We choose the one with the highest R-squared, this is the $M_p-1$ model. Note that since we removed a predictor the R-squared of the new model will be smaller (we have explained that additional predictors will improve these measurement even if they are irrelevant). However, this does not mean it is not potentially a better model, when we compute its BIC, AIC or adjusted R-squared or if we choose to cross validate, the issues of over-fitting will taken into account.
 
 * We repeat the process until we reach $M_0$, until all the predictors have been removed
 
-* Like always, we will choose to cross validate $M_p$, $M_p-1$, $M_p-2$, $M_p-3$....$M_0$, or measure some other performance critiria that accounds for overfitting (or take a combination). Then we can choose the optimal model.
+* Like always, we will choose to cross validate $M_p$, $M_p-1$, $M_p-2$, $M_p-3$....$M_0$, or measure some other performance criteria that accounts for over-fitting (or take a combination). Then we can choose the optimal model.
 
 ```{r}
 backward <- regsubsets(Salary~., data=Hitters, nvmax = 19, method = "backward")
 summary(backward)
 ```
 
-Forawrd and Backward selection will require a lot less copmutational power for larger p. However, since they do not check all posible combinations there is a risk that the concluding model may be not the most optimal. When having to choose between forward and backword, you should consider how much data is avalale. If you do not have samples that are greater than your predictors, backwards propagaton will not perform well. Since it starts with a model using all the predictors, a lot of issues with dimentionality will ocure (as we previously discussed). You may also want to consider whether you think most of your predictors are valuable (i whould go with backwards) or only some of them are (i whould go with forward). You may be able to stop the selection if at some point you do not see improvments, in order to be more resorce and time efficient.
+Forward and Backward selection will require a lot less computational power for larger p. However, since they do not check all possible combinations there is a risk that the concluding model may be not the most optimal. When having to choose between forward and backward, you should consider how much data is available. If you do not have samples that are greater than your predictors, backwards propagation will not perform well. Since it starts with a model using all the predictors, a lot of issues with dimensionality will occur (as we previously discussed). You may also want to consider whether you think most of your predictors are valuable (i would go with backwards) or only some of them are (i would go with forward). You may be able to stop the selection if at some point you do not see improvements, in order to be more resource and time efficient.
 
-If you want some middle ground between computational efficiency and getting closer to the optimal model, you can try a hybrit of forward and backward stepwise selection. In this case you whould start in a similar manner to forward selection, however after adding a new predictior each itteration (or in some of the itterations) you chould also check to see which predictor you could remove. By constantly adding and removing predictors you get to see more variations of the models. This whould start approaching the best subset selection while at the same time keep the focus only on incremental changes that offere the most value.
+If you want some middle ground between computational efficiency and getting closer to the optimal model, you can try a hybrid of forward and backward stepwise selection. In this case you would start in a similar manner to forward selection, however after adding a new predictor each iteration (or in some of the iterations) you could also check to see which predictor you could remove. By constantly adding and removing predictors you get to see more variations of the models. This would start approaching the best subset selection while at the same time keep the focus only on incremental changes that offer the most value.
 
-## Shrinkage/Reguralization methods
+## Shrinkage/Regularisation methods
 
-Such methods are used when we want to focus on reducing the variance of a linear mode (remember variance is assosiated with overfitting, when our model has a lower training error but high testing error). Some reaones why you need to further reduce variance chould be:
+Such methods are used when we want to focus on reducing the variance of a linear mode (remember variance is associated with over-fitting, when our model has a lower training error but high testing error). Some reasons why you need to further reduce variance could be:
 
-* you have only a few training samples. As we discussed in 'curse of dimentionality' when we have only a few samples in ralation to how much predictors we have, our models will tend to be ovecondidenct and do well with training data but not testing data. Even in the case of having less samples than predictors, those methods will be able to prodide a working model.
+* you have only a few training samples. As we discussed in 'curse of dimensionality' when we have only a few samples in relation to how much predictors we have, our models will tend to be overconfident and do well with training data but not testing data. Even in the case of having less samples than predictors, those methods will be able to provide a working model.
 
-* you are more intersted in the predictive abilities of your model rather than its inference. In this case you are more interested on reducing the variance rather than the bias of the model. You want your model to do well on testing/new data
+* you are more interested in the predictive abilities of your model rather than its inference. In this case you are more interested on reducing the variance rather than the bias of the model. You want your model to do well on testing/new data
 
-* Multicolinearity is present on your model. Corelation between predictors causes your model to take into accound the same effects (from predictors) multiple times, as a result your model is oveconfidenct. You will have increased measurment of training error, but again a significantly worse measurment for testing error.
+* Multicollinearity is present on your model. Correlation between predictors causes your model to take into account the same effects (from predictors) multiple times, as a result your model is overconfident. You will have increased measurement of training error, but again a significantly worse measurement for testing error.
 
 Those methods are very similar to least squares, as we know it, however they will try to 'shrink' the estimates of the coefficients (move them more towards zero).
-Why whould that cause a reduction in variance? If we remember the linear equation $y= b_0 + b_1x_1 + b_2x_2..$, where $b_1$, $b_2$ are our coefficiants, the more they get closer to zero the more $x_1$ and $x_2$ will tend to zero. In other words the effect of the presdictors $x_1$ and $x_2$ (as it is measured from the given test sample) will have less of an effect to $y$ (the reaction). So if our current sample will have less of an effect in defining the line, then that line is more genaralized and (since it is less determined by just one sample) potentially it will perform better on testing/new data.
+Why would that cause a reduction in variance? If we remember the linear equation $y= b_0 + b_1x_1 + b_2x_2..$, where $b_1$, $b_2$ are our coefficients, the more they get closer to zero the more $x_1$ and $x_2$ will tend to zero. In other words the effect of the predictors $x_1$ and $x_2$ (as it is measured from the given test sample) will have less of an effect to $y$ (the reaction). So if our current sample will have less of an effect in defining the line, then that line is more generalised and (since it is less determined by just one sample) potentially it will perform better on testing/new data.
 
-There are a few ways to shrink (or as it also refered to as 'regularize') the coeficiants, which we will be looking at in this chapter
+There are a few ways to shrink (or as it also referred to as 'regularise') the coefficients, which we will be looking at in this chapter
 
 ### Ridge regression
 
-As we know this methods are all close to linear regression. Ridge regresion will indeed, try to minimize the function of the leat squared error. However, it also wants to minimize the coefficients for our predictors. So we will also add the cofficient estimations to that function as a peanlty. The weight that this penalty will have is going to be specific to the particular problem, but is genarally represented as $\lambda$.
-In auther words least regresion attempts to minimize:
+As we know this methods are all close to linear regression. Ridge regression will indeed, try to minimise the function of the leat squared error. However, it also wants to minimise the coefficients for our predictors. So we will also add the coefficient estimations to that function as a penalty. The weight that this penalty will have is going to be specific to the particular problem, but is generally represented as $\lambda$.
+In other words least regression attempts to minimise:
 
 $\sum RSS +\lambda (b_1^2 + b_2^2 + ...)$
 
-To claculate the $\lambda$ we use cross validation, we simply try out different values for it, and pick the one that yields the model with the least error. Generally, the closser the $\lambda$ is to zero, the less of an affect the penalty will have (e.g. if it is zero we are baasicly just minimizing the least squares), while the grater it is the more the coeficients will tend to zero.
+To calculate the $\lambda$ we use cross validation, we simply try out different values for it, and pick the one that yields the model with the least error. Generally, the closer the $\lambda$ is to zero, the less of an affect the penalty will have (e.g. if it is zero we are basically just minimising the least squares), while the grater it is the more the coefficients will tend to zero.
 
 ```{r eval=FALSE}
 # this library has the function glmnet, which allows us to perform ridge regression and other such methods
@@ -367,23 +363,23 @@ y <- Hitters$Salary
 # Now that we have everything we can perform ridge regression:
 # altha means we want to perform ridge regression (glmnet also perform other methods)
 ridge.model <- glmnet(x,y, alpha = 0, lambda = grid)
-# we can see the coeficiants of a model with certain lamdba using the following
-# this returns the coefficiants with lamnbda=50 (the intercept and the following 19 coeficiants)
+# we can see the coefficients of a model with certain lambda using the following
+# this returns the coefficients with lamnbda=50 (the intercept and the following 19 coefficients)
 coef(ridge.model)[,50]
 #or using the predict() function
 predict(ridge.model, s=50, type="coefficients")[1:20]
 
-# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
+# in order to choose which lambda to use, we need to followe a similar procedure to what we have done previously. We would split our data in two sets, training and testing. We would use the training to create our models and the test to measure their testing mean squared error. We would then pick the one with the least error. Or we could manually try out different lambdas and see at which lambda we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
 
 set.seed(1)
-# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in 80%-20% for training and testing 
+# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in 80%-20% for training and testing
 train <- sample(1:nrow(x), nrow(x)*0.8)
 train
 test <- (-train)
 # this is the indexes of the reaction attribute for the test data
 y.test = y[test]
 #set up a vector to store mean squared error for each model for each value of lamda
-# in this case we have selected to start measuring the perfomance of various lamdba values, that have a siginificant distance from each other. We can then see which performs better out of them and then make even more trials with numbers close to that (notice how one of the values of lambda is zero. This will result in performing simple least squares (linear regression). It is usufull to include such a model, in the comparison, to ensure ridge regression is actually optimal for our problem)
+# in this case we have selected to start measuring the perfomance of various lambda values, that have a siginificant distance from each other. We can then see which performs better out of them and then make even more trials with numbers close to that (notice how one of the values of lambda is zero. This will result in performing simple least squares (linear regression). It is useful to include such a model, in the comparison, to ensure ridge regression is actually optimal for our problem)
 errors <- c(0.2,0,1,5,10,50,100)
 
 #now we can prerform ridge regression just like before, using only the training data
@@ -397,23 +393,23 @@ for (i in 1:7) {
 errors
 # we see that a large lambda seems to be improving the error (7 is the index for 100)
 which.min(errors)
-# let's see the suggested coeficients for lamdba =100
+# let's see the suggested coeficients for lambda = 100
 coef(ridge.model)[,100]
 ```
 
-We noticed that even with such a large lamdba the coefficients have been minimized but none of them is zero. Effectivly what this means is that we cannot exclude any predictor. As we know, having less predictors chould potentially improve our model's predictive acuraccy and if the coefficiants are very small we have to consider if it is worth keeping the relative predictors. This is why the following method, LASSO was developed. It works very similar to ridge regression, however it can produce models coefficiants equall to zero.
+We noticed that even with such a large lambda the coefficients have been minimised but none of them is zero. Effectively what this means is that we cannot exclude any predictor. As we know, having less predictors could potentially improve our model's predictive accuracy and if the coefficients are very small we have to consider if it is worth keeping the relative predictors. This is why the following method, LASSO was developed. It works very similar to ridge regression, however it can produce models coefficients equal to zero.
 
-Note: in this example we looking at linear regression. However, ridge regression and the following methods, can also be applied to logistic regression. The only difference whould be that we whould be looking to minimize the odds of the likelihood, instead of the mean squared error (plus of cource, the estimetes for the coefficients).
+Note: in this example we looking at linear regression. However, ridge regression and the following methods, can also be applied to logistic regression. The only difference would be that we would be looking to minimise the odds of the likelihood, instead of the mean squared error (plus of course, the estimates for the coefficients).
 
 ### Lasso regression
 
-The lasso regression tryies to minimize the following function:
+The lasso regression tries to minimise the following function:
 
 $\sum RSS +\lambda |b_1| + |b_2| + ...$
 
-This is very similar to Ridge regression, as we have already mentiod. Lasso minimizes the absolute value instead of the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.
+This is very similar to Ridge regression, as we have already mentioned. Lasso minimises the absolute value instead of the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.
 
-The reaon you whould chouse Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actually usufull. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
+The reason you would choose Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actually useful. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
 
 ```{r}
 
@@ -438,15 +434,15 @@ predict(model,type="coefficients", s = Bestlambda)
 ```
 
 As expected a couple of the coefficients were estimated at zero, reducing the number of predictors in our model.
-We have seen an alternative regularization method for estimating coefficients when we know most of our features are usufull (ridge regression) and an alternative for when we suspect some of them are not usufull (lasso). What if we have no idea if our features are usufull or not, what if we have so many features that we cannot know? In this case you whould use the last option elastic net regression which is basicly a hybrit of ridge and lasso regression.
+We have seen an alternative regularisation method for estimating coefficients when we know most of our features are useful (ridge regression) and an alternative for when we suspect some of them are not useful (lasso). What if we have no idea if our features are useful or not, what if we have so many features that we cannot know? In this case you would use the last option elastic net regression which is basically a hybrid of ridge and lasso regression.
 
 ### Elastic Net Regression
 
-The Elastic Net regression tryies to minimize the following function:
+The Elastic Net regression tries to minimise the following function:
 
 $\sum RSS +\lambda_1 |b_1| + |b_2| + ...+\lambda_2 (b_1^2 + b_2^2 + ...)$
 
-It is clear that this is a combination of ridge and lasso regression. It tryies to combine the benefits of the two and is usully used for the case where too many features are avalable, and we cannot distinguess if they are usfull or not. Elastic net regression is also found to takle multicolinarity more effectively. The optimul values for $\lambda_1$ and $\lambda_2$, are found using cross validation, where we trial different combinations of values for each parameter.
+It is clear that this is a combination of ridge and lasso regression. It tries to combine the benefits of the two and is usually used for the case where too many features are available, and we cannot distinguishes if they are useful or not. Elastic net regression is also found to tackle multicollinearity more effectively. The optimal values for $\lambda_1$ and $\lambda_2$, are found using cross validation, where we trial different combinations of values for each parameter.
 
 ```{r}
 set.seed(1)
