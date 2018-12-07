@@ -163,8 +163,10 @@ data$Age[is.na(data$Age)] = mean(data$Age, na.rm = TRUE)
 # Remove attributes that are not valuable
 install.packages("dplyr")
 ```
-```{r}
+```{r message=FALSE}
 library(dplyr)
+```
+```{r}
 data <- data %>% select(-c(Cabin, PassengerId, Ticket, Name))
 
 # Use factors for the following attributes:
