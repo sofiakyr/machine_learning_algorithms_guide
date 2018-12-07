@@ -435,16 +435,26 @@ We have seen an alternative regularization method for estimating coefficients wh
 
 ### Elastic Net Regression
 
+The Elastic Net regression tryies to minimize the following function:
 
+$\sum RSS +\lambda_1 |b_1| + |b_2| + ...+\lambda_2 (b_1^2 + b_2^2 + ...)$
 
+It is clear that this is a combination of ridge and lasso regression. It tryies to combine the benefits of the two and is usully used for the case where too many features are avalable, and we cannot distinguess if they are usfull or not. Elastic net regression is also found to takle multicolinarity more effectively. The optimul values for $\lambda_1$ and $\lambda_2$, are found using cross validation, where we trial different combinations of values for each parameter.
 
+```{r}
+set.seed(1)
+# alpha=0.5 for elastic net
+elnet <- cv.glmnet(x[train,], y[train],alpha=0.5)
+Bestlambda <- elnet$lambda.min
+Bestlambda
+#error
+pred <- predict(elnet, s = Bestlambda, newx =x[test,])
+mean((pred - y.test)^2)
+#coefficients
+model <- glmnet(x,y,alpha = 0.5,lambda=grid)
+predict(model,type ="coefficients", s = Bestlambda)
 
-
-
-
-
-
-
+```
 
 
 
