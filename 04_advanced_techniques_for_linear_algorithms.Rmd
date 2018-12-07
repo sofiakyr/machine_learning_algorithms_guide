@@ -25,7 +25,7 @@ Why are we accounting for the number of samples? A simple explanation is that th
 
 ### The curse of dimensionality
 
-This relationship between number of predictors and samples, is actually very crucial in measuring the performance of a linear model. Remember that each predictor is a dimension in the space which our samples are placed. The more dimensions that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two models with the same number of samples, but different number of predictors, the model for which we could be more confident on its accuracy, would be the one with the least number of predictors!
+This relationship between number of predictors and samples, is actualy very crucial in measuring the performance of a linear model. Remember that each predictor is a dimension in the space which our samples are placed. The more dimensions that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two models with the same number of samples, but different number of predictors, the model for which we could be more confident on its accuracy, would be the one with the least number of predictors!
 
 For the extreme case where the number of predictors are equal or less than the number of samples, the linear model is useless, as it would result in extremely overconfident results. Let's see an example. Let's imagine with have two predictors (this means we have a 2 dimensional space drawn in the x and a y axis).
 We have an equal amount of samples (2 points) from which we will create our linear model, using the least squares fit. To draw a straight line on the x and y axis we only need 2 points anyway, so our line fits perfectly the training data, we have 0 sum of squared error and therefore our classic R-squared is 1. Now we add another 100 samples from the same population on that plot and we see that the sum of squared error for those new points to the previously perfectly fit line is massive!
@@ -40,7 +40,7 @@ library(MASS)
 library(ISLR)
 #let's use our previous linear model of house values as a function of the Boston dataset attributes
 lm.rm_fit <- lm(medv~., data = Boston)
-# we can see that the R-squared and the adjusted R-squared are not too far off. The adjusted number is less, as expected it has paid the price of using multiple predictors, but we have enought samples to support most predictors. If we started removing predictors of less significance, we would notice that the Adjusted R-squared and R-squared would be closer to each other.
+# we can see that the R-squared and the adjusted R-squared are not too far off. The adjusted number is less, as expected it has paid the price of using multiple predictors, but we have enough samples to support most predictors. If we started removing predictors of less significance, we would notice that the Adjusted R-squared and R-squared would be closer to each other.
 summary(lm.rm_fit)
 ```
 
@@ -106,29 +106,30 @@ install.packages('boot')
 ```{r}
 library(boot)
 
-# Setting the seet to the same number will reproduce 'randomness'
-# we need randomness in spliting the data to our blocks for k-fold cross validation
+# Setting the seed to the same number will reproduce 'randomness'
+# we need randomness in splitting the data to our blocks for k-fold cross validation
 set.seed(24)
 
-# gml() function withoud additional parameter will produce a linear model the same way lm() would
+# gml() function without additional parameter will produce a linear model the same way lm() would
 # gml() however works with the k-fold function we need to use later
 glm.fit <- glm(mpg~horsepower, data = Auto)
-# perform cv using the cv.gml function, if you dont specify how many blocks you want to split your data to, the function performs LOOCV by default
+# perform cv using the cv.gml function, if you don't specify how many blocks you want to split your data to, the function performs LOOCV by default
 cv <- cv.glm(Auto, glm.fit)
 # the delta is parameter from above that contains the average error calculated after performing CV for each sample
 cv$delta[1]
 
-# on its own an error does really show us samething, it is valable when we compare it with errors from other models so that we can see which model is doing better.
-# To illustrate this, we will try and compare the errors given when we perform polynomial regression. Using a for() loop we will perform CV on mpg as a function of: # horsepower, horspower^2, horspower^3, horspower^4, horspower^5.
+# on its own an error does really show us something, it is valuable when we compare it with errors from other models so that we can see which model is doing better.
+# To illustrate this, we will try and compare the errors given when we perform polynomial regression. Using a for() loop we will perform CV on mpg as a function of:
+# horsepower, horsepower^2, horsepower^3, horsepower^4, horsepower^5.
 
-#initialize a vector of 5 elements that will contain the errors for each model
+#initialise a vector of 5 elements that will contain the errors for each model
 cv.error = c(1,2,3,4,5)
 #loop 5 times, each time for every model and add the error calculated to cv.error
 for (i in 1:5){
   glm.fit = glm(mpg~poly(horsepower, i), data=Auto)
   cv.error[i] = cv.glm(Auto, glm.fit)$delta[1]
 }
-#if we print out the errors we can see a significant improvement from the linear to the quatratic model (horspower^2)
+#if we print out the errors we can see a significant improvement from the linear to the quadratic model (horsepower^2)
 cv.error
 
 #Now we will repeat the evaluation of the same models, but using a 10-k fold CV.
@@ -173,20 +174,20 @@ install.packages("leaps")
 #leaps contain functions for subset selection
 library(leaps)
 
-# This lab, is again by ISLR, and uses the dataset Hitters. It contains various statistics for the performance of Baseball players such us number of Hits and Homeruns, as well as their salary. We will try and fit a linear model that studies the relationship between their performance and salary.
+# This lab, is again by ISLR, and uses the dataset Hitters. It contains various statistics for the performance of Baseball players such us number of Hits and Home runs, as well as their salary. We will try and fit a linear model that studies the relationship between their performance and salary.
 library(ISLR)
 
-# The salary field for some of the playes is empty. We will remove those players from the dataset, as they are not valable and will cause issues when attempting to make the model.
+# The salary field for some of the players is empty. We will remove those players from the dataset, as they are not valuable and will cause issues when attempting to make the model.
 Hitters <- na.omit(Hitters)
 
 
-# by default the regsubsets() selections looks up to pairs of 8, you can change this by adding the following paramter: nvmax = <number>
+# by default the regsubsets() selections looks up to pairs of 8, you can change this by adding the following parameter: nvmax = <number>
 #we chose 19 since we have 19 predictors
 regfit.full <- regsubsets(Salary~., Hitters, nvmax = 19 )
 # the out put show with an asterix the predictors that yield the optimal model for each pair
 summary(regfit.full)
 
-#you can viwe performance indicators for each model such us:
+#you can view performance indicators for each model such us:
 #adjusted R-squared
 summary(regfit.full)$adjr2
 #the C_p value
@@ -195,13 +196,13 @@ summary(regfit.full)$cp
 summary(regfit.full)$bic
 
 
-#using that you can choose your optimul model
+#using that you can choose your optimal model
 # for example the model with highest adjuster R-squared
 which.max(summary(regfit.full)$adjr2)
 # or the model with lowest C_p
 which.min(summary(regfit.full)$cp)
 
-# or if we want to combine various criteria, it may be useful to  visulise
+# or if we want to combine various criteria, it may be useful to visualise
 par(mfrow = c(2, 2))
 plot(summary(regfit.full)$adjr2, xlab= "Number of virables contained in the model", ylab="Adjasted R-squared")
 plot(summary(regfit.full)$cp, xlab= "Number of virables contained in the model", ylab="C_p")
@@ -211,7 +212,7 @@ plot(summary(regfit.full)$bic, xlab= "Number of virables contained in the model"
 coef(regfit.full,10)
 
 library(leaps)
-# Please know the library for regsubsets did not have a build in function for predict, so we had to built one ourselfs
+# Please know the library for regsubsets did not have a build in function for predict, so we had to built one ourselves
 # here is the code
 predict.regsubsets = function(object, newdata, id, ...) {
     form = as.formula(object$call[[2]])
@@ -220,53 +221,53 @@ predict.regsubsets = function(object, newdata, id, ...) {
     mat[, names(coefi)] %*% coefi
 }
 
-# Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using critira such us adjusted R-squared, would be cross validation. We will see how this could be done here. We choose to perform a 10-k fold cv.
+# Another way to select between the best models from each pair (m0, m1, m2...mp),instead of using criteria such us adjusted R-squared, would be cross validation. We will see how this could be done here. We choose to perform a 10-k fold cv.
 
 # Let's set the seed again to ensure someone can repeat the test and get the same 'randomness'
 set.seed(1)
 
-# To perform 10-k fold cross validation, we first need to split the data in 10 folds (10 equal sized blockes).
+# To perform 10-k fold cross validation, we first need to split the data in 10 folds (10 equal sized blocks).
 k <- 10
-# The way we split the data is we make a vector of size equal to nrow(Hitters) (the rows contained in the dataset Hitters), and each row will be assigned to a fold from 1 to 10 (sample 1:10). Since we want multibple rows to be part of the same fols we set replace=TRUE. Also because we haven't defined any paricular split ration, by default the split will be equal across the folds.
+# The way we split the data is we make a vector of size equal to nrow(Hitters) (the rows contained in the dataset Hitters), and each row will be assigned to a fold from 1 to 10 (sample 1:10). Since we want multiple rows to be part of the same folds we set replace=TRUE. Also because we haven't defined any particular split ration, by default the split will be equal across the folds.
 folds <- sample(1:k, nrow(Hitters), replace=TRUE)
 #we can see that each row of the Hitters dataset has been assigned to one of the 10 k folds, in an equal manner
 folds
-# we also need a variable that will store all the calculated erros. In this case we will have 10 models (one for each fold) for every 19 different sets of variables (M0, M1, M2, ....M19 after performing best subset selection). If we want to be able to keep track of which model came from which fold and subset we need a matrix instead of a simple vector.
+# we also need a variable that will store all the calculated errors. In this case we will have 10 models (one for each fold) for every 19 different sets of variables (M0, M1, M2, ....M19 after performing best subset selection). If we want to be able to keep track of which model came from which fold and subset we need a matrix instead of a simple vector.
 cv.errors <- matrix(NA,k,19, dimnames = list(NULL, paste(1:19)))
-# we will fill this with the actualls erros later
+# we will fill this with the actual errors later
 cv.errors
 
-# Now we need to create 10 models for each of the 19 subsets, using a different combination of 9 out of the 10 blocks each time (leaving one for testing). We will call the testing one j, in order to be able to destingues it and only use it for testing. Let's see this in practice:
+# Now we need to create 10 models for each of the 19 subsets, using a different combination of 9 out of the 10 blocks each time (leaving one for testing). We will call the testing one j, in order to be able to distinguish it and only use it for testing. Let's see this in practice:
 
 # for every j in k (we define j as a single fold. First it will be all the rows who where assigned with 1, then 2, 3 ...)
 for (j in 1:k) {
   # create the 19 models using all the data apart from j (!=j)
   best.fit <- regsubsets(Salary ~., data=Hitters[folds!=j,], nvmax = 19)
-# Now all we have to do, is for each 10 sets of models with the same params calculate the avarage testing error.
+# Now all we have to do, is for each 10 sets of models with the same params calculate the average testing error.
 for (i in 1:19) {
-  # first we need to find ou the values for salary that each model would predict for our testing j fold
+  # first we need to find out the values for salary that each model would predict for our testing j fold
    pred = predict(best.fit, Hitters[folds == j, ], id = i)
-  # then we measure the squared difference of the actuall salary from the predicted for each point, and we store their mean in our matrix
+  # then we measure the squared difference of the actual salary from the predicted for each point, and we store their mean in our matrix
   cv.errors[j,i] <- mean((Hitters$Salary[folds==j]-pred)^2)
  }
 }
-# we can see the difference of the mean squared errors from the predicted to the actuall points. That is for every of the 10 folds for each of 19 subsets used.
+# we can see the difference of the mean squared errors from the predicted to the actual points. That is for every of the 10 folds for each of 19 subsets used.
 cv.errors
 
-# we want to get one arage value for each of 19 models so we can compare then and choose the optimal
-# the function apply will hepls in that
+# We want to get one average value for each of 19 models so we can compare then and choose the optimal.
+# The function apply will help us with that.
 mean.cv.error <- apply(cv.errors,2,mean)
 mean.cv.error
 
-#let plot them to see which models have the loest errors
+#let plot them to see which models have the lowest errors
 par(mflow=c(1,1))
 plot(mean.cv.error, type='b')
 
-# we can see that 10 and 11 are the smallest ones ( with 11 been the smalest), which is quite close to what we got from using criteria like the adjusted R-squared
+# we can see that 10 and 11 are the smallest ones ( with 11 been the smallest), which is quite close to what we got from using criteria like the adjusted R-squared
 
 
 # Note:
-# An alternative to CV, that would be more computationaly advatagious, is simple validation. We have mentioned that when introducting cross validation. Basicly we only split the data in two, a training and testing data set. We create all our models until Mp (by best selection or ather methods) using the training data. We then use the testing data to measure the sum of squared errors, or R-squared of that test data. We choose the one with the smallest test error. Of course this calculation would be highly dependant on how the data was split, and there is risk in not getting accurate measurements for the error.
+# An alternative to CV, that would be more computationally advantageous, is simple validation. We have mentioned that when introducing cross validation. Basically we only split the data in two, a training and testing data set. We create all our models until Mp (by best selection or other methods) using the training data. We then use the testing data to measure the sum of squared errors, or R-squared of that test data. We choose the one with the smallest test error. Of course this calculation would be highly dependant on how the data was split, and there is risk in not getting accurate measurements for the error.
 
 
 
@@ -350,8 +351,8 @@ install.packages("glmnet")
 ```{r}
 library(glmnet)
 
-# for our ridge regression we will need to choose some values for lambda, in order to compare the models they yield and find out the optimul value for lamda
-# a standart inclusive set, that we will use, is from 10^-2 until 10^10
+# for our ridge regression we will need to choose some values for lambda, in order to compare the models they yield and find out the optimal value for lambda
+# a standard inclusive set, that we will use, is from 10^-2 until 10^10
 grid <- 10^seq(10,-2,length = 100)
 
 # this function requires the parameter given a bit deferent that the usual y~.
@@ -361,30 +362,30 @@ x <- model.matrix(Salary~.,Hitters)[,-1]
 y <- Hitters$Salary
 
 # Now that we have everything we can perform ridge regression:
-# altha means we want to perform ridge regression (glmnet also perform other methods)
+# alpha means we want to perform ridge regression (glmnet also perform other methods)
 ridge.model <- glmnet(x,y, alpha = 0, lambda = grid)
 # we can see the coefficients of a model with certain lambda using the following
-# this returns the coefficients with lamnbda=50 (the intercept and the following 19 coefficients)
+# this returns the coefficients with lambda = 50 (the intercept and the following 19 coefficients)
 coef(ridge.model)[,50]
 #or using the predict() function
 predict(ridge.model, s=50, type="coefficients")[1:20]
 
-# in order to choose which lambda to use, we need to followe a similar procedure to what we have done previously. We would split our data in two sets, training and testing. We would use the training to create our models and the test to measure their testing mean squared error. We would then pick the one with the least error. Or we could manually try out different lambdas and see at which lambda we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
+# in order to choose which lambda to use, we need to follow a similar procedure to what we have done previously. We would split our data in two sets, training and testing. We would use the training to create our models and the test to measure their testing mean squared error. We would then pick the one with the least error. Or we could manually try out different lambdas and see at which lambda we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
 
 set.seed(1)
-# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in 80%-20% for training and testing
+# remember x is a matrix of all rows containing values of the predictors, we split their indexes in 80%-20% for training and testing
 train <- sample(1:nrow(x), nrow(x)*0.8)
 train
 test <- (-train)
 # this is the indexes of the reaction attribute for the test data
 y.test = y[test]
-#set up a vector to store mean squared error for each model for each value of lamda
-# in this case we have selected to start measuring the perfomance of various lambda values, that have a siginificant distance from each other. We can then see which performs better out of them and then make even more trials with numbers close to that (notice how one of the values of lambda is zero. This will result in performing simple least squares (linear regression). It is useful to include such a model, in the comparison, to ensure ridge regression is actually optimal for our problem)
+#set up a vector to store mean squared error for each model for each value of lambda
+# in this case we have selected to start measuring the perfomance of various lambda values, that have a siginificant distance from each other. We can then see which performs better out of them and then make even more trials with numbers close to that (notice how one of the values of lambda is zero. This will result in performing simple least squares (linear regression). It is useful to include such a model, in the comparison, to ensure ridge regression is actualy optimal for our problem)
 errors <- c(0.2,0,1,5,10,50,100)
 
-#now we can prerform ridge regression just like before, using only the training data
+#now we can perform ridge regression just like before, using only the training data
 ridge.model <- glmnet(x[train,],y[train], alpha = 0, lambda = grid)
-# and of each of the models with the lamda value we have chosen we will measure the mean squared error
+# and of each of the models with the lambda value we have chosen we will measure the mean squared error
 for (i in 1:7) {
  pred <- predict(ridge.model, s=errors[i], newx=x[test,])
  mserror <- mean((pred - y.test)^2)
@@ -393,7 +394,7 @@ for (i in 1:7) {
 errors
 # we see that a large lambda seems to be improving the error (7 is the index for 100)
 which.min(errors)
-# let's see the suggested coeficients for lambda = 100
+# let's see the suggested coefficients for lambda = 100
 coef(ridge.model)[,100]
 ```
 
@@ -409,24 +410,23 @@ $\sum RSS +\lambda |b_1| + |b_2| + ...$
 
 This is very similar to Ridge regression, as we have already mentioned. Lasso minimises the absolute value instead of the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.
 
-The reason you would choose Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actually useful. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
+The reason you would choose Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actualy useful. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
 
 ```{r}
-
 set.seed(1)
 # alpha = 1, gives us the Lasso regression
 lasso <- glmnet(x[train,],y[train],alpha=1,lambda = grid)
 
-# this time we will perform cross validation to find the best lamda using the build in cv.glmnet function
+# this time we will perform cross validation to find the best lambda using the build in cv.glmnet function
 cv.out <- cv.glmnet(x[train,], y[train], alpha = 1)
-# get the lamda with least mean squared error
+# get the lambda with least mean squared error
 Bestlambda <- cv.out$lambda.min
 Bestlambda
 # calculate the error
 pred <- predict(lasso, s = Bestlambda, newx =x[test,])
 mean((pred- y.test)^2)
 
-#view the coefficients for the model produced using the optimal lamda
+#view the coefficients for the model produced using the optimal lambda
 # first we should make a model using all the data, since we now know the lambda
 model <- glmnet(x,y,alpha = 1,lambda=grid)
 predict(model,type="coefficients", s = Bestlambda)
@@ -458,18 +458,3 @@ model <- glmnet(x,y,alpha = 0.5,lambda=grid)
 predict(model,type ="coefficients", s = Bestlambda)
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
