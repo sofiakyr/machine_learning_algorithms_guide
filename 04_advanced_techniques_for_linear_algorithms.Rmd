@@ -103,9 +103,10 @@ For this example, which is also given by the book, we will use another dataset m
 #this library has functions that will allow us to perform k-fold validation
 install.packages('boot')
 ```
-```{r}
+```{r message=FALSE}
 library(boot)
-
+```
+```{r}
 # Setting the seed to the same number will reproduce 'randomness'
 # we need randomness in splitting the data to our blocks for k-fold cross validation
 set.seed(24)
