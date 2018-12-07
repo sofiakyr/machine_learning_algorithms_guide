@@ -366,11 +366,11 @@ coef(ridge.model)[,50]
 #or using the predict() function
 predict(ridge.model, s=50, type="coefficients")[1:20]
 
-# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We chould also compare our results to linear regression where lambda simple equals zero. Let's see an example:
+# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
 
 set.seed(1)
-# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in two 
-train <- sample(1:nrow(x), nrow(x)/2)
+# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in 80%-20% for training and testing 
+train <- sample(1:nrow(x), nrow(x)*0.8)
 train
 test <- (-train)
 # this is the indexes of the reaction attribute for the test data
@@ -402,18 +402,38 @@ Note: in this example we looking at linear regression. However, ridge regression
 
 The lasso regression tryies to minimize the following function:
 
-$\sum RSS +\lambda |b_1 + b_2 + ...|$
+$\sum RSS +\lambda |b_1| + |b_2| + ...$
 
 This is very similar to Ridge regression, as we have already mentiod. Lasso minimizes the absolute value instead of the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.
 
 The reaon you whould chouse Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actually usufull. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
 
+```{r}
 
+set.seed(1)
+# alpha = 1, gives us the Lasso regression
+lasso <- glmnet(x[train,],y[train],alpha=1,lambda = grid)
 
+# this time we will perform cross validation to find the best lamda using the build in cv.glmnet function
+cv.out <- cv.glmnet(x[train,], y[train], alpha = 1)
+# get the lamda with least mean squared error
+Bestlambda <- cv.out$lambda.min
+Bestlambda
+# calculate the error
+pred <- predict(lasso, s = Bestlambda, newx =x[test,])
+mean((pred- y.test)^2)
 
+#view the coefficients for the model produced using the optimal lamda
+# first we should make a model using all the data, since we now know the lambda
+model <- glmnet(x,y,alpha = 1,lambda=grid)
+predict(model,type="coefficients", s = Bestlambda)
 
+```
 
+As expected a couple of the coefficients were estimated at zero, reducing the number of predictors in our model.
+We have seen an alternative regularization method for estimating coefficients when we know most of our features are usufull (ridge regression) and an alternative for when we suspect some of them are not usufull (lasso). What if we have no idea if our features are usufull or not, what if we have so many features that we cannot know? In this case you whould use the last option elastic net regression which is basicly a hybrit of ridge and lasso regression.
 
+### Elastic Net Regression
 
 
 
