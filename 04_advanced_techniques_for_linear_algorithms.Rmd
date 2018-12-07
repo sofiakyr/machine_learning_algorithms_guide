@@ -336,7 +336,7 @@ Such methods are used when we want to focus on reducing the variance of a linear
 Those methods are very similar to least squares, as we know it, however they will try to 'shrink' the estimates of the coefficients (move them more towards zero).
 Why whould that cause a reduction in variance? If we remember the linear equation $y= b_0 + b_1x_1 + b_2x_2..$, where $b_1$, $b_2$ are our coefficiants, the more they get closer to zero the more $x_1$ and $x_2$ will tend to zero. In other words the effect of the presdictors $x_1$ and $x_2$ (as it is measured from the given test sample) will have less of an effect to $y$ (the reaction). So if our current sample will have less of an effect in defining the line, then that line is more genaralized and (since it is less determined by just one sample) potentially it will perform better on testing/new data.
 
-There are a few ways to shrink (or as it also refered to as 'regularize') the coeficiants, which we will be looking at in this chapter.
+There are a few ways to shrink (or as it also refered to as 'regularize') the coeficiants, which we will be looking at in this chapter
 
 ### Ridge regression
 
@@ -373,39 +373,95 @@ coef(ridge.model)[,50]
 #or using the predict() function
 predict(ridge.model, s=50, type="coefficients")[1:20]
 
-# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We chould also compare our results to linear regression where lambda simple equals zero. Let's see an example:
+# in order to choose which lamdba to use, we need to followe a similar procedure to what we have done previously. We whould split our data in two sets, training and testing. We whould use the training to create our models and the test to measure their testing mean squared error. We whould then pick the one with the least error. Or we chould manually try out different lambdas and see at which lamdba we are getting best results. We should also compare our results to linear regression where lambda simple equals zero. Let's see an example:
 
 set.seed(1)
-train <- sample(1:nrow(x), nrow(x)/2)
+# remeber x is a matrix of all rows containg values of the predictors, we split teir indexes in 80%-20% for training and testing 
+train <- sample(1:nrow(x), nrow(x)*0.8)
 train
 test <- (-train)
+# this is the indexes of the reaction attribute for the test data
 y.test = y[test]
+#set up a vector to store mean squared error for each model for each value of lamda
+# in this case we have selected to start measuring the perfomance of various lamdba values, that have a siginificant distance from each other. We can then see which performs better out of them and then make even more trials with numbers close to that (notice how one of the values of lambda is zero. This will result in performing simple least squares (linear regression). It is usufull to include such a model, in the comparison, to ensure ridge regression is actually optimal for our problem)
+errors <- c(0.2,0,1,5,10,50,100)
 
-
+#now we can prerform ridge regression just like before, using only the training data
+ridge.model <- glmnet(x[train,],y[train], alpha = 0, lambda = grid)
+# and of each of the models with the lamda value we have chosen we will measure the mean squared error
+for (i in 1:7) {
+ pred <- predict(ridge.model, s=errors[i], newx=x[test,])
+ mserror <- mean((pred - y.test)^2)
+ errors[i] <- mserror
+}
+errors
+# we see that a large lambda seems to be improving the error (7 is the index for 100)
+which.min(errors)
+# let's see the suggested coeficients for lamdba =100
+coef(ridge.model)[,100]
 ```
+
+We noticed that even with such a large lamdba the coefficients have been minimized but none of them is zero. Effectivly what this means is that we cannot exclude any predictor. As we know, having less predictors chould potentially improve our model's predictive acuraccy and if the coefficiants are very small we have to consider if it is worth keeping the relative predictors. This is why the following method, LASSO was developed. It works very similar to ridge regression, however it can produce models coefficiants equall to zero.
+
+Note: in this example we looking at linear regression. However, ridge regression and the following methods, can also be applied to logistic regression. The only difference whould be that we whould be looking to minimize the odds of the likelihood, instead of the mean squared error (plus of cource, the estimetes for the coefficients).
 
 ### Lasso regression
 
+The lasso regression tryies to minimize the following function:
 
+$\sum RSS +\lambda |b_1| + |b_2| + ...$
 
+This is very similar to Ridge regression, as we have already mentiod. Lasso minimizes the absolute value instead of the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.
 
+The reaon you whould chouse Lasso over Ridge regression, is if you where looking to perform feature selection. That is, if you knew that some of the attributes in your dataset are not actually usufull. Unlike Ridge, Lasso can result in coefficients with estimated value of zero.
 
+```{r}
 
+set.seed(1)
+# alpha = 1, gives us the Lasso regression
+lasso <- glmnet(x[train,],y[train],alpha=1,lambda = grid)
 
+# this time we will perform cross validation to find the best lamda using the build in cv.glmnet function
+cv.out <- cv.glmnet(x[train,], y[train], alpha = 1)
+# get the lamda with least mean squared error
+Bestlambda <- cv.out$lambda.min
+Bestlambda
+# calculate the error
+pred <- predict(lasso, s = Bestlambda, newx =x[test,])
+mean((pred- y.test)^2)
 
+#view the coefficients for the model produced using the optimal lamda
+# first we should make a model using all the data, since we now know the lambda
+model <- glmnet(x,y,alpha = 1,lambda=grid)
+predict(model,type="coefficients", s = Bestlambda)
 
+```
 
+As expected a couple of the coefficients were estimated at zero, reducing the number of predictors in our model.
+We have seen an alternative regularization method for estimating coefficients when we know most of our features are usufull (ridge regression) and an alternative for when we suspect some of them are not usufull (lasso). What if we have no idea if our features are usufull or not, what if we have so many features that we cannot know? In this case you whould use the last option elastic net regression which is basicly a hybrit of ridge and lasso regression.
 
+### Elastic Net Regression
 
+The Elastic Net regression tryies to minimize the following function:
 
+$\sum RSS +\lambda_1 |b_1| + |b_2| + ...+\lambda_2 (b_1^2 + b_2^2 + ...)$
 
+It is clear that this is a combination of ridge and lasso regression. It tryies to combine the benefits of the two and is usully used for the case where too many features are avalable, and we cannot distinguess if they are usfull or not. Elastic net regression is also found to takle multicolinarity more effectively. The optimul values for $\lambda_1$ and $\lambda_2$, are found using cross validation, where we trial different combinations of values for each parameter.
 
+```{r}
+set.seed(1)
+# alpha=0.5 for elastic net
+elnet <- cv.glmnet(x[train,], y[train],alpha=0.5)
+Bestlambda <- elnet$lambda.min
+Bestlambda
+#error
+pred <- predict(elnet, s = Bestlambda, newx =x[test,])
+mean((pred - y.test)^2)
+#coefficients
+model <- glmnet(x,y,alpha = 0.5,lambda=grid)
+predict(model,type ="coefficients", s = Bestlambda)
 
-
-
-
-
-
+```
 
 
 
