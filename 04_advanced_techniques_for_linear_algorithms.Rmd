@@ -194,7 +194,7 @@ selected are equal to the number of samples available. In other words each time 
 the samples apart from one, that one will be used to asses it. This is a clearly computational expensive method, but
 might be useful if we have very few samples to train our model with.
 
-* 10-k fold validation, where k=10
+* 10-k fold validation, where k = 10
 
 ```{r eval=FALSE}
 # This library has functions that will allow us to perform k-fold validation
@@ -229,11 +229,11 @@ cv$delta[1]
 # horsepower, horsepower^2, horsepower^3, horsepower^4, horsepower^5.
 
 # Initialise a vector of 5 elements that will contain the errors for each model
-cv.error = c(1,2,3,4,5)
+cv.error = c(1, 2, 3, 4, 5)
 # Loop 5 times, each time for every model and add the error calculated to
 # cv.error
 for (i in 1:5){
-  glm.fit = glm(mpg~poly(horsepower, i), data=Auto)
+  glm.fit = glm(mpg~poly(horsepower, i), data = Auto)
   cv.error[i] = cv.glm(Auto, glm.fit)$delta[1]
 }
 # If we print out the errors we can see a significant improvement from the
@@ -241,12 +241,12 @@ for (i in 1:5){
 cv.error
 
 # Now we will repeat the evaluation of the same models, but using a 10-k fold CV
-cv.error = c(1,2,3,4,5)
+cv.error = c(1, 2, 3, 4, 5)
 for (i in 1:5){
-  glm.fit = glm(mpg~poly(horsepower, i), data=Auto)
+  glm.fit = glm(mpg~poly(horsepower, i), data = Auto)
   # The only additional parameter is K, which we chose to set to 10 since we are
   # looking to perform a 10-k fold cv.
-  cv.error[i] = cv.glm(Auto, glm.fit, K=10)$delta[1]
+  cv.error[i] = cv.glm(Auto, glm.fit, K = 10)$delta[1]
 }
 
 # We can see that the results are quite similar (also the 10-k fold completed a
@@ -352,7 +352,7 @@ plot(summary(regfit.full)$bic,
 
 # We can see that probably something close to 10 would be optimal, let's see the
 # selected 10 variables and their coefficients.
-coef(regfit.full,10)
+coef(regfit.full, 10)
 
 library(leaps)
 # Please know the library for regsubsets did not have a build in function for
@@ -366,7 +366,7 @@ predict.regsubsets = function(object, newdata, id, ...) {
 }
 
 # Another way to select between the best models from each pair
-# (m0, m1, m2...mp),instead of using criteria such as adjusted R-squared, would
+# (m0, m1, m2...mp), instead of using criteria such as adjusted R-squared, would
 # be cross validation. We will see how this could be done here. We choose to
 # perform a 10-k fold cv.
 
@@ -380,9 +380,9 @@ k <- 10
 # The way we split the data is we make a vector of size equal to nrow(Hitters)
 # (the rows contained in the dataset Hitters), and each row will be assigned to
 # a fold from 1 to 10 (sample 1:10). Since we want multiple rows to be part of
-# the same folds we set replace=TRUE. Also because we haven't defined any
+# the same folds we set replace = TRUE. Also because we haven't defined any
 # particular split ration, by default the split will be equal across the folds.
-folds <- sample(1:k, nrow(Hitters), replace=TRUE)
+folds <- sample(1:k, nrow(Hitters), replace = TRUE)
 # We can see that each row of the Hitters dataset has been assigned to one of
 # the 10 k folds, in an equal manner.
 folds
@@ -391,7 +391,7 @@ folds
 # variables (M0, M1, M2, ....M19 after performing best subset selection). If we
 # want to be able to keep track of which model came from which fold and subset
 # we need a matrix instead of a simple vector.
-cv.errors <- matrix(NA,k,19, dimnames = list(NULL, paste(1:19)))
+cv.errors <- matrix(NA, k, 19, dimnames = list(NULL, paste(1:19)))
 # We will fill this with the actual errors later
 cv.errors
 
@@ -404,7 +404,7 @@ cv.errors
 # who where assigned with 1, then 2, 3 ...)
 for (j in 1:k) {
   # Create the 19 models using all the data apart from j (!=j)
-  best.fit <- regsubsets(Salary ~., data=Hitters[folds!=j,], nvmax = 19)
+  best.fit <- regsubsets(Salary ~., data = Hitters[folds!=j,], nvmax = 19)
   # Now all we have to do, is for each 10 sets of models with the same params
   # calculate the average testing error.
   for (i in 1:19) {
@@ -413,7 +413,7 @@ for (j in 1:k) {
     pred = predict(best.fit, Hitters[folds == j, ], id = i)
     # Then we measure the squared difference of the actual salary from the
     # predicted for each point, and we store their mean in our matrix.
-    cv.errors[j,i] <- mean((Hitters$Salary[folds==j]-pred)^2)
+    cv.errors[j, i] <- mean((Hitters$Salary[folds==j]-pred)^2)
   }
 }
 # We can see the difference of the mean squared errors from the predicted to the
@@ -423,11 +423,11 @@ cv.errors
 # We want to get one average value for each of 19 models so we can compare then
 # and choose the optimal.
 # The function apply will help us with that.
-mean.cv.error <- apply(cv.errors,2,mean)
+mean.cv.error <- apply(cv.errors, 2, mean)
 mean.cv.error
 
 # Lets plot them to see which models have the lowest errors
-par(mflow=c(1,1))
+par(mflow = c(1, 1))
 plot(mean.cv.error, type='b')
 
 # We can see that 10 and 11 are the smallest ones ( with 11 been the smallest),
@@ -484,7 +484,7 @@ Forward Stepwise Selection
 
 
 ```{r}
-forward <- regsubsets(Salary~., data=Hitters, nvmax = 19, method = "forward")
+forward <- regsubsets(Salary~., data = Hitters, nvmax = 19, method = "forward")
 summary(forward)
 ```
 
@@ -506,7 +506,7 @@ Backward Stepwise Selection
   performance criteria that accounts for over-fitting (or take a combination). Then we can choose the optimal model.
 
 ```{r}
-backward <- regsubsets(Salary~., data=Hitters, nvmax = 19, method = "backward")
+backward <- regsubsets(Salary~., data = Hitters, nvmax = 19, method = "backward")
 summary(backward)
 ```
 
@@ -586,7 +586,7 @@ library(glmnet)
 # order to compare the models they yield and find out the optimal value for
 # lambda.
 # A standard inclusive set, that we will use, is from 10^-2 until 10^10
-grid <- 10^seq(10,-2,length = 100)
+grid <- 10^seq(10, -2, length = 100)
 
 # This function requires the parameter given a bit deferent that the usual y~.
 # For the predictors it wants them as a matrix, model.matrix() turns then in the
@@ -598,14 +598,14 @@ y <- Hitters$Salary
 # Now that we have everything we can perform ridge regression:
 # alpha means we want to perform ridge regression (glmnet also perform other
 # methods)
-ridge.model <- glmnet(x,y, alpha = 0, lambda = grid)
+ridge.model <- glmnet(x, y, alpha = 0, lambda = grid)
 # We can see the coefficients of a model with certain lambda using the
 # following:
 # This returns the coefficients with lambda = 50 (the intercept and the
 # following 19 coefficients)
-coef(ridge.model)[,50]
+coef(ridge.model)[, 50]
 # Or using the predict() function
-predict(ridge.model, s=50, type="coefficients")[1:20]
+predict(ridge.model, s = 50, type="coefficients")[1:20]
 
 # In order to choose which lambda to use, we need to follow a similar procedure
 # to what we have done previously. We would split our data in two sets, training
@@ -632,15 +632,15 @@ y.test = y[test]
 # will result in performing simple least squares (linear regression). It is
 # useful to include such a model, in the comparison, to ensure ridge regression
 # is actually optimal for our problem)
-errors <- c(0.2,0,1,5,10,50,100)
+errors <- c(0.2, 0, 1, 5, 10, 50, 100)
 
 # Now we can perform ridge regression just like before, using only the training
 # data.
-ridge.model <- glmnet(x[train,],y[train], alpha = 0, lambda = grid)
+ridge.model <- glmnet(x[train,], y[train], alpha = 0, lambda = grid)
 # And of each of the models with the lambda value we have chosen we will measure
 # the mean squared error.
 for (i in 1:7) {
- pred <- predict(ridge.model, s=errors[i], newx=x[test,])
+ pred <- predict(ridge.model, s = errors[i], newx = x[test,])
  mserror <- mean((pred - y.test)^2)
  errors[i] <- mserror
 }
@@ -649,7 +649,7 @@ errors
 # 100)
 which.min(errors)
 # Let's see the suggested coefficients for lambda = 100
-coef(ridge.model)[,100]
+coef(ridge.model)[, 100]
 ```
 
 We noticed that even with such a large lambda the coefficients have been minimised but none of them is zero. Effectively
@@ -678,7 +678,7 @@ coefficients with estimated value of zero.
 ```{r}
 set.seed(1)
 # alpha = 1, gives us the Lasso regression.
-lasso <- glmnet(x[train,],y[train],alpha=1,lambda = grid)
+lasso <- glmnet(x[train,], y[train], alpha = 1, lambda = grid)
 
 # This time we will perform cross validation to find the best lambda using the
 # build in cv.glmnet function.
@@ -692,8 +692,8 @@ mean((pred- y.test)^2)
 
 # View the coefficients for the model produced using the optimal lambda.
 # First we should make a model using all the data, since we now know the lambda.
-model <- glmnet(x,y,alpha = 1,lambda=grid)
-predict(model,type="coefficients", s = Bestlambda)
+model <- glmnet(x, y, alpha = 1, lambda = grid)
+predict(model, type="coefficients", s = Bestlambda)
 
 ```
 
@@ -717,13 +717,13 @@ and $\lambda_2$, are found using cross validation, where we trial different comb
 ```{r}
 set.seed(1)
 # alpha = 0.5 for elastic net
-elnet <- cv.glmnet(x[train,], y[train],alpha=0.5)
+elnet <- cv.glmnet(x[train,], y[train], alpha = 0.5)
 Bestlambda <- elnet$lambda.min
 Bestlambda
 #error
 pred <- predict(elnet, s = Bestlambda, newx =x[test,])
 mean((pred - y.test)^2)
 #coefficients
-model <- glmnet(x,y,alpha = 0.5,lambda=grid)
-predict(model,type ="coefficients", s = Bestlambda)
+model <- glmnet(x, y, alpha = 0.5, lambda = grid)
+predict(model, type ="coefficients", s = Bestlambda)
 ```
