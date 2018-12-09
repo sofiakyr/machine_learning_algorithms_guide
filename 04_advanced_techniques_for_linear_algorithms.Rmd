@@ -30,14 +30,6 @@ better, as well as other approaches to fitting linear-based models on non-linear
 dive deep and try to optimise a linear model in that extend, instead of just using a non-linear one is because of its interpretability. Linear models, in real-life scenarios are superior in solving interference problems (finding
 relationships between predictors and reaction).
 
-### Goals and expectations
-
-Like always, we will be explaining those approaches in simple and comprehensive matter with code examples. However, it
-is beyond the goals of this guide to go into too much details. This chapter will be summarising the techniques analysed
-by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, in their book
-'An introduction to Statistical Learning'. My goal, as always, is for anyone reading this (without any background in
-statistics or computer science) to be able to understand when they are necessary and how to apply them. For more
-details, I would advise you to refer to that book, or online resources.
 
 ## Improved performance indicators (adjusted R-squared and alternatives)
 
