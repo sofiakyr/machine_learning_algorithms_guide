@@ -52,18 +52,101 @@ The coeficiants are called the loading scores and will show us which features ha
 
 5. We choose a few of those PCs, whose combination explains most of the variation, and we we project the data on them.
 
-
 Warning: One thing to be carefull of is using data of a different scale for some of the features. Data with higher scale will bias PCA to assume that most of the viriation is happening in that axis. For example if we had scores of students in maths' exam (from 1 to 10) and in history (from 1 to 100), the loading scores for history whould be unreasonably hight. A standart practice to avoid this, is to devide all feature data by its standart deviation.
 
+```{r}
+# This lab was created by professor Bharatendra Rai from University of Massachusetts Dartmouth (it is been slightly modified for our perpuses)
 
+# We are using a classic data set that comes with R, the iris dataset. It contains information about 3 different species of the iris flower, such us their pedal lenght and width. We want to know if we can use that information to claster the different spicies and predict which species new data belongs to, from its attributes.
+data("iris")
+summary(iris)
 
+# The iris dataset comes labeled, this means that we can use PCA in a 'supervised' format. It just allows us to split the data in two, and measure the performance of the model in predicting speicies on the testing and training data.
+# Partition Data
+set.seed(111)
+# the ratio of the split is 80% for the training and 20% for the testing
+ind <- sample(2, nrow(iris),
+              replace = TRUE,
+              prob = c(0.8, 0.2))
+training <- iris[ind==1,]
+testing <- iris[ind==2,]
 
+# Scatter Plot & Correlations
+#install.packages("psych")
+library(psych)
+# We can see that the data is highly correlated, espacially petal.Lenght and petal.Width (almost 1!), this makes it a good candidate for PCA even tho we do not have that make dimentions
+pairs.panels(training[,-5],
+             gap = 0,
+             bg = c("red", "yellow", "blue")[training$Species],
+             pch=21)
 
+# Principal Component Analysis with prcomp()
+pc <- prcomp(training[,-5],
+             center = TRUE,
+             scale. = TRUE)
+           
+# we can see the loading values for each PC
+summary(pc)
 
+# As we whould expect there is zero correlation between the PCs (Orthogonality of PCs), so we are good to go
+pairs.panels(pc$x,
+             gap=0,
+             bg = c("red", "yellow", "blue")[training$Species],
+             pch=21)
 
+# Scree plot can show us how much of the variation in the data set is explained by each PC
+pcVar <- pc$sdev^2
+pcaVarPercentage <- round(pcVar/sum(pcVar)*100,1)
+# we can see that most of the variation can be explained by just the first 2 PCs
+barplot(pcaVarPercentage, main="Scree plot", xlab="PC", ylab = "Presentage Variation")
 
+# We will now project our data in those two Pc's
+# Bi-Plot
+#install.packages("devtools")
+#install.packages("rlang")
+#install.packages("Rcpp")
+library(devtools)
+#install_github("vqv/ggbiplot")
+library(ggbiplot)
 
+#we can see that PCA has done a very good gob of grouping iris of the same species using only 2 dimentions
+#the red arrws help us understand how PC1 and PC2 are derived, we can use them to approximate the properties of each feature
+g <- ggbiplot(pc,
+              obs.scale = 1,
+              var.scale = 1,
+              groups = training$Species,
+              ellipse = TRUE,
+              circle = TRUE,
+              ellipse.prob = 0.68)
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal',
+               legend.position = 'top')
+print(g)
 
+# Prediction with Principal Components
+# contains predictions of species for the training data
+trg <- predict(pc, training)
+trg <- data.frame(trg, training[5])
+tr
+# contains predictions of species for the testingdata
+tst <- predict(pc, testing)
+tst <- data.frame(tst, testing[5])
 
+# Multinomial Logistic regression with First Two PCs
+library(nnet)
+trg$Species <- relevel(trg$Species, ref = "setosa")
+mymodel <- multinom(Species~PC1+PC2, data = trg)
+summary(mymodel)
 
+# Confusion Matrix & Misclassification Error - training
+p <- predict(mymodel, trg)
+tab <- table(p, trg$Species)
+tab
+1 - sum(diag(tab))/sum(tab)
 
+# Confusion Matrix & Misclassification Error - testing
+p1 <- predict(mymodel, tst)
+tab1 <- table(p1, tst$Species)
+tab1
+1 - sum(diag(tab1))/sum(tab1)
+```
