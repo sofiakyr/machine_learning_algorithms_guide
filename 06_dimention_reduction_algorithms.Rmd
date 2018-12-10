@@ -4,7 +4,7 @@ We have previously seen a few alternatives for feature selection. In this chapte
 
 Dimention redaction is often performend when:
 
-* The problem requires regression or classification
+* The problem requires regression, classification, clastering
 * We want to visualize data of multiple dimentions
 * The data we have has multiple features that are highly correlated, and out of all the features, a few of them are the majour drivers
 * We do not have the responce variable (unsupervised learning)
@@ -24,43 +24,36 @@ When the responce is not clear, for example we do not know what categories will 
 
 ## Principal Component Analysis (PCA)
 
-PCA is an unsupervised machine learning algorithm, used for dimention reduction. Just as with supervised learning we will be trying to gain insight on our problem by studing the variations in the datset, trying to explain them and use the explanations for classifications or predictions. Often we are faced with datasets containing multiple predictors, wich can be highly correlated, making it difitult to perform this analysis. PCA can reduce the number of variables, while maintining the measures that explain most of of the variability in a dataset. It does that by contracting new representativive variables.
+PCA is an unsupervised machine learning algorithm, used for dimention reduction. Just as with supervised learning we will be trying to gain insight on our problem by studing the variations in the datset, trying to explain them and use the explanations for grouping the data or making predictions. Often we are faced with datasets containing multiple predictors, wich can be highly correlated, making it difitult to perform this analysis. PCA can reduce the number of variables and remove any mullticolinearity effect, while maintining the measures that explain most of of the variability in a dataset. 
 
-We will see how this is achived step by in this section.
+PCA will attempt to summarize the data, by projecting it in new axis. Each of those new axis will be a linear combination of the features in the original dataset, that results in a line closest to the observations. For example a one dimentional summary of the data, whould be a line closest, on avarage, to all the data points (taking the Euclidean distance). A two dimentional summary whould be a plane that is closest to the data points.
 
-
-### Linear Transformations
-
-First, we will need a small and friendly overviwe of some linear algebra, to get the idea of how or why we are following those steps. This is just to give you some backround.
-
-Before we get into explaining linear transformations, we need to explain what we mean by vector. We can say a vector is just a list of coordinates that describe how to get to a point from the origin of the axis(and is drawn like an arrow).
-
-A linear transformation, is nothing more than a function that takes on a vector input and outputs another vector. One way to think of how a vector is changed to another, is if the space around it is 'transformed' (scaled or rotated).The world linear is because we want this function to not transform the space in such a way that it causes the origin to move or to cause curves in the space and axis. A transformation can be described in a matrix. A matrix is a combination of vectors. Here its of those vectors will describe a change in each axis.
-
-In order to identify a transofmation in 2-D space you just need to find out how the x, y axis has changed. All the vectors contained in that space will have changed proportionally. Similarly if you had more dimentions you whould need to find out how the rest of your axis have changed, in order to place everything else acordingly.
-
-There is a spacial case of vectors that will have not been moved from their spam (their general direction) after a linear transformation. They may have been shrinked or streched but not rotated. This vectors are called Eigen vectors and the magnitute by which they have been schaled is called the eigen value. The coordinates of the eigen vector in PCA are refeared to as loading values.
-
-The fact that its direction hasn't change means that the product of the transformation matrix and that vector was zero. The only way it is possible for a product of non-zero matrixs to be zero is if the transformation assosiated, squasies space into a lower dimention. If we imagine rotating a plane we will end up looking at a single line at some point. This whould represent the eigen vector.
-
-Since we want to perform a transformation that reduces the dimentions but maintains the 'essence', we whould be very interested in finding out eigen values.
+PCA will create as many of those 'summary dimentions' as there are features in the dataset, in order to explain all of the viration (unleas there in not enough data to find all of them). However, usually the first few dimentions will be able to summarize the data quite well, explaining a significant presentage of the viriation. So we choose to project the data in those fewer dimentions.
 
 
-### Steb by step process
+We have already meantioned that in order for 'summary dimentions' to be able to explain the data, they are a compination of the features in the original dataset. In an n-dimentional space the first principal component will follow the direction of the dimention which shows the most viriation. For example if we had a 2-D scatterplot where the observations mostly followed a straight line, parallel to the x axis, we whould see that most of the action is happening on the x axis, while there is little viriation on the y axis. The first principal component whould follow the direction the x-axis, mayby slightly roted to capture some of the variation on the y axis.
+
+Those 'summary dimentions' are colled princical components, let's how they are dirived.
 
 
-Let's start with a 2-D example, we have 2 predictors and we want to calculate the principal components for them. The goal is to perform a linear transformation, where the new axis (named PC1 and PC2) on which our data points are projected can better describe the data. If we had more that two axis we whould like to be able to remove some of them and still be able to describe the data. 
+1. We swift the data so that the center of the data points is at the origin of the axis (they are swifted without loosing the relative distances to each other). This means that the mean of the data is now zero. For your information, this is not required however, having a mean of zero makes the calculations later on easy, so it is generally prefered.
+
+2. We find the best fit line between our data points, which are now centered. The best fit line, will be able to best describe our data (sumarize it) and therefore it will become our fist principal component (PC1). This is done in a similar way to least squared distance in linear regression. However, since we are looking to find a vector (vectors allways start from the origin, we want this since PC1 will become a new axis, it whould be very uless if an axis did not start from the origin) we want this best fitline to pass through the origin. Because this is true instead of minimizing the disctance of our points to the best fitting line, we can instead maximize the distance of the projected (to the best fiting line) points to the origin. This distance is at a 90 degree angle from the disctance of our points to the best fitting line, and since the distance of each point to the origin is always constant, they are inversy proportianal (when the disctance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the pythagorium theorum. 
+
+The form of the PC1 whill be :
+$y =\beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n$, where $x_1$ to $x_n$, are the features on the original dataset.
+
+The coeficiants are called the loading scores and will show us which features had the most effect on the PC (the higher the absolute value of the coefficient the more infuence that feature had).
 
 
-1. We swift the data so that the center of the data points is at the origin of the axis (they are swifted without loosing the relative distances to each other)
+3.We want the next PC to be a (again) a linear combination of all features that explaines the most (of the remaining!) variance. We do not want the next PC to be corelated to the previous PC, we want it to only explain the remaining variance and avoid multicollinearity. This means that this new line will be perpendicular to the privious (and still needs to pass through the origin to become a new axis).Colinearity in a graphical representation can be identified when two lines are close to each other and/or have the same direction. When they are perpendicular to each other there is claerly no corelation.
 
-2. We find the best fit line between those points. This is done in a similar way to least squared distance in linear regression. However, since we want to perform a linear transformation we need this line to pass through the origin. Because this is true instead of minimizing the disctance of our points to the best fitting line, we can instead maximize the distance of the projected (to the best fiting line) points to the origin. This distance is at a 90 degree angle from the disctance of our points to the best fitting line and since the distance of each point to the origin is always constant, they are inversy proportianal (when the disctance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the pythagorium theorum. 
+4. We keep making Pc's until all of the variation is explained.
 
-3. This best fitting line that maximizes the sum of squared difference of the projected point to the origin is called the first principle component (PC1). 
-
-4. PC2 will just be the line that also passes from the origin and is perpendicular to PC1
+5. We choose a few of those PCs, whose combination explains most of the variation, and we we project the data on them.
 
 
+Warning: One thing to be carefull of is using data of a different scale for some of the features. Data with higher scale will bias PCA to assume that most of the viriation is happening in that axis. For example if we had scores of students in maths' exam (from 1 to 10) and in history (from 1 to 100), the loading scores for history whould be unreasonably hight. A standart practice to avoid this, is to devide all feature data by its standart deviation.
 
 
 
