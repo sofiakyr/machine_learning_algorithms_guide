@@ -10,7 +10,7 @@
 
 ## Basic probality exersises
 
-### Coin tossing: 
+### Coin tossing:
 
 We are going to try and examine if the propability of getting heads or tails when tossing a coin if 0.5 by
 conducting n bernouli trials, summing the results of heads or tails and seing if they are about half
@@ -20,7 +20,7 @@ conducting n bernouli trials, summing the results of heads or tails and seing if
 #using the random number generator
 N <- 100
 #will return true (1) if the outpout from 0 to 1 is >0.5
-flips <- runif(N, min=0, max=1)>0.5 
+flips <- runif(N, min=0, max=1)>0.5
 #we sum them up, it will add all the ones for true and zero's for false of the above list of flips
 #so we expect half of them to be true and so to get a result close to 0.5
 #we can increase the N to get closer
@@ -32,7 +32,7 @@ flips <- sample(sample.space, N, replace = TRUE, prob = c(0.5, 0.5))
 sum(flips)/N
 ```
 
-### The famous birthday problem: 
+### The famous birthday problem:
 
 
 Finding the propability that at least two people having the same birthday from a sample of n people.
@@ -41,9 +41,11 @@ we ignore leap years, seasonal varietions
 
 All the propable birthdays of the people whould be 365^k if everyones birthday was unique (no one has the same birthday), there whould be factorial(365)/factorial(365-k) ways for that to be true, from the permutations formula so the propability that at least two people have the same birthday whould be 1 - (propability no one having the same birthday)
 
-```{r}
+```{r eval=FALSE}
 #this library allows us to use larger numbers
 install.packages("Rmpfr")
+```
+```{r}
 library("Rmpfr")
 
 #create function to calculate permutations, this is the standart formula however we use the rmpfr library
@@ -64,7 +66,6 @@ for(k in 1:count){
 }
 
 plot(1:count, p, xlab="number of people", ylab ="propability in %")
-
 ```
 
 ## Understanding P-values
@@ -82,7 +83,7 @@ P4heads
 P4tails <- 1/posibleOutcomes
 #there is no other outcome less likly so we can get the p value from
 pValue <- P4heads + P4tails
-pValue 
+pValue
 #the propability was 0.031, however the p-value is 0.03, which is less than the usuall threshold of 0.05 and so we chould accept the H0
 #this chould occure at random
 
@@ -104,14 +105,14 @@ heights <- c(1.50, 1.45, 1.54, 1.60,1.61,1.62,1.66,1.64,1.66, 1.66, 1.66, 1.66, 
 
 #this how the graph looks like, where the blue line represents the pdf (propability density function)
 #assuming the heights of the population follows a normal distribution
-h<-hist(heights, breaks=10, col="red") 
-xfit<-seq(min(heights),max(heights),length=40) 
-yfit<-dnorm(xfit,mean=mean(heights),sd=sd(heights)) 
-yfit <- yfit*diff(h$mids[1:2])*length(heights) 
+h<-hist(heights, breaks=10, col="red")
+xfit<-seq(min(heights),max(heights),length=40)
+yfit<-dnorm(xfit,mean=mean(heights),sd=sd(heights))
+yfit <- yfit*diff(h$mids[1:2])*length(heights)
 lines(xfit, yfit, col="blue", lwd=2)
 
 # generally we can get the aeria under the graph by calculating the integral from x1 to x2, in a normal distribution we can use the z scores instead
-#to calculate the aeria from an x point to the mean, by relating to the standart normal distribution. We also know that the total aeria which represents 
+#to calculate the aeria from an x point to the mean, by relating to the standart normal distribution. We also know that the total aeria which represents
 #all the propabilities whould be one, also the aeia from the left or right to the mean whould be 0.5 due to te symetry.
 
 #so in order to get what we are looking for we need to add the aeria from x1 to the mean and the aeria from x2 to the mean
@@ -180,7 +181,7 @@ n <- 100
 meanWeight <- 180
 sPopulation <- 20
 
-#we can calculate the interval from a normal distribution 
+#we can calculate the interval from a normal distribution
 error <- qnorm(0.95)* sPopulation/sqrt(n)
 left <- meanWeight - error
 right <- meanWeight + error
@@ -213,7 +214,7 @@ expectedFr <- 1/6*n
 ####################### Second step: choose the level of significance (a) #############################################
 
 #a is the aeria under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
-#We will use a=0.01 for 
+#We will use a=0.01 for
 a <- 0.01
 
 
@@ -243,7 +244,7 @@ tStat
 ####################### First step: state the null and alernative hypothesis############################################
 
 #H0(null hypothesis): not affected
-#Ha(alternative hypothesis): affected 
+#Ha(alternative hypothesis): affected
 
 #create our contingency table
 trial <- matrix(c(26,20,13,29, 5, 7), ncol=3)
@@ -275,7 +276,7 @@ exp.table
 ####################### Second step: choose the level of significance (a) #############################################
 
 #a is the aeria under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
-#We will use a=0.05 for 
+#We will use a=0.05 for
 
 #example chi square distribution for visibility
 x <- rchisq(100, 5)
@@ -372,7 +373,7 @@ fisher.test(TeaTasting, alternative = "greater")
 
 ```
 
-## Anova 
+## Anova
 
 ### Two-way ANOVA with interaction testing
 ```{r}
@@ -387,7 +388,7 @@ summary(model1)
 
 #add an interaction manually, product of wool and tension
 model2 <- aov(breaks ~ wool + tension + wool:tension, data = warpbreaks)
-#we see that the interaction of wool with tension (combination) is fairly significant 
+#we see that the interaction of wool with tension (combination) is fairly significant
 summary(model2)
 
 #check for all interactions, should return the same model
@@ -395,10 +396,9 @@ model3 <- aov(breaks ~ wool * tension, data = warpbreaks)
 summary(model3)
 ```
 
-### Manuall step-by-step example 
+### Manual step-by-step example
 
 ```{r}
-
 #this is a balanced test since for every poisson the same amount of tests/treatments were used
 servivolTimeDS <- read.csv("data/poison_balanced.tsv", sep="")
 
@@ -428,7 +428,7 @@ meanTimeForAll
 
 ##########################Sum square of first factor(poison)#############################################################
 
-#this is given by calculating the squared difference of the grand mean to the mean for each 
+#this is given by calculating the squared difference of the grand mean to the mean for each
 #poison and then suming the result
 
 #for robustness we make a function that selects the mean for a given poison and does the calculations
@@ -450,7 +450,7 @@ sumOfSquaresForTreatmentsF <- function(treatmentGiven){
 
 
 sumOfSquaresForTreatments <- sum(mapply(sumOfSquaresForTreatmentsF, c("A", "B", "C", "D")))
-sumOfSquaresForTreatments 
+sumOfSquaresForTreatments
 ########################## Sum square within error ######################################################################
 
 #This is the square sum for each servivaltime in our dataset minus the avarage for that poison and treatment
@@ -470,11 +470,11 @@ product <- expand.grid(x, y)
 sumOfSquaresWithError <- sum(mapply( sumOfSquaresWithErrorF,treatmentGiven= as.character(product[1,"Var1"]),poisonGiven=product[1,"Var2"]))
 sumOfSquaresWithError
 ########################## Sum of Square Total ################################
-sumSquareTotal <- sum((servivolTimeDS$survivolTime - meanTimeForAll)^2) 
+sumSquareTotal <- sum((servivolTimeDS$survivolTime - meanTimeForAll)^2)
 sumSquareTotal
 
 ######################### sum square of both factors ############################################
-#sum of both factors is given by  
+#sum of both factors is given by
 sumOfSquareBothFactors <- sumSquareTotal - sumOfSquaresWithError -sumOfSquaresForTreatments - sumOfSquaresForPoison
 
 ######################### calculating the degrees of freedom for each sum of squares ############
@@ -503,11 +503,11 @@ meanSquareOfSumWithinError
 
 #we need to calculate the F-score for this whcich is meansquareof1rstfactor/meansquareWithinError
 #so we need the mean square of 1rst factor:
-meanSquareOfFirstFactor <- sumOfSquaresForPoison/dfFirstFactor 
+meanSquareOfFirstFactor <- sumOfSquaresForPoison/dfFirstFactor
 FscoreForPoison <- meanSquareOfFirstFactor/meanSquareOfSumWithinError
 # F(dfFirstFactor ,dfWithinError) = FscoreForPoison p<0.5 for a 95%confidence interval,
 #we can find the critical value for df of numerator dfFirstFactor and dfWithinError demonimator from the F disctribution
-cvForPoison <- qf(.95, df1=dfFirstFactor, df2=dfWithinError) 
+cvForPoison <- qf(.95, df1=dfFirstFactor, df2=dfWithinError)
 cvForPoison
 #FscoreForPoison falls in the rejection aeria and so we can reject he H0 and accept that the poison does affect the
 #servival time
@@ -519,9 +519,8 @@ cvForPoison
 servivolTimeDS$poison <- as.factor(servivolTimeDS$poison)
 modelForServivolTime <- lm(survivolTime ~ treatment * poison, data = servivolTimeDS)
 #type does not matter since our test is balanced
-install.packages("car")
 library(car)
 Anova(modelForServivolTime, type="III")
 
 #from the above we can reject that poison and treatment has no effect and accept that the interaction has no effect
-
+```

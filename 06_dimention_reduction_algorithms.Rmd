@@ -1,6 +1,6 @@
 # Dimention Reducing Algorithms
 
-We have previously seen a few alternatives for feature selection. In this chapter we will look into methods that allow us to reduce the number of predictors with the use of some linear algebra. We will see how we can reduce problems of multiple dimentions into 2-D space, by ploting new axis and exptrapolating the data on them. We will aslo discover ways to visually represent multidimentional data and perform classifications. 
+We have previously seen a few alternatives for feature selection. In this chapter we will look into methods that allow us to reduce the number of predictors with the use of some linear algebra. We will see how we can reduce problems of multiple dimentions into 2-D space, by ploting new axis and exptrapolating the data on them. We will aslo discover ways to visually represent multidimentional data and perform classifications.
 
 Dimention redaction is often performend when:
 
@@ -15,16 +15,16 @@ Up until now the data that we were analyzed had been _labeled_, that is we knew 
 
 * A company like Netfix wants to identify groups of users with similar taste, in order to improve their recommendations. What defines taste? We can look into the genre of the film, the users age and the users ratings, but there isnt really a clearly defined problem or responce variable. Similarly, they might want to classify movies depending on their popularity. How do we find What the predictors that make a movie popular, and what do we clasify as popularity?
 
-* A researcher wants to group patiants that have a rare dissease using their gene expressions, symtoms and recovery progress. This will allow him to conduct his studies easier and treat each patiant more effectivily depending on their variation of the studied attributes. We do not know what or how many groups, this classification will result into, neither do we know which of the attributes collected are usufull. 
+* A researcher wants to group patiants that have a rare dissease using their gene expressions, symtoms and recovery progress. This will allow him to conduct his studies easier and treat each patiant more effectivily depending on their variation of the studied attributes. We do not know what or how many groups, this classification will result into, neither do we know which of the attributes collected are usufull.
 
 Unlike, our previous classificcation problem of bank account defauting, where the outcome was either defauted or not defauted, in such cases we simply do not know what the outcome will be.
 
-When the responce is not clear, for example we do not know what categories will result from the data, we say that this is an _unsupervised_ problem. 
+When the responce is not clear, for example we do not know what categories will result from the data, we say that this is an _unsupervised_ problem.
 
 
 ## Principal Component Analysis (PCA)
 
-PCA is an unsupervised machine learning algorithm, used for dimention reduction. Just as with supervised learning we will be trying to gain insight on our problem by studing the variations in the datset, trying to explain them and use the explanations for grouping the data or making predictions. Often we are faced with datasets containing multiple predictors, wich can be highly correlated, making it difitult to perform this analysis. PCA can reduce the number of variables and remove any mullticolinearity effect, while maintining the measures that explain most of of the variability in a dataset. 
+PCA is an unsupervised machine learning algorithm, used for dimention reduction. Just as with supervised learning we will be trying to gain insight on our problem by studing the variations in the datset, trying to explain them and use the explanations for grouping the data or making predictions. Often we are faced with datasets containing multiple predictors, wich can be highly correlated, making it difitult to perform this analysis. PCA can reduce the number of variables and remove any mullticolinearity effect, while maintining the measures that explain most of of the variability in a dataset.
 
 PCA will attempt to summarize the data, by projecting it in new axis. Each of those new axis will be a linear combination of the features in the original dataset, that results in a line closest to the observations. For example a one dimentional summary of the data, whould be a line closest, on avarage, to all the data points (taking the Euclidean distance). A two dimentional summary whould be a plane that is closest to the data points.
 
@@ -38,7 +38,7 @@ Those 'summary dimentions' are colled princical components, let's how they are d
 
 1. We swift the data so that the center of the data points is at the origin of the axis (they are swifted without loosing the relative distances to each other). This means that the mean of the data is now zero. For your information, this is not required however, having a mean of zero makes the calculations later on easy, so it is generally prefered.
 
-2. We find the best fit line between our data points, which are now centered. The best fit line, will be able to best describe our data (sumarize it) and therefore it will become our fist principal component (PC1). This is done in a similar way to least squared distance in linear regression. However, since we are looking to find a vector (vectors allways start from the origin, we want this since PC1 will become a new axis, it whould be very uless if an axis did not start from the origin) we want this best fitline to pass through the origin. Because this is true instead of minimizing the disctance of our points to the best fitting line, we can instead maximize the distance of the projected (to the best fiting line) points to the origin. This distance is at a 90 degree angle from the disctance of our points to the best fitting line, and since the distance of each point to the origin is always constant, they are inversy proportianal (when the disctance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the pythagorium theorum. 
+2. We find the best fit line between our data points, which are now centered. The best fit line, will be able to best describe our data (sumarize it) and therefore it will become our fist principal component (PC1). This is done in a similar way to least squared distance in linear regression. However, since we are looking to find a vector (vectors allways start from the origin, we want this since PC1 will become a new axis, it whould be very uless if an axis did not start from the origin) we want this best fitline to pass through the origin. Because this is true instead of minimizing the disctance of our points to the best fitting line, we can instead maximize the distance of the projected (to the best fiting line) points to the origin. This distance is at a 90 degree angle from the disctance of our points to the best fitting line, and since the distance of each point to the origin is always constant, they are inversy proportianal (when the disctance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the pythagorium theorum.
 
 The form of the PC1 whill be :
 $y =\beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n$, where $x_1$ to $x_n$, are the features on the original dataset.
@@ -72,7 +72,11 @@ training <- iris[ind==1,]
 testing <- iris[ind==2,]
 
 # Scatter Plot & Correlations
-#install.packages("psych")
+```
+```{r eval=FALSE}
+install.packages("psych")
+```
+```{r}
 library(psych)
 # We can see that the data is highly correlated, espacially petal.Lenght and petal.Width (almost 1!), this makes it a good candidate for PCA even tho we do not have that make dimentions
 pairs.panels(training[,-5],
@@ -84,7 +88,7 @@ pairs.panels(training[,-5],
 pc <- prcomp(training[,-5],
              center = TRUE,
              scale. = TRUE)
-           
+
 # we can see the loading values for each PC
 summary(pc)
 
@@ -101,12 +105,13 @@ pcaVarPercentage <- round(pcVar/sum(pcVar)*100,1)
 barplot(pcaVarPercentage, main="Scree plot", xlab="PC", ylab = "Presentage Variation")
 
 # We will now project our data in those two Pc's
+```
+```{r eval=FALSE}
 # Bi-Plot
-#install.packages("devtools")
-#install.packages("rlang")
-#install.packages("Rcpp")
-library(devtools)
-#install_github("vqv/ggbiplot")
+install.packages("devtools")
+devtools::install_github("vqv/ggbiplot")
+```
+```{r}
 library(ggbiplot)
 
 #we can see that PCA has done a very good gob of grouping iris of the same species using only 2 dimentions
