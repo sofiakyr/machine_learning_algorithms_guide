@@ -1,67 +1,67 @@
-# Dimention Reducing Algorithms
+# Dimension Reducing Algorithms
 
-We have previously seen a few alternatives for feature selection. In this chapter we will look into methods that allow us to reduce the number of predictors with the use of some linear algebra. We will see how we can reduce problems of multiple dimentions into 2-D space, by ploting new axis and exptrapolating the data on them. We will aslo discover ways to visually represent multidimentional data and perform classifications.
+We have previously seen a few alternatives for feature selection. In this chapter we will look into methods that allow us to reduce the number of predictors with the use of some linear algebra. We will see how we can reduce problems of multiple dimensions into 2-D space, by plotting new axis and extrapolating the data on them. We will also discover ways to visually represent multidimensional data and perform classifications.
 
-Dimention redaction is often performend when:
+Dimension redaction is often performed when:
 
-* The problem requires regression, classification, clastering
-* We want to visualize data of multiple dimentions
-* The data we have has multiple features that are highly correlated, and out of all the features, a few of them are the majour drivers
-* We do not have the responce variable (unsupervised learning)
+* The problem requires regression, classification, clustering
+* We want to visualise data of multiple dimensions
+* The data we have has multiple features that are highly correlated, and out of all the features, a few of them are the major drivers
+* We do not have the response variable (unsupervised learning)
 
 ##Unsupervised learning
 
-Up until now the data that we were analyzed had been _labeled_, that is we knew the associated y/reaction variable. If we remeber, the salaries assosiated with the baseball players were known, when analyzing the Hitters dataset, similarly the price of the properties on the Boston dataset was also given. Tha helped us gain a clear understanding of the problem. We wonted to study the relationship between the features and the reaction variable, and use it to make predictions. Having the reaction variable readilly avalable, also meant that were able to measure the performance of our models with ease, using methods such us cross-validation and confution matrix. But what if our promblem was something like this?
+Up until now the data that we were analysed had been _labeled_, that is we knew the associated y/reaction variable. If we remember, the salaries associated with the baseball players were known, when analysing the Hitters dataset, similarly the price of the properties on the Boston dataset was also given. That helped us gain a clear understanding of the problem. We wonted to study the relationship between the features and the reaction variable, and use it to make predictions. Having the reaction variable readily available, also meant that were able to measure the performance of our models with ease, using methods such us cross-validation and confusion matrix. But what if our problem was something like this?
 
-* A company like Netfix wants to identify groups of users with similar taste, in order to improve their recommendations. What defines taste? We can look into the genre of the film, the users age and the users ratings, but there isnt really a clearly defined problem or responce variable. Similarly, they might want to classify movies depending on their popularity. How do we find What the predictors that make a movie popular, and what do we clasify as popularity?
+* A company like Netflix wants to identify groups of users with similar taste, in order to improve their recommendations. What defines taste? We can look into the genre of the film, the users age and the users ratings, but there isn't really a clearly defined problem or response variable. Similarly, they might want to classify movies depending on their popularity. How do we find What the predictors that make a movie popular, and what do we classify as popularity?
 
-* A researcher wants to group patiants that have a rare dissease using their gene expressions, symtoms and recovery progress. This will allow him to conduct his studies easier and treat each patiant more effectivily depending on their variation of the studied attributes. We do not know what or how many groups, this classification will result into, neither do we know which of the attributes collected are usufull.
+* A researcher wants to group patients that have a rare disease using their gene expressions, symptoms and recovery progress. This will allow him to conduct his studies easier and treat each patient more effectively depending on their variation of the studied attributes. We do not know what or how many groups, this classification will result into, neither do we know which of the attributes collected are useful.
 
-Unlike, our previous classificcation problem of bank account defauting, where the outcome was either defauted or not defauted, in such cases we simply do not know what the outcome will be.
+Unlike, our previous classification problem of bank account defaulting, where the outcome was either defaulted or not defaulted, in such cases we simply do not know what the outcome will be.
 
-When the responce is not clear, for example we do not know what categories will result from the data, we say that this is an _unsupervised_ problem.
+When the response is not clear, for example we do not know what categories will result from the data, we say that this is an _unsupervised_ problem.
 
 
 ## Principal Component Analysis (PCA)
 
-PCA is an unsupervised machine learning algorithm, used for dimention reduction. Just as with supervised learning we will be trying to gain insight on our problem by studing the variations in the datset, trying to explain them and use the explanations for grouping the data or making predictions. Often we are faced with datasets containing multiple predictors, wich can be highly correlated, making it difitult to perform this analysis. PCA can reduce the number of variables and remove any mullticolinearity effect, while maintining the measures that explain most of of the variability in a dataset.
+PCA is an unsupervised machine learning algorithm, used for dimension reduction. Just as with supervised learning we will be trying to gain insight on our problem by studying the variations in the dataset, trying to explain them and use the explanations for grouping the data or making predictions. Often we are faced with datasets containing multiple predictors, which can be highly correlated, making it difficult to perform this analysis. PCA can reduce the number of variables and remove any multicollinearity effect, while maintaining the measures that explain most of of the variability in a dataset.
 
-PCA will attempt to summarize the data, by projecting it in new axis. Each of those new axis will be a linear combination of the features in the original dataset, that results in a line closest to the observations. For example a one dimentional summary of the data, whould be a line closest, on avarage, to all the data points (taking the Euclidean distance). A two dimentional summary whould be a plane that is closest to the data points.
+PCA will attempt to summarise the data, by projecting it in new axis. Each of those new axis will be a linear combination of the features in the original dataset, that results in a line closest to the observations. For example a one dimensional summary of the data, would be a line closest, on average, to all the data points (taking the Euclidean distance). A two dimensional summary would be a plane that is closest to the data points.
 
-PCA will create as many of those 'summary dimentions' as there are features in the dataset, in order to explain all of the viration (unleas there in not enough data to find all of them). However, usually the first few dimentions will be able to summarize the data quite well, explaining a significant presentage of the viriation. So we choose to project the data in those fewer dimentions.
-
-
-We have already meantioned that in order for 'summary dimentions' to be able to explain the data, they are a compination of the features in the original dataset. In an n-dimentional space the first principal component will follow the direction of the dimention which shows the most viriation. For example if we had a 2-D scatterplot where the observations mostly followed a straight line, parallel to the x axis, we whould see that most of the action is happening on the x axis, while there is little viriation on the y axis. The first principal component whould follow the direction the x-axis, mayby slightly roted to capture some of the variation on the y axis.
-
-Those 'summary dimentions' are colled princical components, let's how they are dirived.
+PCA will create as many of those 'summary dimensions' as there are features in the dataset, in order to explain all of the variation (unless there in not enough data to find all of them). However, usually the first few dimensions will be able to summarise the data quite well, explaining a significant percentage of the variation. So we choose to project the data in those fewer dimensions.
 
 
-1. We swift the data so that the center of the data points is at the origin of the axis (they are swifted without loosing the relative distances to each other). This means that the mean of the data is now zero. For your information, this is not required however, having a mean of zero makes the calculations later on easy, so it is generally prefered.
+We have already mentioned that in order for 'summary dimensions' to be able to explain the data, they are a combination of the features in the original dataset. In an n-dimensional space the first principal component will follow the direction of the dimension which shows the most variation. For example if we had a 2-D scatterplot where the observations mostly followed a straight line, parallel to the x axis, we would see that most of the action is happening on the x axis, while there is little variation on the y axis. The first principal component would follow the direction the x-axis, maybe slightly rotated to capture some of the variation on the y axis.
 
-2. We find the best fit line between our data points, which are now centered. The best fit line, will be able to best describe our data (sumarize it) and therefore it will become our fist principal component (PC1). This is done in a similar way to least squared distance in linear regression. However, since we are looking to find a vector (vectors allways start from the origin, we want this since PC1 will become a new axis, it whould be very uless if an axis did not start from the origin) we want this best fitline to pass through the origin. Because this is true instead of minimizing the disctance of our points to the best fitting line, we can instead maximize the distance of the projected (to the best fiting line) points to the origin. This distance is at a 90 degree angle from the disctance of our points to the best fitting line, and since the distance of each point to the origin is always constant, they are inversy proportianal (when the disctance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the pythagorium theorum.
+Those 'summary dimensions' are called principal components, let's how they are derived.
 
-The form of the PC1 whill be :
+
+1. We swift the data so that the centre of the data points is at the origin of the axis (they are shifted without loosing the relative distances to each other). This means that the mean of the data is now zero. For your information, this is not required however, having a mean of zero makes the calculations later on easy, so it is generally preferred.
+
+2. We find the best fit line between our data points, which are now centred. The best fit line, will be able to best describe our data (summarise it) and therefore it will become our fist principal component (PC1). This is done in a similar way to least squared distance in linear regression. However, since we are looking to find a vector (vectors always start from the origin, we want this since PC1 will become a new axis, it would be very unless if an axis did not start from the origin) we want this best fit line to pass through the origin. Because this is true instead of minimising the distance of our points to the best fitting line, we can instead maximise the distance of the projected (to the best fitting line) points to the origin. This distance is at a 90 degree angle from the distance of our points to the best fitting line, and since the distance of each point to the origin is always constant, they are inversely proportional (when the distance of our points to the best fitting line decreases, the distance from the projected points to the origin increases), from the Pythagorean theorem.
+
+The form of the PC1 will be :
 $y =\beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n$, where $x_1$ to $x_n$, are the features on the original dataset.
 
-The coeficiants are called the loading scores and will show us which features had the most effect on the PC (the higher the absolute value of the coefficient the more infuence that feature had).
+The coefficients are called the loading scores and will show us which features had the most effect on the PC (the higher the absolute value of the coefficient the more influence that feature had).
 
 
-3.We want the next PC to be a (again) a linear combination of all features that explaines the most (of the remaining!) variance. We do not want the next PC to be corelated to the previous PC, we want it to only explain the remaining variance and avoid multicollinearity. This means that this new line will be perpendicular to the privious (and still needs to pass through the origin to become a new axis).Colinearity in a graphical representation can be identified when two lines are close to each other and/or have the same direction. When they are perpendicular to each other there is claerly no corelation.
+3.We want the next PC to be a (again) a linear combination of all features that explains the most (of the remaining!) variance. We do not want the next PC to be correlated to the previous PC, we want it to only explain the remaining variance and avoid multicollinearity. This means that this new line will be perpendicular to the previous (and still needs to pass through the origin to become a new axis). Collinearity in a graphical representation can be identified when two lines are close to each other and/or have the same direction. When they are perpendicular to each other there is clearly no correlation.
 
 4. We keep making Pc's until all of the variation is explained.
 
 5. We choose a few of those PCs, whose combination explains most of the variation, and we we project the data on them.
 
-Warning: One thing to be carefull of is using data of a different scale for some of the features. Data with higher scale will bias PCA to assume that most of the viriation is happening in that axis. For example if we had scores of students in maths' exam (from 1 to 10) and in history (from 1 to 100), the loading scores for history whould be unreasonably hight. A standart practice to avoid this, is to devide all feature data by its standart deviation.
+Warning: One thing to be careful of is using data of a different scale for some of the features. Data with higher scale will bias PCA to assume that most of the variation is happening in that axis. For example if we had scores of students in maths' exam (from 1 to 10) and in history (from 1 to 100), the loading scores for history would be unreasonably hight. A standard practice to avoid this, is to divide all feature data by its standard deviation.
 
 ```{r}
-# This lab was created by professor Bharatendra Rai from University of Massachusetts Dartmouth (it is been slightly modified for our perpuses)
+# This lab was created by professor Bharatendra Rai from University of Massachusetts Dartmouth (it is been slightly modified for our purposes)
 
-# We are using a classic data set that comes with R, the iris dataset. It contains information about 3 different species of the iris flower, such us their pedal lenght and width. We want to know if we can use that information to claster the different spicies and predict which species new data belongs to, from its attributes.
+# We are using a classic data set that comes with R, the iris dataset. It contains information about 3 different species of the iris flower, such us their pedal length and width. We want to know if we can use that information to cluster the different species and predict which species new data belongs to, from its attributes.
 data("iris")
 summary(iris)
 
-# The iris dataset comes labeled, this means that we can use PCA in a 'supervised' format. It just allows us to split the data in two, and measure the performance of the model in predicting speicies on the testing and training data.
+# The iris dataset comes labeled, this means that we can use PCA in a 'supervised' format. It just allows us to split the data in two, and measure the performance of the model in predicting species on the testing and training data.
 # Partition Data
 set.seed(111)
 # the ratio of the split is 80% for the training and 20% for the testing
@@ -78,7 +78,7 @@ install.packages("psych")
 ```
 ```{r}
 library(psych)
-# We can see that the data is highly correlated, espacially petal.Lenght and petal.Width (almost 1!), this makes it a good candidate for PCA even tho we do not have that make dimentions
+# We can see that the data is highly correlated, especially petal.Length and petal.Width (almost 1!), this makes it a good candidate for PCA even tho we do not have that make dimensions
 pairs.panels(training[,-5],
              gap = 0,
              bg = c("red", "yellow", "blue")[training$Species],
@@ -92,7 +92,7 @@ pc <- prcomp(training[,-5],
 # we can see the loading values for each PC
 summary(pc)
 
-# As we whould expect there is zero correlation between the PCs (Orthogonality of PCs), so we are good to go
+# As we would expect there is zero correlation between the PCs (Orthogonality of PCs), so we are good to go
 pairs.panels(pc$x,
              gap=0,
              bg = c("red", "yellow", "blue")[training$Species],
@@ -102,7 +102,7 @@ pairs.panels(pc$x,
 pcVar <- pc$sdev^2
 pcaVarPercentage <- round(pcVar/sum(pcVar)*100,1)
 # we can see that most of the variation can be explained by just the first 2 PCs
-barplot(pcaVarPercentage, main="Scree plot", xlab="PC", ylab = "Presentage Variation")
+barplot(pcaVarPercentage, main="Scree plot", xlab="PC", ylab = "Percentage Variation")
 
 # We will now project our data in those two Pc's
 ```
@@ -114,8 +114,8 @@ devtools::install_github("vqv/ggbiplot")
 ```{r}
 library(ggbiplot)
 
-#we can see that PCA has done a very good gob of grouping iris of the same species using only 2 dimentions
-#the red arrws help us understand how PC1 and PC2 are derived, we can use them to approximate the properties of each feature
+#we can see that PCA has done a very good gob of grouping iris of the same species using only 2 dimensions
+#the red arrows help us understand how PC1 and PC2 are derived, we can use them to approximate the properties of each feature
 g <- ggbiplot(pc,
               obs.scale = 1,
               var.scale = 1,
@@ -133,7 +133,7 @@ print(g)
 trg <- predict(pc, training)
 trg <- data.frame(trg, training[5])
 tr
-# contains predictions of species for the testingdata
+# contains predictions of species for the testing data
 tst <- predict(pc, testing)
 tst <- data.frame(tst, testing[5])
 
