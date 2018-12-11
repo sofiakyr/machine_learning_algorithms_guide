@@ -407,7 +407,7 @@ summary(model3)
 survivalTimeDS <- read.csv("data/poison_balanced.tsv", sep="")
 
 #we can see the boxplot to get an idea of the variance
-boxplot(survivolTime~ treatment* poison ,data=survivalTimeDS)
+boxplot(survivalTime~ treatment* poison ,data=survivalTimeDS)
 
 summary(survivalTimeDS)
 
@@ -418,16 +418,16 @@ summary(survivalTimeDS)
 ############################ inspect the mean survival time for each combination #######################################
 library(plyr)
 #per poison
-meanPerPoison <-ddply(survivalTimeDS, .(poison), summarize, mean=mean(survivolTime))
+meanPerPoison <-ddply(survivalTimeDS, .(poison), summarize, mean=mean(survivalTime))
 meanPerPoison
 #per treatment
-meanPerTreatment <-ddply(survivalTimeDS, .(treatment), summarize, mean=mean(survivolTime))
+meanPerTreatment <-ddply(survivalTimeDS, .(treatment), summarize, mean=mean(survivalTime))
 meanPerTreatment
 #for each poisson each treatment
-meanPoisonTreat <-ddply(survivalTimeDS, .(treatment, poison), summarize, mean=mean(survivolTime))
+meanPoisonTreat <-ddply(survivalTimeDS, .(treatment, poison), summarize, mean=mean(survivalTime))
 meanPoisonTreat
 #total
-meanTimeForAll <- mean(survivalTimeDS$survivolTime)
+meanTimeForAll <- mean(survivalTimeDS$survivalTime)
 meanTimeForAll
 
 ##########################Sum square of first factor(poison)#############################################################
@@ -462,7 +462,7 @@ sumOfSquaresForTreatments
 sumOfSquaresWithErrorF <- function(treatmentGiven, poisonGiven){
   subTrPoi <- subset(survivalTimeDS, treatment==treatmentGiven & poison== poisonGiven)
   meanOfTrPoi <- subset(meanPoisonTreat, treatment==treatmentGiven& poison== poisonGiven,select="mean")
-  sumTrPoi <- sum((subTrPoi$survivolTime - meanOfTrPoi)^2)
+  sumTrPoi <- sum((subTrPoi$survivalTime - meanOfTrPoi)^2)
   return(sumTrPoi)
 }
 #to get all combinations A1, A2,A3,B1....we need to use outer product
@@ -474,7 +474,7 @@ product <- expand.grid(x, y)
 sumOfSquaresWithError <- sum(mapply( sumOfSquaresWithErrorF,treatmentGiven= as.character(product[1,"Var1"]),poisonGiven=product[1,"Var2"]))
 sumOfSquaresWithError
 ########################## Sum of Square Total ################################
-sumSquareTotal <- sum((survivalTimeDS$survivolTime - meanTimeForAll)^2)
+sumSquareTotal <- sum((survivalTimeDS$survivalTime - meanTimeForAll)^2)
 sumSquareTotal
 
 ######################### sum square of both factors ############################################
@@ -521,7 +521,7 @@ cvForPoison
 
 #however you need to ensure your factors are actually of type factor!!!
 survivalTimeDS$poison <- as.factor(survivalTimeDS$poison)
-modelForSurvivalTime <- lm(survivolTime ~ treatment * poison, data = survivalTimeDS)
+modelForSurvivalTime <- lm(survivalTime ~ treatment * poison, data = survivalTimeDS)
 #type does not matter since our test is balanced
 library(car)
 Anova(modelForSurvivalTime, type="III")
