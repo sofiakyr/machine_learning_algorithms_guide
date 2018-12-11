@@ -419,7 +419,7 @@ mean.cv.error <- apply(cv.errors, 2, mean)
 mean.cv.error
 
 # Lets plot them to see which models have the lowest errors
-par(mflow = c(1, 1))
+par(mfrow = c(1, 1))
 plot(mean.cv.error, type='b')
 
 # We can see that 10 and 11 are the smallest ones ( with 11 been the smallest),
