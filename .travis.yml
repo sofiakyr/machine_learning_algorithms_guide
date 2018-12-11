@@ -16,6 +16,7 @@ addons:
       - libjpeg-dev
       - libxml2-dev
       - libz-dev
+      - libmpfr-dev
 
 install:
   - R -e "0" --args --bootstrap-packrat
