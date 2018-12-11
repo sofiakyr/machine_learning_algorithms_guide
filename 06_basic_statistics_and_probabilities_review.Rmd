@@ -249,26 +249,26 @@ tStat
 #Ha(alternative hypothesis): affected
 
 #create our contingency table
-trial <- matrix(c(26,20,13,29, 5, 7), ncol=3)
+trial <- matrix(c(26,20,13,29, 5, 7), ncol = 3)
 colnames(trial) <- c("rep", "dem", "other")
 rownames(trial) <- c("males", "females")
 trial.table <- as.table(trial)
 trial.table
 
-totalFemales <- sum(trial["females",])
-totalMales <- sum(trial["males",])
-totalRep <- sum(trial[,"rep"])
-totalDem <- sum(trial[,"dem"])
-totalOther <- sum(trial[,"other"])
-totalSubjects <- totalFemales +totalMales
+totalFemales <- sum(trial.table["females",])
+totalMales <- sum(trial.table["males",])
+totalRep <- sum(trial.table[,"rep"])
+totalDem <- sum(trial.table[,"dem"])
+totalOther <- sum(trial.table[,"other"])
+totalSubjects <- totalFemales + totalMales
 
 #expected values if Ho holds
-ExpMaleRep <- totalMales * totalRep /totalSubjects
-ExpMaleDem <- totalMales * totalDem /totalSubjects
-ExpMaleOther <- totalMales * totalOther /totalSubjects
-ExFemaleRep <- totalFemales * totalRep /totalSubjects
-ExFemaleDem <- totalFemales * totalDem /totalSubjects
-ExFemaleOther <- totalFemales * totalOther /totalSubjects
+ExpMaleRep <- totalMales * totalRep / totalSubjects
+ExpMaleDem <- totalMales * totalDem / totalSubjects
+ExpMaleOther <- totalMales * totalOther / totalSubjects
+ExFemaleRep <- totalFemales * totalRep / totalSubjects
+ExFemaleDem <- totalFemales * totalDem / totalSubjects
+ExFemaleOther <- totalFemales * totalOther / totalSubjects
 
 exp <- matrix(c(ExpMaleRep,ExFemaleRep,ExpMaleDem,ExFemaleDem,ExpMaleOther,ExFemaleOther), ncol=3)
 colnames(exp) <- c("rep", "dem", "other")
