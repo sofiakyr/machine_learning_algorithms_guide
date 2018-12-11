@@ -9,14 +9,4 @@ github-repo: chicsof/machine_learning_algorithms_guide
 description: "In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach."
 ---
 
-# Progress {-}
 
-Since this is a living document there are parts that are being edited or still in the process of being written. So far
-the completed sections are:
-
-* [2 Linear Regression](linear-regression.html)
-* [3 Logistic Regression](logistic-regression.html)
-* [4 Advanced Techniques for Linear Algorithms](advanced-techniques-for-linear-algorithms.html)
-* [13 Recommendation Systems](recomendation-systems.html)
-
-Contact me at sophia.97@windowslive.com if you have any queries :)

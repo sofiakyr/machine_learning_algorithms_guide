@@ -17,3 +17,19 @@ My inspiration for creating this, was the book 'An introduction to Statistical L
 Daniela Witten, Trevor Hastie and Robert Tibshirani, which I would highly recommend. It contains labs and exercises for
 your learning, as well as an approachable explanation of machine learning algorithms. We will be referring to that book
 and other resources through the guide.
+
+Chapters coming up up soon:
+
+* General Additive Models (GAMs)
+
+* Bayer's for Classification
+
+* Ather classification Algorithms (k-means and knn)
+
+* Desition Trees
+
+* Support-Vector Machines
+
+* Boosting
+
+For any quiries contact at: sophia.97@windowslive.com
