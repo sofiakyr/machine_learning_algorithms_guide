@@ -208,9 +208,10 @@ right
 trialDice <- matrix(c(22,24,38,30, 46, 44), ncol=6)
 colnames(trialDice) <- c(1,2,3,4,5,6)
 rownames(trialDice) <- c("frequencies")
-trial.tableDice <- as.table(trial)
+trial.tableDice <- as.table(trialDice)
+trial.tableDice
 
-n <- sum(trialDice["frequencies",])
+n <- sum(trial.tableDice["frequencies",])
 expectedFr <- 1/6*n
 ####################### Second step: choose the level of significance (a) #############################################
 
@@ -228,7 +229,7 @@ criticalValue <-qchisq(0.99, df=5)
 criticalValue
 ####################### Four step: Find test statistic ###############################################################
 
-tStat = sum((trialDice["frequencies",]- expectedFr )^2)/expectedFr
+tStat = sum((trial.tableDice["frequencies",]- expectedFr )^2)/expectedFr
 tStat
 ####################### Five step: Draw a conclusion ###############################################################
 
