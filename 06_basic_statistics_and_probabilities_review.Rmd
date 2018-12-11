@@ -1,25 +1,25 @@
 # Basic Statistics and Probabilities Review
 
-## A usufull cheatsheat in Propabilities
+## A useful cheatsheet in Probabilities
 
-![1.1 A usufull cheatsheat in Propabilities](images/probabilities.png)
+![1.1 A useful cheatsheet in Probabilities](images/probabilities.png)
 
-## A usufull cheatsheat in Distributions
+## A useful cheatsheet in Distributions
 
-![1.2 A usufull cheatsheat in Distributions](images/distributions.png)
+![1.2 A useful cheatsheet in Distributions](images/distributions.png)
 
-## Basic probality exersises
+## Basic probability exercises
 
 ### Coin tossing:
 
-We are going to try and examine if the propability of getting heads or tails when tossing a coin if 0.5 by
-conducting n bernouli trials, summing the results of heads or tails and seing if they are about half
+We are going to try and examine if the probability of getting heads or tails when tossing a coin if 0.5 by
+conducting n Bernoulli trials, summing the results of heads or tails and seeing if they are about half
 
 
 ```{r}
 #using the random number generator
 N <- 100
-#will return true (1) if the outpout from 0 to 1 is >0.5
+#will return true (1) if the output from 0 to 1 is >0.5
 flips <- runif(N, min=0, max=1)>0.5
 #we sum them up, it will add all the ones for true and zero's for false of the above list of flips
 #so we expect half of them to be true and so to get a result close to 0.5
@@ -35,11 +35,11 @@ sum(flips)/N
 ### The famous birthday problem:
 
 
-Finding the propability that at least two people having the same birthday from a sample of n people.
-we ignore leap years, seasonal varietions
+Finding the probability that at least two people having the same birthday from a sample of n people.
+we ignore leap years, seasonal variations
 
 
-All the propable birthdays of the people whould be 365^k if everyones birthday was unique (no one has the same birthday), there whould be factorial(365)/factorial(365-k) ways for that to be true, from the permutations formula so the propability that at least two people have the same birthday whould be 1 - (propability no one having the same birthday)
+All the probable birthdays of the people would be 365^k if everyones birthday was unique (no one has the same birthday), there would be factorial(365)/factorial(365-k) ways for that to be true, from the permutations formula so the probability that at least two people have the same birthday would be 1 - (probability no one having the same birthday)
 
 ```{r eval=FALSE}
 #this library allows us to use larger numbers
@@ -48,7 +48,7 @@ install.packages("Rmpfr")
 ```{r}
 library("Rmpfr")
 
-#create function to calculate permutations, this is the standart formula however we use the rmpfr library
+#create function to calculate permutations, this is the standard formula however we use the rmpfr library
 #that will let us deal with larger numbers
 perm <- function(n, k) {
   factorialMpfr(n)/factorialMpfr(n-k)
@@ -65,45 +65,46 @@ for(k in 1:count){
   p[k] <- asNumeric(d)
 }
 
-plot(1:count, p, xlab="number of people", ylab ="propability in %")
+plot(1:count, p, xlab="number of people", ylab ="probability in %")
 ```
 
 ## Understanding P-values
-The p value if used to decide whether an Ho should be accepted or rejected. It is releted to the propability of the event happening, assuming it is random (h0 is true) BUT it does not always equal that.
+The p value if used to decide whether an Ho should be accepted or rejected. It is related to the probability of the event happening, assuming it is random (h0 is true) BUT it does not always equal that.
 
-p-value is : propability of event happening at random + propability of all other events of an equal chance + propability of all events that are less likly to happen
+p-value is : probability of event happening at random + probability of all other events of an equal chance + probability of all events that are less likely to happen
 
 ```{r}
-#lets take the example of tossing a coin and landing 5 heads on a row, what is the p-value
-posibleOutcomes<- 2^5
-posibleOutcomes
-P4heads <- 1/posibleOutcomes
+#let's take the example of tossing a coin and landing 5 heads on a row, what is the p-value
+possibleOutcomes<- 2^5
+possibleOutcomes
+P4heads <- 1/possibleOutcomes
 P4heads
-#the propability of landing 5 tails in a row is equally likly
-P4tails <- 1/posibleOutcomes
-#there is no other outcome less likly so we can get the p value from
+#the probability of landing 5 tails in a row is equally likely
+P4tails <- 1/possibleOutcomes
+#there is no other outcome less likely so we can get the p value from
 pValue <- P4heads + P4tails
 pValue
-#the propability was 0.031, however the p-value is 0.03, which is less than the usuall threshold of 0.05 and so we chould accept the H0
-#this chould occure at random
+#the probability was 0.031, however the p-value is 0.03, which is less than the usual threshold of 0.05 and so we could accept the H0
+#this could occur at random
 
-#what whould the p value be if we goten 4 heads and 1 tail
-WaysForheads1tail <- factorial(5)/factorial(4)*factorial(5-4)
-P4heads1tail <- WaysForheads1tail/posibleOutcomes
+#what would the p value be if we got 4 heads and 1 tail
+WaysForHeads1tail <- factorial(5)/factorial(4)*factorial(5-4)
+P4heads1tail <- WaysForHeads1tail/possibleOutcomes
 P4heads1tail
-#the propability of something equally likly having (4 tails and 1 head)
+#the probability of something equally likely having (4 tails and 1 head)
 P4tails1head <- P4heads1tail
-#propability of something less likly happening (5 heads or 5 tails), is already calculated so p whould be:
+#probability of something less likely happening (5 heads or 5 tails), is already calculated so p would be:
 pValue <- P4heads1tail + P4tails1head + P4heads + P4tails
-pValue#also quite hight so event chould easily occure at random
+#also quite high so event could easily occurs at random
+pValue
 
-#what if we were dealing with continious distributions, e.g hight measurments?
-#in this case we use a density function where the aeria under the graph represents the propability for that x1 to x2 occuring.
+#what if we were dealing with continuous distributions, e.g hight measurements?
+#in this case we use a density function where the area under the graph represents the probability for that x1 to x2 occurring.
 
-#if we had the following height sample, what is the propability of a person having a height from 1.60 to 1.68
+#if we had the following height sample, what is the probability of a person having a height from 1.60 to 1.68
 heights <- c(1.50, 1.45, 1.54, 1.60,1.61,1.62,1.66,1.64,1.66, 1.66, 1.66, 1.66, 1.69, 1.70, 1.71, 1.72, 1.73, 1.74, 1.75, 1.80, 1.85, 1.90)
 
-#this how the graph looks like, where the blue line represents the pdf (propability density function)
+#this how the graph looks like, where the blue line represents the pdf (probability density function)
 #assuming the heights of the population follows a normal distribution
 h<-hist(heights, breaks=10, col="red")
 xfit<-seq(min(heights),max(heights),length=40)
@@ -111,39 +112,39 @@ yfit<-dnorm(xfit,mean=mean(heights),sd=sd(heights))
 yfit <- yfit*diff(h$mids[1:2])*length(heights)
 lines(xfit, yfit, col="blue", lwd=2)
 
-# generally we can get the aeria under the graph by calculating the integral from x1 to x2, in a normal distribution we can use the z scores instead
-#to calculate the aeria from an x point to the mean, by relating to the standart normal distribution. We also know that the total aeria which represents
-#all the propabilities whould be one, also the aeia from the left or right to the mean whould be 0.5 due to te symetry.
+# generally we can get the area under the graph by calculating the integral from x1 to x2, in a normal distribution we can use the z scores instead
+#to calculate the area from an x point to the mean, by relating to the standard normal distribution. We also know that the total area which represents
+#all the probabilities would be one, also the area from the left or right to the mean would be 0.5 due to the symmetry.
 
-#so in order to get what we are looking for we need to add the aeria from x1 to the mean and the aeria from x2 to the mean
+#so in order to get what we are looking for we need to add the area from x1 to the mean and the area from x2 to the mean
 m <- mean(heights)
 s <- sd(heights)
 m
 #from x1 to m
-#the zcrore is
+#the score is
 z1 <- (1.60-m)/s
-#the aeria from z1 to end
-aeriaX1ToEnd <- pnorm(z1)
-aeriaX1ToEnd
-#knowing that the aria ftom the mean to the end is 0.5, then the aeria from the mean to x1 is
-aeriaX1 <- 0.5 - aeriaX1ToEnd
-aeriaX1
+#the area from z1 to end
+areaX1ToEnd <- pnorm(z1)
+areaX1ToEnd
+#knowing that the aria from the mean to the end is 0.5, then the area from the mean to x1 is
+areaX1 <- 0.5 - areaX1ToEnd
+areaX1
 #from x2 to m
 z2 <- (1.68-m)/s
-aeriaX2ToEnd <- pnorm(z2)
-aeriaX2ToEnd
-aeriaX2 <-  aeriaX2ToEnd -0.5
-aeriaX2
-#since the one x is on the left of the mean and the other on the right we can just add them, otherwise we whould have to also remove a common aeria
-TotalAeria <- aeriaX1+aeriaX2
-TotalAeria
-#that is equal to 30% propability that a persons hight is exacly inbetween 1.60 to 1.68
-#to measure the p value we need to also measure the propability of someone having a height less that 1.60
-aeriaX1ToEnd
-#and the propability of someone having a height greater than 1.68
-aeriaX2ToEnd
+areaX2ToEnd <- pnorm(z2)
+areaX2ToEnd
+areaX2 <-  areaX2ToEnd -0.5
+areaX2
+#since the one x is on the left of the mean and the other on the right we can just add them, otherwise we would have to also remove a common area
+TotalArea <- areaX1+areaX2
+TotalArea
+#that is equal to 30% probability that a persons hight is exactly in-between 1.60 to 1.68
+#to measure the p value we need to also measure the probability of someone having a height less that 1.60
+areaX1ToEnd
+#and the probability of someone having a height greater than 1.68
+areaX2ToEnd
 #and add them up
-pValue <- TotalAeria + aeriaX1ToEnd + aeriaX2ToEnd
+pValue <- TotalArea + areaX1ToEnd + areaX2ToEnd
 pValue
 #that is a large p value and therefor shows that having a height close to the mean is not uncommon
 ```
@@ -160,7 +161,7 @@ studentScores <- c(83, 73, 71, 77, 77, 59, 92)
 scoreMean <- mean(studentScores)
 n <- length(studentScores)
 
-#since we do not know the standart deviation of the actuall population, rather we only know the s of the sample and our sample n<30 we will use t
+#since we do not know the standard deviation of the actual population, rather we only know the s of the sample and our sample n<30 we will use t
 # values to calculate the error
 error <- qt(0.99,df=n-1) * sd(studentScores)/sqrt(n)
 
@@ -175,7 +176,7 @@ right
 
 ```{r}
 #Estimate the avarage weight for the adult male population.The avarage weight of 100 randomly selected adult males is 180lbs. Assume a population
-#standart deviation of 20lbs. Compute a 95% confidence interval for the population avarage weight.
+#standard deviation of 20lbs. Compute a 95% confidence interval for the population avarage weight.
 
 n <- 100
 meanWeight <- 180
@@ -213,7 +214,7 @@ n <- sum(trialDice["frequencies",])
 expectedFr <- 1/6*n
 ####################### Second step: choose the level of significance (a) #############################################
 
-#a is the aeria under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
+#a is the area under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
 #We will use a=0.01 for
 a <- 0.01
 
@@ -221,7 +222,7 @@ a <- 0.01
 ####################### Third step: Find critical value ###############################################################
 
 #critical value is the point (z value) that separates the tails as defined from a to the main curve
-#the standart deviation of the population is given so we will use a  z test
+#the standard deviation of the population is given so we will use a  z test
 #(1-0.01)for R
 criticalValue <-qchisq(0.99, df=5)
 criticalValue
@@ -231,7 +232,7 @@ tStat = sum((trialDice["frequencies",]- expectedFr )^2)/expectedFr
 tStat
 ####################### Five step: Draw a conclusion ###############################################################
 
-# tsat<criticalValue and so it falls in the rejected aeria, so we can reject the null hypothesis and accept the Ha
+# tsat<criticalValue and so it falls in the rejected area, so we can reject the null hypothesis and accept the Ha
 
 ```
 
@@ -275,7 +276,7 @@ exp.table <- as.table(exp)
 exp.table
 ####################### Second step: choose the level of significance (a) #############################################
 
-#a is the aeria under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
+#a is the area under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.
 #We will use a=0.05 for
 
 #example chi square distribution for visibility
@@ -290,7 +291,7 @@ a <- 0.05
 ####################### Third step: Find critical value ###############################################################
 
 #critical value is the point (z value) that separates the tails as defined from a to the main curve
-#the standart deviation of the population is given so we will use a  z test
+#the standard deviation of the population is given so we will use a  z test
 #(1-0.05)for R
 criticalValue <-qchisq( 0.95, df=2)
 criticalValue
@@ -301,7 +302,7 @@ tStat <- sum(eachExquaer)
 tStat
 ####################### Five step: Draw a conclusion ###############################################################
 
-# tsat>criticalValue and so it does not falls in the rejected aeria, so we can accept the null hypothesis and we cannot accept the Ha
+# tsat>criticalValue and so it does not falls in the rejected area, so we can accept the null hypothesis and we cannot accept the Ha
 
 ######################################################################################################
 ########################## CHI-SQUARE TEST Of INDEPENDANCY IN R ######################################
@@ -312,7 +313,7 @@ chisq.test(trial.table)
 
 
 chisq.test(trial.table)$expected
-#this returns the expected values, it validetes the ones we calculated previously on exp.table and it can be used to compere with our actuall values
+#this returns the expected values, it validetes the ones we calculated previously on exp.table and it can be used to compere with our actual values
 
 #to confirm this
 Rexpected <- chisq.test(trial.table)$expected
@@ -327,20 +328,21 @@ barplot(trial.table, legend= TRUE, beside = T)
 ### Chi-square goodness of fit in R
 
 ```{r}
-#we use the dice exaple again
-frequeciesGiven<- c(22,24,38,30, 46, 44)
+#we use the dice example again
+frequenciesGiven<- c(22,24,38,30, 46, 44)
 #calculated on top of the page
 pForEach<- c(1/6,1/6,1/6,1/6, 1/6, 1/6)
 
-#this validetes our previous results and so it gives a p=0.009177 which is a very small propability for the H0 to be tru, therefore we accept the Ha
-chisq.test(frequeciesGiven, p=pForEach)
+#this validates our previous results and so it gives a p=0.009177 which is a very small probability for the H0 to be tru, therefore we accept the Ha
+chisq.test(frequenciesGiven, p=pForEach)
 ```
 
 ### Fisher's Exact test in R
+
 ```{r}
-#this is used for non-paremetric data (not following a normal distribution)
-#legent has it, it was discovered when testing if a lady in the UK chould tell if milk was poured before or after
-#so lets take this example. Assume 20 trials out of which the lady gets guesses 9 times correctly that tea was poured before, out of the 10 in which it actally was.
+#this is used for non-parametric data (not following a normal distribution)
+#legend has it, it was discovered when testing if a lady in the UK could tell if milk was poured before or after
+#so lets take this example. Assume 20 trials out of which the lady gets guesses 9 times correctly that tea was poured before, out of the 10 in which it actually was.
 n <- 20
 s <- 9
 milkBefore <- 10
@@ -352,15 +354,15 @@ comb = function(n, x) {
 
 totalWays <- comb(n,milkBefore)
 totalWays
-#the lady got 4, so we need to calculate in how many ways she chould have gotten 4 out of 5
+#the lady got 4, so we need to calculate in how many ways she could have gotten 4 out of 5
 #there are ten ways in 10 orders
-waysToGuessSuc <- 10*10
-waysToGuessSuc
-#if we assume the H0, the propability that she got it corectly at random whould be:
-p <- waysToGuessSuc / totalWays
+waysToGuessSuccess <- 10*10
+waysToGuessSuccess
+#if we assume the H0, the probability that she got it correctly at random would be:
+p <- waysToGuessSuccess / totalWays
 p
-# p= 0.02, which is quite small smaller that 0.05 which is usually the threshold so we can reject the H0. According to this triall the lady can, most likly,
-#tell whether or not milk was pured before or after the tea
+# p= 0.02, which is quite small smaller that 0.05 which is usually the threshold so we can reject the H0. According to this trial the lady can, most likely,
+#tell whether or not milk was poured before or after the tea
 
 #let's try this using R built in functionality
 TeaTasting <-
@@ -376,12 +378,13 @@ fisher.test(TeaTasting, alternative = "greater")
 ## Anova
 
 ### Two-way ANOVA with interaction testing
+
 ```{r}
 #built in data set
 head(warpbreaks)
 summary(warpbreaks)
 
-#standart model
+#standard model
 model1 <- aov(breaks ~ wool + tension, data = warpbreaks)
 #we can see that tension is significant to the breaks
 summary(model1)
@@ -400,43 +403,43 @@ summary(model3)
 
 ```{r}
 #this is a balanced test since for every poisson the same amount of tests/treatments were used
-servivolTimeDS <- read.csv("data/poison_balanced.tsv", sep="")
+survivalTimeDS <- read.csv("data/poison_balanced.tsv", sep="")
 
-#we can see the boxplot to get an idea of the varience
-boxplot(survivolTime~ treatment* poison ,data=servivolTimeDS)
+#we can see the boxplot to get an idea of the variance
+boxplot(survivalTime~ treatment* poison ,data=survivalTimeDS)
 
-summary(servivolTimeDS)
+summary(survivalTimeDS)
 
 #H0: type of poison has no affect
 #H0: type o treatment has no affect
 #H0: combination of poison and type has no affect
 
-############################ inspect the mean servivol time for each combination #######################################
+############################ inspect the mean survival time for each combination #######################################
 library(plyr)
 #per poison
-meanPerPoison <-ddply(servivolTimeDS, .(poison), summarize, mean=mean(survivolTime))
+meanPerPoison <-ddply(survivalTimeDS, .(poison), summarize, mean=mean(survivalTime))
 meanPerPoison
 #per treatment
-meanPerTreatment <-ddply(servivolTimeDS, .(treatment), summarize, mean=mean(survivolTime))
+meanPerTreatment <-ddply(survivalTimeDS, .(treatment), summarize, mean=mean(survivalTime))
 meanPerTreatment
-#for each possion each treatment
-meanPoisonTreat <-ddply(servivolTimeDS, .(treatment, poison), summarize, mean=mean(survivolTime))
+#for each poisson each treatment
+meanPoisonTreat <-ddply(survivalTimeDS, .(treatment, poison), summarize, mean=mean(survivalTime))
 meanPoisonTreat
 #total
-meanTimeForAll <- mean(servivolTimeDS$survivolTime)
+meanTimeForAll <- mean(survivalTimeDS$survivalTime)
 meanTimeForAll
 
 ##########################Sum square of first factor(poison)#############################################################
 
 #this is given by calculating the squared difference of the grand mean to the mean for each
-#poison and then suming the result
+#poison and then summing the result
 
 #for robustness we make a function that selects the mean for a given poison and does the calculations
 sumOfSquaresForPoisonF <- function(poisonGiven){
   #we multiply by 4 because we have 4 treatments per poison
   4*(((subset(meanPerPoison,poison==poisonGiven,select="mean"))[1,]-meanTimeForAll)^2)
 }
-#then we apply this function for poion 1,2,3 and sum the result
+#then we apply this function for poison 1,2,3 and sum the result
 sumOfSquaresForPoison <- sum(mapply(sumOfSquaresForPoisonF, c(1,2,3)))
 
 
@@ -453,12 +456,12 @@ sumOfSquaresForTreatments <- sum(mapply(sumOfSquaresForTreatmentsF, c("A", "B", 
 sumOfSquaresForTreatments
 ########################## Sum square within error ######################################################################
 
-#This is the square sum for each servivaltime in our dataset minus the avarage for that poison and treatment
+#This is the square sum for each survival time in our dataset minus the average for that poison and treatment
 
 sumOfSquaresWithErrorF <- function(treatmentGiven, poisonGiven){
-  subTrPoi <- subset(servivolTimeDS, treatment==treatmentGiven & poison== poisonGiven)
+  subTrPoi <- subset(survivalTimeDS, treatment==treatmentGiven & poison== poisonGiven)
   meanOfTrPoi <- subset(meanPoisonTreat, treatment==treatmentGiven& poison== poisonGiven,select="mean")
-  sumTrPoi <- sum((subTrPoi$survivolTime - meanOfTrPoi)^2)
+  sumTrPoi <- sum((subTrPoi$survivalTime - meanOfTrPoi)^2)
   return(sumTrPoi)
 }
 #to get all combinations A1, A2,A3,B1....we need to use outer product
@@ -470,7 +473,7 @@ product <- expand.grid(x, y)
 sumOfSquaresWithError <- sum(mapply( sumOfSquaresWithErrorF,treatmentGiven= as.character(product[1,"Var1"]),poisonGiven=product[1,"Var2"]))
 sumOfSquaresWithError
 ########################## Sum of Square Total ################################
-sumSquareTotal <- sum((servivolTimeDS$survivolTime - meanTimeForAll)^2)
+sumSquareTotal <- sum((survivalTimeDS$survivalTime - meanTimeForAll)^2)
 sumSquareTotal
 
 ######################### sum square of both factors ############################################
@@ -481,10 +484,10 @@ sumOfSquareBothFactors <- sumSquareTotal - sumOfSquaresWithError -sumOfSquaresFo
 
 #for first factor (poison)
 dfFirstFactor <- 3-1
-#for second factor (treatmeant)
+#for second factor (treatment)
 dfSecondFactor <- 4-1
 #for within error we add up n-1 of each treatment for each poison so:
-#(4-1) a treat ment for a poison *3 one treatment for each poison *4 each treatment for each poison
+#(4-1) a treatment for a poison *3 one treatment for each poison *4 each treatment for each poison
 dfWithinError <- (4-1)*3*4
 #sum of both squares, we multiply df of first and second
 dfSumOfBoth <- dfFirstFactor * dfSecondFactor
@@ -495,32 +498,32 @@ dfTotal
 ######################### calculating the mean square of sum of square within error ############
 
 #we will need this to calculate the f-scores which will allow us to draw our conclusions for each H0
-#this is the sum of squares within error devided by its degrees of freedom so:
+#this is the sum of squares within error divided by its degrees of freedom so:
 meanSquareOfSumWithinError <- sumOfSquaresWithError/dfWithinError
 meanSquareOfSumWithinError
 
-######################### H0: poison does not affect the survivol time ############################
+######################### H0: poison does not affect the survival time ############################
 
-#we need to calculate the F-score for this whcich is meansquareof1rstfactor/meansquareWithinError
-#so we need the mean square of 1rst factor:
+#we need to calculate the F-score for this which is meanSquareOfFirstFactor/meanSquareWithinError
+#so we need the mean square of 1st factor:
 meanSquareOfFirstFactor <- sumOfSquaresForPoison/dfFirstFactor
 FscoreForPoison <- meanSquareOfFirstFactor/meanSquareOfSumWithinError
 # F(dfFirstFactor ,dfWithinError) = FscoreForPoison p<0.5 for a 95%confidence interval,
-#we can find the critical value for df of numerator dfFirstFactor and dfWithinError demonimator from the F disctribution
+#we can find the critical value for df of numerator dfFirstFactor and dfWithinError denominator from the F distribution
 cvForPoison <- qf(.95, df1=dfFirstFactor, df2=dfWithinError)
 cvForPoison
-#FscoreForPoison falls in the rejection aeria and so we can reject he H0 and accept that the poison does affect the
-#servival time
+#FscoreForPoison falls in the rejection area and so we can reject he H0 and accept that the poison does affect the
+#survival time
 
 ####### you can repeat this for the rest of the H0's ##############################################
 ### or we can be sensible and use..... r #####
 
 #however you need to ensure your factors are actually of type factor!!!
-servivolTimeDS$poison <- as.factor(servivolTimeDS$poison)
-modelForServivolTime <- lm(survivolTime ~ treatment * poison, data = servivolTimeDS)
+survivalTimeDS$poison <- as.factor(survivalTimeDS$poison)
+modelForSurvivalTime <- lm(survivalTime ~ treatment * poison, data = survivalTimeDS)
 #type does not matter since our test is balanced
 library(car)
-Anova(modelForServivolTime, type="III")
+Anova(modelForSurvivalTime, type="III")
 
 #from the above we can reject that poison and treatment has no effect and accept that the interaction has no effect
 ```
