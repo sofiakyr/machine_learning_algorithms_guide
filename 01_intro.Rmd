@@ -9,15 +9,6 @@ approaches. This guide does not require any prior knowledge, although some basic
 would make things easier. For those that need to occasionally refresh their statistics, there is a chapter devoted to
 that.
 
-This guide refers to anyone who is interested in machine learning, from any background. We will go far beyond the basics
-of use cases and implementation of each algorithm, however at no point will there be anything presented that assumes
-previous knowledge and is not accompanied by real case examples and implementations.
-
-My inspiration for creating this, was the book 'An introduction to Statistical Learning' written by Gareth James,
-Daniela Witten, Trevor Hastie and Robert Tibshirani, which I would highly recommend. It contains labs and exercises for
-your learning, as well as an approachable explanation of machine learning algorithms. We will be referring to that book
-and other resources through the guide.
-
 Chapters coming up up soon:
 
 * General Additive Models (GAMs)
@@ -33,3 +24,5 @@ Chapters coming up up soon:
 * Boosting
 
 For any quiries contact at: sophia.97@windowslive.com
+
+Credits should be given to to the book 'An introduction to Statistical Learning' written by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, which helped a lot in my learning and originization of this project. We will be refering to this book and other resources throught the guide.
