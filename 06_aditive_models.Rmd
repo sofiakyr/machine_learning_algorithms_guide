@@ -2,11 +2,68 @@
 
 ## Introduction
 
-As we have already mentioned, the linear model suffers some serious limitations which steam from the asumption that the model follows a linear treand. In real life, relations between predictors and reaction are (almost always) more complicated. They can be changing as the preidctors take on higher/lower values. When we explained linear regression we also show polynomial regression, which was able to better explain some of those alternations and optimize our models' performance. In this chapter we will look into auther such extensions of the linear models. As a generall idea, we will be attempting to capture variations on this relationship, by spliting the data on different ranges of the predictors (where the variation occures), and fitting a different model on each.
+As we have already mentioned, the linear model suffers some serious limitations, which steam from the asumption that the model follows a linear treand. In real life, relations between predictors and reaction are (almost always) more complicated. They can be changing as the preidctors take on higher/lower values. When we explained linear regression we also show polynomial regression, which was able to better explain some of those alternations and optimize our models' performance. In this chapter we will look into auther such extensions of the linear models. As a generall idea, we will be attempting to capture variations on this relationship, by spliting the data on different ranges of the predictors (where the variation occures), and fitting a different model on each.
 
 Following that though, Aditive models are usuful when:
 
 * On the scatterplot we observe that the way the predictor is relatated to the reaction changes for deferent ranges of the predictor. If you spot various 'curving' patterns.
 
 * In such cases, algorithms such us desition tree based may result in similar or better performance models, with less of the complexity. You may want to use an Additive model, if inference is key in your analysis or as a comparison point in your benchmarking. As always, this will highly depend on your problem, the data you have and your resources. It is adviced to try out various models and cross validate them.
+
+## Step Function
+
+This method suggests breaking down the model into _bins_. Each bin will have its own coefficients that are only valide for a certain range of the predictors $X$. Each bin is assigned a constant $C_1$, $C_2$, $C_3$, $C_k$ which can either be 1 or 0, indicatating if the value that $X$ takes, is inside or outside the bin's range. Doing so allows us to represent the function as follows and sove using least squares.
+
+$ y_j = \beta_0 + \beta_1 C_1 x_1 + \beta_2 C_2 x_1 + ... + \beta_k C_k x_1 + \beta_1 C_1 x_2 + \beta_2 C_2 x_2 + ... + \beta_k C_k x_2 + ... + \beta_1 C_1 x_j + \beta_2 C_2 x_j + ... + \beta_k C_k x_j$
+
+where for each $x_j$ you can have up to one $C_k=1$ (one or none $C_k$ will be true), since it can only have up to one coefficient depending on which bin it bellongs to.
+
+This method comes with a major disadvatage. Since each bin's coeffients are derived using only data that is within the bin's range, we might miss capturing global trends.
+
+Generally, you whould consider using this method if :
+
+* The bins you want to split your data into are well defined by nature. For example, this method is popular in disciplines such us biostatistics and epidemology, where the relationships studied are very different for patiants with 5-year differences (bins whould split the data for every age group).
+
+* You have a lot of coefficients out of which some are usufull for sertain ranges and others are usufll for other ranges
+
+```{r}
+# we will use the dataset Wage, made by ISLR to fit well for additive models
+library(ISLR)
+data(Wage)
+
+# the cut() function will help us split the data in bins. We can select how many bins we want, here we have selected 4. Furthermore, we can set the cutpoints, which whould be used to place each bin with the option breakes=,. If this is not spacified R will choose to place each bin uniformly acrros the range of x. In this case R has set a bin for every 15.5 year group.
+table(cut(Wage$age,4))
+
+model <- lm(wage~cut(age,4), data = Wage)
+# here you can see that each age group has its own coefficient estimate. 
+# notice that the age group 17.9 to 33.5 does not have a coefficient. For those values prediction whould simply be their avarage wage given by the intercept $94.158.
+model
+```
+
+
+## Splines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
