@@ -1,0 +1,12 @@
+# Additive Models
+
+## Introduction
+
+As we have already mentioned, the linear model suffers some serious limitations which steam from the asumption that the model follows a linear treand. In real life, relations between predictors and reaction are (almost always) more complicated. They can be changing as the preidctors take on higher/lower values. When we explained linear regression we also show polynomial regression, which was able to better explain some of those alternations and optimize our models' performance. In this chapter we will look into auther such extensions of the linear models. As a generall idea, we will be attempting to capture variations on this relationship, by spliting the data on different ranges of the predictors (where the variation occures), and fitting a different model on each.
+
+Following that though, Aditive models are usuful when:
+
+* On the scatterplot we observe that the way the predictor is relatated to the reaction changes for deferent ranges of the predictor. If you spot various 'curving' patterns.
+
+* In such cases, algorithms such us desition tree based may result in similar or better performance models, with less of the complexity. You may want to use an Additive model, if inference is key in your analysis or as a comparison point in your benchmarking. As always, this will highly depend on your problem, the data you have and your resources. It is adviced to try out various models and cross validate them.
+
