@@ -1,4 +1,4 @@
-# Additive Models
+# Extensions for linear models
 
 ## Introduction
 
@@ -32,32 +32,108 @@ library(ISLR)
 data(Wage)
 
 # the cut() function will help us split the data in bins. We can select how many bins we want, here we have selected 4. Furthermore, we can set the cutpoints, which whould be used to place each bin with the option breakes=,. If this is not spacified R will choose to place each bin uniformly acrros the range of x. In this case R has set a bin for every 15.5 year group.
-table(cut(Wage$age,4))
+t <-table(cut(Wage$age,4))
+t
 
 model <- lm(wage~cut(age,4), data = Wage)
 # here you can see that each age group has its own coefficient estimate. 
 # notice that the age group 17.9 to 33.5 does not have a coefficient. For those values prediction whould simply be their avarage wage given by the intercept $94.158.
 model
+
+# let's see how this looks like
+library(ggplot2)
+
+x1 <- seq(17.9, 33.5, 0.1)
+y1 <- rep(94.158, times = length(x1) )
+
+y2 <- integer()
+x2 <- seq(33.5, 49, 0.1)
+for(i in 1:length(x2)){
+  y2[i] <-  94.158 + 24.053* x2[i]
+}
+
+y3 <- integer()
+x3 <- seq(49, 64.5, 0.1)
+for(i in 1:length(x3)){
+  y3[i] <-  94.158 +  23.665* x3[i]
+}
+
+y4 <- integer()
+x4 <- seq(64.5, 80.1, 0.1)
+for(i in 1:length(x4)){
+  y4[i] <-  94.158 +  7.641* x4[i]
+}
+
+
+x <- c(x1,x2, x3, x4)
+y <- c(y1,y2, y3, y4)
+
+d=data.frame(x=x, y=y)
+ggplot() +
+geom_step(data=d, mapping=aes(x=x, y=y)) +
+geom_step(data=d, mapping=aes(x=x, y=y), direction="vh", linetype=3) +
+geom_point(data=d, mapping=aes(x=x, y=y), color="red") 
+
 ```
 
 
 ## Splines
 
+As we can see from the graph, the endpoints are not fitting well, the model is not 'smooth'. And although it is clearly not as strick and overgenralized as a simple linear model, it may not do a great job of describing the revaltionship between age and wage. If we look at the scatterplot, we can see that a curve rather than a line chould be more fitting.
+
+```{r}
+plot(Wage$age, Wage$wage)
+
+```
+
+We already know that we can use a polynomial in order to fit a curve to the data. We chould try various degrees of polynomials and cross validate them to see which performed the best. Polynomials however, have various pitfalls. They usually perform well on quite high degrees. High degrees of polynomials will curve the data too much in unessasry places and can cause inaccurate analysis, among other issues. Instead we whould like to use _piecewise polynomial regression_, where we whould choose a polynomial of smaller degree but achieve optimal performance. In piecewise polynomial regression we fit a model using deferent coefficiants for various ranges of $x$. Quite often the cubic (3rd degree polynomial) performs well, here is what a function for cubic piecewise polynomial regression whould look like:
+
+$y_i = \left\{ \begin{array}{ll} \beta_01 + \beta_11x_j + \beta_21x_j^2 + \beta_31x_j^3 & \mbox{if } x_y \geq c \\ \beta_02 + \beta_12x_j + \beta_22x_j^2 + \beta_32x_j^3 & \mbox{if } x_j < c \end{array} \right.$ 
+
+Where the range of $x$ is been 'cut' on the point $c$. The point $c$ is called a knot. We can add more knots if we want to increase the flexibility of the model.
+
+When we apply such a function we have manged to overcome some of the pitfalls of polynomial regression but the model whould be discontinious at the point of the knot. It whould look similar to the privious example of step functions where at points the function was missing out 'smoothness'.
+
+```{r}
+data1 <- Wage[which(Wage$age >= 50),]
+data2 <- Wage[which(Wage$age<50),]
+
+fit1 <- lm(wage ~ age + I(age^2) + I(age^3), data = data1)
+fit2 <- lm(wage ~ age + I(age^2) + I(age^3), data = data2)
+
+
+age.grid1 <- seq(from=18,to=50)
+age.grid1 <- seq(from=51,to=80)
+
+y1<- predict(fit1,list(age=age.grid1))
+y2<- predict(fit2,list(age=age.grid2))
+
+x <- c(age.grid1,age.grid2)
+y <- c(y1,y2)
+
+plot(x,y)
+
+
+```
 
 
 
 
 
 
+```{r}
+library(splines)
+model <- lm(wage~bs(age,knots=c(25,40,60)), data=Wage)
+agelims <- range(Wage$age)
+age.grid <- seq(from=agelims[1],to=agelims[2])
+age.grid
+pred<- predict(model,list(age=age.grid),se=T)
+plot(Wage$age, Wage$wage, col ="grey")
+lines(age.grid, pred$fit, lwd=2)
+lines(age.grid,pred$fit+2*pred$se, lty="dashed")
+lines(age.grid,pred$fit-2*pred$se, lty="dashed")
 
-
-
-
-
-
-
-
-
+```
 
 
 
