@@ -181,10 +181,61 @@ lines(model,lwd=2)
 
 ## Local Regression
 
+If all fails, there is the alternative of fitting a curve to your data using the local regression. This method creates the curve incrementaly. It chooses its place at some point $x$, by considering the location of the closets observations around that place. It resembles the algorithm k-nearest-neibours (discussed in future chapters).
+
+Let's see exacly how this is achieved:
+
+1. First we need to define the size of the window. That is how many closest observations we want the method to account for, when defining each new point of the curve. We will call this number $k$
+
+2. Then we want to define the new points of the curve. We do that by moving the original observation's location to a new location. We start from the first observation and we find the k-closest observations to it.
+
+3. To find its new position we perform least squares on the k-closest points (including the original point). The original point is refered to us the vocal point. The closest those k points are, the more weight is given to them on the regression. They have more inflance on the position of the best fit line. The vocal point has the most weight.
+
+4. We project the vocal point on the best fit line. The projection is the fist point of the curve we are trying to draw
+
+5. We repeat steps 2,3 and 4 for all the observations, in order to find all the points of our curve. 
+
+6. We chould now draw a 'best fit curve' by connecting all those new points. However, that curve may have a lot of 'wiggle', so we want to follow some additional steps in order to smoothen it.
+
+7. The 'wiggles' whould be the result of points that are too hight/low compared to the avarege, and are infuancing the position of the best fit line each time too much (remeber leverage points). TO reduce their effect, we add additional weights based on how far the original points are to the projected ones. Points that are moved too much will have higher weights.
+
+8. We repeat the process of finding new points from the original observations using least squares. However, this time we also account for the additional new weights.
+
+9. Now we can fit a smoother curve in our data, by connecting the new points
+
+Notes: 
+
+* The process of regulization (smoothening) may need to be repeated a couple of times in order to reach the desired level of smoothness.
+
+* We may want to fit parabolas insead of lines on each window of data. Parabolas tend to work better on data that indicates a lot of curving patterns. In R you can use the function lowess() for a line and loess() for a parabola (or a line, it defaults to parabola)
+
+* In theory we can perform Local Regression for multiple $x$ predictors. However, when the dimentions are increasing the observations will become more sparse amongs them. This means that there whould be greater distances between them and not enought nearby observations for each dimention. You need to ensure you have enough observations. In generall local regresion is performed with 3 or 4 predictors as a max. 
+
+watch https://www.youtube.com/watch?v=Vf7oJ6z2LCc for a good visual explanation by Josh Starmer. 
 
 
+```{r}
+
+#fitting parabollas
+#spam associates with degree of smoothing and is revated with the window size selected proportional to the data
+fit1 = loess(wage~age,span=.2,data=Wage)
+fit2 = loess(wage~age,span=.5,data=Wage)
+
+plot(Wage$age, Wage$wage, col="#CCBADC")
+lines(age.grid,predict(fit1,data.frame(age=age.grid)),lwd=2)
+lines(age.grid,predict(fit2,data.frame(age=age.grid)),lwd=2, col = "orange")
+legend("topright", legend=c("Span =0.2", "Span=0.5"), col=c("black","orange"), lty=1, lwd=2, cex=.8)
 
 
+#fitting lines
+#f is simila to span, the greater f gives more smoothnes
+plot(Wage$age, Wage$wage, col="#CCBADC")
+lines(lowess(Wage$age, Wage$wage, f=2/3), col=2)
+lines(lowess(Wage$age, Wage$wage,f=1/8)) 
+legend("topright", legend=c("f=2/3", "f=1/4"), col=c("red","black"), lty=1, lwd=2, cex=.8)
+
+
+```
 
 
 
