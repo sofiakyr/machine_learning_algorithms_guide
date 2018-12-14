@@ -92,7 +92,7 @@ $y_i = \left\{ \begin{array}{ll} \beta_01 + \beta_11x_j + \beta_21x_j^2 + \beta_
 
 Where the range of $x$ is been 'cut' on the point $c$. The point $c$ is called a knot. We can add more knots if we want to increase the flexibility of the model.
 
-When we apply such a function we have manged to overcome some of the pitfalls of polynomial regression but the model whould be discontinious at the point of the knot. It whould look similar to the privious example of step functions where at points the function was missing out 'smoothness'.
+When we apply such a function we have manged to overcome some of the pitfalls of polynomial regression. However, the model whould be discontinious at the points of the knots, here is an example where we chosen a single knot at age 50. 
 
 ```{r}
 data1 <- Wage[which(Wage$age >= 50),]
@@ -100,7 +100,7 @@ data2 <- Wage[which(Wage$age<50),]
 
 fit1 <- lm(wage ~ age + I(age^2) + I(age^3), data = data1)
 fit2 <- lm(wage ~ age + I(age^2) + I(age^3), data = data2)
-
+fit1
 
 age.grid1 <- seq(from=18,to=50)
 age.grid1 <- seq(from=51,to=80)
@@ -108,11 +108,9 @@ age.grid1 <- seq(from=51,to=80)
 y1<- predict(fit1,list(age=age.grid1))
 y2<- predict(fit2,list(age=age.grid2))
 
-x <- c(age.grid1,age.grid2)
-y <- c(y1,y2)
-
-plot(x,y)
-
+plot(Wage$wage ~ Wage$age, data = Wage,col="#CCBADC",pch=16 , cex=1.3)
+with(data.frame(age.grid1), lines(x = age.grid1, y = y1))
+with(data.frame(age.grid2), lines(x = age.grid2, y = y2))
 
 ```
 
