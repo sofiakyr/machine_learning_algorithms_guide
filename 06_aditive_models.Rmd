@@ -88,25 +88,32 @@ plot(Wage$age, Wage$wage)
 
 We already know that we can use a polynomial in order to fit a curve to the data. We chould try various degrees of polynomials and cross validate them to see which performed the best. Polynomials however, have various pitfalls. They usually perform well on quite high degrees. High degrees of polynomials will curve the data too much in unessasry places and can cause inaccurate analysis, among other issues. Instead we whould like to use _piecewise polynomial regression_, where we whould choose a polynomial of smaller degree but achieve optimal performance. In piecewise polynomial regression we fit a model using deferent coefficiants for various ranges of $x$. Quite often the cubic (3rd degree polynomial) performs well, here is what a function for cubic piecewise polynomial regression whould look like:
 
-$y_i = \left\{ \begin{array}{ll} \beta_01 + \beta_11x_j + \beta_21x_j^2 + \beta_31x_j^3 & \mbox{if } x_y \geq c \\ \beta_02 + \beta_12x_j + \beta_22x_j^2 + \beta_32x_j^3 & \mbox{if } x_j < c \end{array} \right.$ 
+$y_i = \left\{ \begin{array}{ll} \beta_01 + \beta_11x_j + \beta_21x_j^2 + \beta_31x_j^3 & \mbox{if } x_j \geq c \\ \beta_02 + \beta_12x_j + \beta_22x_j^2 + \beta_32x_j^3 & \mbox{if } x_j < c \end{array} \right.$ 
 
-Where the range of $x$ is been 'cut' on the point $c$. The point $c$ is called a knot. We can add more knots if we want to increase the flexibility of the model.
+Where the range of $x$ is been 'cut' on the point $c$. The point $c$ is called a knot. We can add more knots if we want to increase the flexibility of the model. 
 
-When we apply such a function we have manged to overcome some of the pitfalls of polynomial regression. However, the model whould be discontinious at the points of the knots, here is an example where we chosen a single knot at age 50. 
+We say that the above function has been split in two _bais functions_ one for $x_j \geq c$ and one for $x_j < c$.
+
+When we apply such a regression, we have manged to overcome some of the pitfalls of polynomial regression. However, the model whould be discontinious at the points of the knots, here is an example where we chosen a single knot at age 50. 
 
 ```{r}
+#split the data at knot=50
 data1 <- Wage[which(Wage$age >= 50),]
 data2 <- Wage[which(Wage$age<50),]
 
+#create the two bais functions
 fit1 <- lm(wage ~ age + I(age^2) + I(age^3), data = data1)
 fit2 <- lm(wage ~ age + I(age^2) + I(age^3), data = data2)
 
+# x values for each bais function
 age.grid1 <- seq(from=18,to=50)
 age.grid1 <- seq(from=50,to=80)
 
+#y values resuslting from each bais function
 y1<- predict(fit1,list(age=age.grid1))
 y2<- predict(fit2,list(age=age.grid2))
 
+#plots
 plot(Wage$wage ~ Wage$age, data = Wage,col="#CCBADC")
 with(data.frame(age.grid1), lines(x = age.grid1, y = y1))
 with(data.frame(age.grid2), lines(x = age.grid2, y = y2))
@@ -122,17 +129,22 @@ Here is what happens when we add this condition
 #library for fitting cubic splines
 library(splines)
 model <- lm(wage~bs(age,knots=c(50)), data=Wage)
+
+# x values
 agelims <- range(Wage$age)
 age.grid <- seq(from=agelims[1],to=agelims[2])
 
+# resulting y values
 pred<- predict(model,list(age=age.grid),se=T)
+
+#plot
 plot(Wage$age, Wage$wage, col="#CCBADC")
 lines(age.grid, pred$fit, lwd=2)
 
 ```
 
 ```{r}
-#if you are not sure how many knots to place and where you can instead choose your degrees of freedom, the knots are placed uniformly by R:
+#if you are not sure how many knots to place and where, you can instead choose your degrees of freedom, the knots are placed uniformly by R:
 
 model <- lm(wage~ns(age, df=4), data=Wage)
 pred <- predict(model, newdata = list(age=age.grid), se=T)
@@ -150,7 +162,22 @@ lines(age.grid, pred$fit, lwd=2)
 
 ## Smoothing splines
 
+Smoothing splines is another way we can fit a curve to our data. Just like we did when fitting a line to the data, we will try to fit a curve that minimizes the residual error ( a curve that is the closest to all points). Of cource with a curve, we can always fit all the data perfectly, using potentially a very 'wiggly' curve that goes around all the points. Such a curve will have extreme problems of overfitting. Instead, what we really want to do is find a curve that fits the data well but also minimizes overfitting. 
 
+We can achieve this in a similar manner to ridge regresssion, adding a penalty of weight $\lamdba$ to the function that minimizes RSS. This penatly will be assosiated with how 'wiggly' the line is, since we are trying to find the best fitting 'smooth' curve. We have explain that smoothness of the curve can be assosiated with the second derivative of the curve's function. This brings us to the function we will be minimizing (dont worry too much about the represantation):
+
+$\sum_{n=1}^{n} (y_i - g(x_i)^2) + \lambda \int  g''(t)^2\,dt.$
+
+As you whould expect, $\lambda$ is found using cross validation.
+
+```{r}
+
+# smooth splines using cross validation
+model <- smooth.spline(Wage$age, Wage$wage, cv= TRUE)
+plot(Wage$age, Wage$wage, col="#CCBADC")
+lines(model,lwd=2)
+
+```
 
 ## Local Regression
 
