@@ -158,67 +158,55 @@ tab1
 
 ## Linear Discriminant Analysis (LDA)
 
-Linear discriminant analysis is very similar to PCA, however it is a supervised method. When we feed data to LDA, we know beforehand what categories we are looking to group, and each observesation is labeled. LDA makes use of this additional information and when it performs dimention recution, it can achieve better separation of the categoreis.
+Linear discriminant analysis is very similar to PCA, however it is a supervised method. When we feed data to LDA, we know beforehand what categories we are looking to group, and each observation is labeled. LDA makes use of this additional information and when it performs dimension reduction, it can achieve better separation of the categories.
 
-We can use LDA to summarize multidimentional data in a 2-D grath, without having to compromize important information from the various attributes. This can show us how effective curent attributes are in grouping the data and what their relationship is.
+We can use LDA to summarise multidimensional data in a 2-D graph, without having to compromise important information from the various attributes. This can show us how effective current attributes are in grouping the data and what their relationship is.
 
-Like PCA, LDA creates new axis, by combining the existing features and projects the data points on them. 
-LDA tries to find an axis wich sutisfies two conditions. First, when the data is projected on the new line, the distance between the means of the categories (the values the responce takes on) is maximized. The further away the means of two categories are the more separeted they will be, since the mean is where most of the data for each category is ususally concentrated on. Secondly, their stabdart deviation is minimized. This is how scattered the data will be when projejected on the best fit line (the more conentrated the data for each category is on its own mean, the better the separation will be). 
+Like PCA, LDA creates new axis, by combining the existing features and projects the data points on them.
+LDA tries to find an axis which satisfies two conditions. First, when the data is projected on the new line, the distance between the means of the categories (the values the response takes on) is maximised. The further away the means of two categories are the more separated they will be, since the mean is where most of the data for each category is usually concentrated on. Secondly, their standard deviation is minimised. This is how scattered the data will be when projected on the best fit line (the more concentrated the data for each category is on its own mean, the better the separation will be).
 
-When we have 2 dimational data (data with 2 features $a$ nad $b$), the function that will produce the best single axis for that data to be projected on, whould be the result of maximizing the following function: 
+When we have 2 dimensional data (data with 2 features $a$ and $b$), the function that will produce the best single axis for that data to be projected on, would be the result of maximising the following function:
 
 $\frac{(\mu_a - \mu_b)^2}{\sigma_a^2 + \sigma_b^2}$
 
-If we had more than two dimentions in the original data, instead of taking each and every combination of distances that need to be maximized we perform the following steps:
+If we had more than two dimensions in the original data, instead of taking each and every combination of distances that need to be maximised we perform the following steps:
 
 1. Find a central point to all the data $C_all$
-2. Find a centeral point for each category of the data $C_a$, $C_b$ ...
+2. Find a central point for each category of the data $C_a$, $C_b$ ...
 3. Compute the distance $d$ for each $C_a$, $C_b$ ... to $C_all$ (defined as their squared difference)
 
-The function we will be looking to maximize whould become as fallowing:
+The function we will be looking to maximise would become as fallowing:
 
 $\frac{d_a + d_b + d_c ...}{\sigma_a^2 + \sigma_b^2 +  \sigma_c^2}$
 
-LDA will lways result in two axis that acheive the most separation
+LDA will always result in two axis that achieve the most separation
 
 ```{r}
-
 data("iris")
 
 library(MASS)
 linear <- lda(Species ~., iris)
 
-# Proportion of trace, shows the persentage of seperation achived by each axis 
+# Proportion of trace, shows the percentage of separation achieved by each axis
 # we see that LD1 separates the data almost perfectly
 linear
-# we can see the coefficiants for the two lines (our new axis), that were created by LDA
-# the coeefiifants will show how each attribute affected each axis
+# we can see the coefficients for the two lines (our new axis), that were created by LDA
+# the coefficients will show how each attribute affected each axis
 linear$scaling
-
+```
+```{r eval=FALSE}
 install.packages('devtools')
+```
+```{r}
 library(devtools)
-install_github('fawda123/ggord')
+```
+```{r eval=FALSE}
+devtools::install_github('fawda123/ggord')
+```
+```{r}
 library(ggord)
 
 # we can see that the separation using LDA is much better than with PCA
 p <- ggord(linear, iris$Species)
 p
-
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
