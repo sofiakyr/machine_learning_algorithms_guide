@@ -107,17 +107,16 @@ fit2 <- lm(wage ~ age + I(age^2) + I(age^3), data = data2)
 
 # x values for each bias function
 age.grid1 <- seq(from=18,to=50)
-age.grid1 <- seq(from=50,to=80)
+age.grid2 <- seq(from=50,to=80)
 
 #y values resulting from each bias function
-y1<- predict(fit1,list(age=age.grid1))
-y2<- predict(fit2,list(age=age.grid2))
+y1 <- predict(fit1,list(age=age.grid1))
+y2 <- predict(fit2,list(age=age.grid2))
 
 #plots
 plot(Wage$wage ~ Wage$age, data = Wage,col="#CCBADC")
 with(data.frame(age.grid1), lines(x = age.grid1, y = y1))
 with(data.frame(age.grid2), lines(x = age.grid2, y = y2))
-
 ```
 
 We now need to 'smoothen' the graph. In other words, we want we want the rate of change for its slope (which describes its shape) to be the same at the point of the knots, so as to avoid weird 'bumps'. This is given by the second derivative. So we can add the condition that the second derivatives of the left and right functions need to be the same, at the point of the knot (50 in this example). Adding this constraint will create what is called a _natural_ spline. There are other ways to smoothen the graph such us a _clamp_, where instead we require the first derivatives to be equal to zero.
