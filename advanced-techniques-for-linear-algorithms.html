@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>4 Advanced techniques for linear algorithms | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="4 Advanced techniques for linear algorithms | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Advanced techniques for linear algorithms | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="logistic-regression.html">
+<link rel="next" href="dimension-reducing-algorithms.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="advanced-techniques-for-linear-algorithms" class="section level1">
+<h1><span class="header-section-number">4</span> Advanced techniques for linear algorithms</h1>
+<div id="introduction-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Introduction</h2>
+<p>In this chapter we will look into some more advanced ways of measuring the performance of our models as well improving
+it.</p>
+<p>Up to now we have been relating performance with how well our algorithm describes the variation in our training data
+(remember how we defined R-squared).There is a major issue with this, the more predictors we add the more our model will
+become ‘better’ according to this definition. Remember we are only using a SAMPLE of TRAINING data, both for designing
+the model and for measuring its performance. This sample of training data will contain some noise (some randomness),
+and when we add a new predictor, even if its completely irrelevant, a weak relationship (either positive or negative)
+will be found between that predictor and this randomness. The more of those irrelevant predictors we add, incrementally,
+we will start to describe this random variation better (in reality you can imagine this as shear luck). However this
+randomness is ONLY relevant to the sample data set that we happened to have, if we select another sample from the
+population we would have a different noise and all those predictors that we though are adding value to our model would
+only be causing issues. In this chapter we will look into how we can mitigate this issue and optimise our models as well
+us measure their performance more accurately. In this chapter we will look at doing so, while still building a
+linear-based model, you could also mitigate this by using algorithms that are non-linear such as tree based ones.</p>
+<div id="bias-variance-trade-off" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Bias Variance Trade Off</h3>
+<p>The issue above is part off a major concern in machine learning, described as the <em>the bias variance trade off</em>. Where
+bias describes how well a model fits in the training data, and variance how well it fits to the future/test data. In
+most cases there is a point where optimising the model for the training data will start to cause over-fitting. In other
+words, it will make the model very specific to that training sample and not generalised enough to fit future samples.</p>
+<p>In this chapter We will also look into alternatives to using the least square technique, in order to fit our line
+better, as well as other approaches to fitting linear-based models on non-linear problems. The reason we really want to
+dive deep and try to optimise a linear model in that extend, instead of just using a non-linear one is because of its interpretability. Linear models, in real-life scenarios are superior in solving interference problems (finding
+relationships between predictors and reaction).</p>
+</div>
+</div>
+<div id="improved-performance-indicators-adjusted-r-squared-and-alternatives" class="section level2">
+<h2><span class="header-section-number">4.2</span> Improved performance indicators (adjusted R-squared and alternatives)</h2>
+<p>As we mentioned before the R-squared, for measuring the performance of our linear model will continuously increase with
+the addition of relevant or irrelevant predictors, resulting in overestimation of the models’ fitness. A very simple but
+popular approach in mitigating this, is the use of the <em>adjusted R-squared</em> instead, which adds a penalty for increased
+predictors in the formula. If we recall the formula for R-squared is
+<span class="math inline">\(R^2 = 1- \frac{sum squared error}{total variation}\)</span>. For the adjusted R-squared we want this to be decreasing as the
+number of predictors are increasing. It is given by
+<span class="math inline">\(R^2 = 1- \frac{\text{sum squared error/(n-d-1)}}{\text{total variation/(n-1)}}\)</span>, where n is the total number of samples
+and d is the degrees of freedom (total number of predictors -1).</p>
+<p>Why are we accounting for the number of samples? A simple explanation is that the more samples we have, the more
+confident we can be that the accuracy we measured on this bigger sample will be the closer for the total population.
+As the number of samples (<span class="math inline">\(n\)</span>) increases , we can see that the adjusted R-squared also increases, as we would expect
+from our intuition.This increase however, is relevant to how many predictors we have (since the nominator is divided by
+<span class="math inline">\(n-d-1\)</span>). For example, if we take the case where d&gt;n (we have more predictors than samples) the R-squared will decrease.
+Lets see more about the relationship between predictors and samples.</p>
+<div id="the-curse-of-dimensionality" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> The curse of dimensionality</h3>
+<p>This relationship between number of predictors and samples, is actually very crucial in measuring the performance of a
+linear model. Remember that each predictor is a dimension in the space which our samples are placed. The more dimensions
+that space has (the more predictors), the more our points will be spread out. If we were comparing the accuracy of two
+models with the same number of samples, but different number of predictors, the model for which we could be more
+confident on its accuracy, would be the one with the least number of predictors!</p>
+<p>For the extreme case where the number of predictors are equal or less than the number of samples, the linear model is
+useless, as it would result in extremely overconfident results. Let’s see an example. Let’s imagine with have two
+predictors (this means we have a 2 dimensional space drawn in the x and a y axis).</p>
+<p>We have an equal amount of samples (2 points) from which we will create our linear model, using the least squares fit.
+To draw a straight line on the x and y axis we only need 2 points anyway, so our line fits perfectly the training data,
+we have 0 sum of squared error and therefore our classic R-squared is 1. Now we add another 100 samples from the same
+population on that plot and we see that the sum of squared error for those new points to the previously perfectly fit
+line is massive!</p>
+<p>The problems caused by high dimensions is referred to us the curse of dimensionality. A high dimensional problem is
+usually one where number of predictors is close to or less than the number of samples. In order to perform linear
+regression on such problems we usually result in techniques for reducing the number of dimensions. We will look into
+those techniques later on. For now we need to understand how the adjusted R-squared attempts to be a better measurement
+for model fitness, by accounting for this relationship between number of predictors and number of samples used.</p>
+<p>The adjusted R-squared is given by R automatically when we request the summary statistics for our model, and you have
+probably already noticed it.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
+<span class="kw">library</span>(ISLR)
+<span class="co"># Let&#39;s use our previous linear model of house values as a function of the</span>
+<span class="co"># Boston dataset attributes</span>
+lm.rm_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span>., <span class="dt">data =</span> Boston)
+<span class="co"># We can see that the R-squared and the adjusted R-squared are not too far off.</span>
+<span class="co"># The adjusted number is less, as expected it has paid the price of using</span>
+<span class="co"># multiple predictors, but we have enough samples to support most predictors.</span>
+<span class="co"># If we started removing predictors of less significance, we would notice that</span>
+<span class="co"># the adjusted R-squared and R-squared would be closer to each other.</span>
+<span class="kw">summary</span>(lm.rm_fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ ., data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.595  -2.730  -0.518   1.777  26.199 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  3.646e+01  5.103e+00   7.144 3.28e-12 ***
+## crim        -1.080e-01  3.286e-02  -3.287 0.001087 ** 
+## zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+## indus        2.056e-02  6.150e-02   0.334 0.738288    
+## chas         2.687e+00  8.616e-01   3.118 0.001925 ** 
+## nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+## rm           3.810e+00  4.179e-01   9.116  &lt; 2e-16 ***
+## age          6.922e-04  1.321e-02   0.052 0.958229    
+## dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+## rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+## tax         -1.233e-02  3.760e-03  -3.280 0.001112 ** 
+## ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+## black        9.312e-03  2.686e-03   3.467 0.000573 ***
+## lstat       -5.248e-01  5.072e-02 -10.347  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.745 on 492 degrees of freedom
+## Multiple R-squared:  0.7406, Adjusted R-squared:  0.7338 
+## F-statistic: 108.1 on 13 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="alternatives" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Alternatives</h3>
+<p>Although the motivation behind the adjusted R-squared is logical and it is a very popular approach, it can not really be
+supported by any statistical theory. This why there are other alternatives available such as:</p>
+<ul>
+<li>Mallows’ <span class="math inline">\(C_p\)</span>, computed by:</li>
+</ul>
+<p><span class="math inline">\(C_p = \frac{1}{n} (\text{sum of squared error}+ 2d \sigma^2)\)</span>, where <span class="math inline">\(d\)</span> is the degrees of freedom and <span class="math inline">\(\sigma^2\)</span> is
+the approximated, using the training sample, population variance.</p>
+<p>A high <span class="math inline">\(C_p\)</span> measure means that the model is not a good fit. <em>This approach tries to account for bias (over-fitting due
+to additional irrelevant predictors) by looking at how spread out the data is within those predictors (remember each
+predictor can be seen as a dimension)</em>. It uses the measure of uneducable error <span class="math inline">\(\epsilon\)</span> as a penalty,
+<span class="math inline">\(\epsilon = 2d \sigma^2\)</span>.</p>
+<p>Again the more the predictors increase (<span class="math inline">\(d\)</span> will increase) the higher the penalty will be. As for the <span class="math inline">\(\sigma^2\)</span> we can
+think of it as a regulator for that penalty. <span class="math inline">\(\sigma^2\)</span> measures how spread out the data is, it makes sense that the
+more variation there is, the more spread out the data will be and the more the error will increase. While when <span class="math inline">\(n\)</span>
+increases <span class="math inline">\(C_p\)</span> decreases, indicating better performance when more samples are available.</p>
+<p>Since <span class="math inline">\(\sigma^2\)</span> is estimated using the sample’s <span class="math inline">\(\sigma^2\)</span>, this criterium requires enough data to get a good
+approximation and it will not perform well using small datasets. Furthermore, we have mentioned that the <span class="math inline">\(\epsilon\)</span> is
+underestimated when there are complications in the relationship of the predictors and the reaction (
+e.g. multicollinearity), in such cases <span class="math inline">\(C_p\)</span> will also not provide useful insight.</p>
+<ul>
+<li>Akaike information criterion (AIC), computed by:
+<span class="math inline">\(AIC = 2k - 2ln(L)\)</span>, where k is the number of predictor plus one, and L is the maximum value of the likelihood function
+for the model.</li>
+</ul>
+<p>Again a small AIC, like a small <span class="math inline">\(C_p\)</span> indicated a good fit.</p>
+<p>As we know the maximum likelihood function is a way to find optimum fit. The higher that number is the more fit our
+model will be, resulting in a smaller AIC. However we still have a penalty related to how many predictors are used, this
+is the role of <span class="math inline">\(2k\)</span> in the equation.We will not go into too much details, but it has been found that AIC has an overall
+good performance in any model and data available, and quite often outperforms other methods when used for choosing
+predictors and finding the best model.</p>
+<ul>
+<li>Bayesian information criterion (BIC), computed by:
+<span class="math inline">\(BIC = ln(n)k - 2ln(L)\)</span></li>
+</ul>
+<p>This is very similar to AIC, with the main deference been that a heavier penalty is given for models with increasing
+predictors, resulting in defining optimal models those with less predictors.</p>
+</div>
+</div>
+<div id="cross-validation" class="section level2">
+<h2><span class="header-section-number">4.3</span> Cross Validation</h2>
+<p>We now have a way to account for over-fitting, when accessing our model. However, we are still only assessing our model
+on how well it is performing on the same data that it was trained with. We do not have any way of assessing how it would
+do when new data comes in.</p>
+<p>You may think that this is a simple thing to do, we can split our data (like we did with confusion matrix) in a training
+sample (70-80%), used to train the model and a (20-30%) testing data, only used to test that trained model. We then just
+need to calculate the R-squared, adjusted R-squared, <span class="math inline">\(C_p\)</span> or any other chosen criterion on the trained model, for that
+testing data (this method is called validation). We now have a performance measurement for a testing data!</p>
+<p>Yes but if we split the data, how do we split it. Any random 70-80% sample will result in different estimates for our
+coefficients, since it will randomly contain different values for each predictors/reaction. Similarly any random 20-30%
+sample will result in varying measurements for our performance criteria. Those variations can be quite significant,
+especially when we do not have enough samples.</p>
+<p>If we want more accuracy we need to take more measurements. This is where a new method of assessment comes in,
+Cross-Validation. Instead of splitting the data in two blocks, we will split it in <span class="math inline">\(k\)</span> number of blocks containing an
+equal portion of the data. For each of those blocks we will:</p>
+<ul>
+<li>Use all the remaining data (not contained in that block) to train the model</li>
+<li>Use the data contained in that block to test the trained model. We calculate the chosen performance indicator (
+e.g. sum of squared error (residuals)) for the test data (found in the block).</li>
+</ul>
+<p>We will repeat that for all the <span class="math inline">\(k\)</span> blocks. We then take the average performance indicator from all the <span class="math inline">\(k\)</span> indicators.
+This is our CV value.</p>
+<p>We can choose whatever value for k we want, to perform what is called k-fold cross validation. It is usually advised to
+choose 5-fold or 10-fold depending on how much data and resources are available.</p>
+<p>Apart from assisting in choosing the optimum coefficients for linear models, cross validation is also a great to way to
+compare the performance of different machine learning algorithms. We can perform cross validation in any model, in a
+similar manner to what was previously described. It also has other applications, which we will look at later on.</p>
+<p>I would recommend cross validation when you need to compare the performance of different machine learning algorithms on
+the same problem, when you do not have a lot of samples to simply trust the other methods, if computational power and
+complexity are not an issue, or if performance is crucial for your model.</p>
+<div id="cross-validation-in-action" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> Cross Validation in action</h3>
+<p>For this example, which is also given by the book, we will use another dataset made by ISLR, the Auto dataset. The
+dataset consists of various car’s consumption of fuel per mile and a few features that could be related with this,
+such as their weight, horsepower and number of cylinder’s. We will try an analyse this relationship using a linear
+model (We will only use horsepower to keep things simple and to the point). We will use k-fold validation to assess
+our model’s performance. In particular we will look at two cases for CV:</p>
+<ul>
+<li><p>LOOCV (Leave One Out Cross Validation), which is just an extreme case of normal CV where the number of block (k)
+selected are equal to the number of samples available. In other words each time our model will be trained using all
+the samples apart from one, that one will be used to asses it. This is a clearly computational expensive method, but
+might be useful if we have very few samples to train our model with.</p></li>
+<li><p>10-k fold validation, where k = 10</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This library has functions that will allow us to perform k-fold validation</span>
+<span class="kw">install.packages</span>(<span class="st">&#39;boot&#39;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(boot)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setting the seed to the same number will reproduce &#39;randomness&#39;.</span>
+<span class="co"># We need randomness in splitting the data to our blocks for k-fold cross</span>
+<span class="co"># validation.</span>
+<span class="kw">set.seed</span>(<span class="dv">24</span>)
+
+<span class="co"># gml() function without additional parameter will produce a linear model the</span>
+<span class="co"># same way lm() would.</span>
+<span class="co"># gml() however works with the k-fold function we need to use later.</span>
+glm.fit &lt;-<span class="st"> </span><span class="kw">glm</span>(mpg<span class="op">~</span>horsepower, <span class="dt">data =</span> Auto)
+<span class="co"># Perform cv using the cv.gml function, if you don&#39;t specify how many blocks you</span>
+<span class="co"># want to split your data to, the function performs LOOCV by default.</span>
+cv &lt;-<span class="st"> </span><span class="kw">cv.glm</span>(Auto, glm.fit)
+<span class="co"># The delta is parameter from above that contains the average error calculated</span>
+<span class="co"># after performing CV for each sample.</span>
+cv<span class="op">$</span>delta[<span class="dv">1</span>]</code></pre>
+<pre><code>## [1] 24.23151</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># On its own an error does really show us something, it is valuable when we</span>
+<span class="co"># compare it with errors from other models so that we can see which model is</span>
+<span class="co"># doing better.</span>
+<span class="co"># To illustrate this, we will try and compare the errors given when we perform</span>
+<span class="co"># polynomial regression. Using a for() loop we will perform CV on mpg as a</span>
+<span class="co"># function of:</span>
+<span class="co"># horsepower, horsepower^2, horsepower^3, horsepower^4, horsepower^5.</span>
+
+<span class="co"># Initialise a vector of 5 elements that will contain the errors for each model</span>
+cv.error =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)
+<span class="co"># Loop 5 times, each time for every model and add the error calculated to</span>
+<span class="co"># cv.error</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>){
+  glm.fit =<span class="st"> </span><span class="kw">glm</span>(mpg<span class="op">~</span><span class="kw">poly</span>(horsepower, i), <span class="dt">data =</span> Auto)
+  cv.error[i] =<span class="st"> </span><span class="kw">cv.glm</span>(Auto, glm.fit)<span class="op">$</span>delta[<span class="dv">1</span>]
+}
+<span class="co"># If we print out the errors we can see a significant improvement from the</span>
+<span class="co"># linear to the quadratic model (horsepower^2)</span>
+cv.error</code></pre>
+<pre><code>## [1] 24.23151 19.24821 19.33498 19.42443 19.03321</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Now we will repeat the evaluation of the same models, but using a 10-k fold CV</span>
+cv.error =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>){
+  glm.fit =<span class="st"> </span><span class="kw">glm</span>(mpg<span class="op">~</span><span class="kw">poly</span>(horsepower, i), <span class="dt">data =</span> Auto)
+  <span class="co"># The only additional parameter is K, which we chose to set to 10 since we are</span>
+  <span class="co"># looking to perform a 10-k fold cv.</span>
+  cv.error[i] =<span class="st"> </span><span class="kw">cv.glm</span>(Auto, glm.fit, <span class="dt">K =</span> <span class="dv">10</span>)<span class="op">$</span>delta[<span class="dv">1</span>]
+}
+
+<span class="co"># We can see that the results are quite similar (also the 10-k fold completed a</span>
+<span class="co"># lot faster, this is important especially if we had more data)</span>
+cv.error</code></pre>
+<pre><code>## [1] 24.26469 19.35152 19.47426 19.42381 19.15667</code></pre>
+</div>
+</div>
+<div id="selecting-the-optimal-predictors-for-the-model" class="section level2">
+<h2><span class="header-section-number">4.4</span> Selecting the optimal predictors for the model</h2>
+<p>We have seen how to measure the model’s fitness and account for over-fitting (using any or combinations of the methods
+we have been discussing), so we can compare various models with different sets of predictors and see which ones are more
+effective. In this section we will present various automated approaches for performing feature selection, in order to
+uncover which set of predictors will yield the optimal result.</p>
+<p>As we know, we want our model to have the lowest possible test error (which we can measure with cross validation) as
+well as a good balance between under-fitting and over-fitting (which we can measure using criterion such as AIC or BIC).
+So one could produce various models for his problem, using a deferent subset of the predictors each time. He could them
+cross validate each or measure their AIC and choose the one with the smallest error. A more methodical way of doing so
+is the <em>best subset selection</em> approach.</p>
+<div id="best-subset-selection" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Best subset selection</h3>
+<p>In this approach we will fit a models for every single possible combination of predictors, measure their performance and
+choose the optimal one. We will do so in a more organised and efficient way, while choosing the right performance
+criteria in each step of the selection process.</p>
+<p>Steps:</p>
+<ul>
+<li><p>First we define the ‘null Model’, this is a model of 0 predictors <span class="math inline">\(M_0\)</span>, that simply uses the total average of the
+reaction to give a prediction (this is necessary since all of the predictors could be irreverent, it acts as a
+measurement of comparison)</p></li>
+<li><p>Then we take every singe predictor and make a model containing only that predictor and the reaction. We measure their
+performance using the R-squared. The best out of them is called the <span class="math inline">\(M_1\)</span> model, since it only contains a single
+predictor.</p></li>
+<li><p>Then we take every combination of 2 predictors and fit a model out of each pair, we measure all of their performance
+using the R-squared, the best out of them is called the <span class="math inline">\(M_2\)</span> model.</p></li>
+<li><p>Then we take every combination of 3 predictors and fit a model out of each 3 pairs, we measure all of their
+performance using the R-squared, the best out of them is called the <span class="math inline">\(M_3\)</span> model.</p></li>
+<li><p>We repeat until there are no more combinations possible, we have reached the total number of predictors, let’s call
+this the <span class="math inline">\(M_p\)</span> model.</p></li>
+<li><p>We then take all our best models for each combination <span class="math inline">\(M_0\)</span>, <span class="math inline">\(M_1\)</span>, <span class="math inline">\(M_2\)</span>, <span class="math inline">\(M_3\)</span>…<span class="math inline">\(M_p\)</span> and perform cross validation
+or measure their adjusted R-square, the AIC or BIC criterion (or a combination of those performance indicators). And
+of course, we choose the one with the least error.</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;leaps&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># leaps containS functions for subset selection</span>
+<span class="kw">library</span>(leaps)
+
+<span class="co"># This lab, is again by ISLR, and uses the dataset Hitters. It contains various</span>
+<span class="co"># statistics for the performance of Baseball players such as number of Hits and</span>
+<span class="co"># Home runs, as well as their salary. We will try and fit a linear model that</span>
+<span class="co"># studies the relationship between their performance and salary.</span>
+<span class="kw">library</span>(ISLR)
+
+<span class="co"># The salary field for some of the players is empty. We will remove those</span>
+<span class="co"># players from the dataset, as they are not valuable and will cause issues when</span>
+<span class="co"># attempting to make the model.</span>
+Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)
+
+
+<span class="co"># By default the regsubsets() selections looks up to pairs of 8, you can change</span>
+<span class="co"># this by adding the following parameter: nvmax = &lt;number&gt;</span>
+<span class="co"># We chose 19 since we have 19 predictors</span>
+regfit.full &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Salary<span class="op">~</span>., Hitters, <span class="dt">nvmax =</span> <span class="dv">19</span> )
+<span class="co"># The out put show with an asterix the predictors that yield the optimal model</span>
+<span class="co"># for each pair.</span>
+<span class="kw">summary</span>(regfit.full)</code></pre>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(Salary ~ ., Hitters, nvmax = 19)
+## 19 Variables  (and intercept)
+##            Forced in Forced out
+## AtBat          FALSE      FALSE
+## Hits           FALSE      FALSE
+## HmRun          FALSE      FALSE
+## Runs           FALSE      FALSE
+## RBI            FALSE      FALSE
+## Walks          FALSE      FALSE
+## Years          FALSE      FALSE
+## CAtBat         FALSE      FALSE
+## CHits          FALSE      FALSE
+## CHmRun         FALSE      FALSE
+## CRuns          FALSE      FALSE
+## CRBI           FALSE      FALSE
+## CWalks         FALSE      FALSE
+## LeagueN        FALSE      FALSE
+## DivisionW      FALSE      FALSE
+## PutOuts        FALSE      FALSE
+## Assists        FALSE      FALSE
+## Errors         FALSE      FALSE
+## NewLeagueN     FALSE      FALSE
+## 1 subsets of each size up to 19
+## Selection Algorithm: exhaustive
+##           AtBat Hits HmRun Runs RBI Walks Years CAtBat CHits CHmRun CRuns
+## 1  ( 1 )  &quot; &quot;   &quot; &quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 2  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 3  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 4  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 5  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 6  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 7  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot;*&quot;    &quot; &quot;  
+## 8  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot;*&quot;    &quot;*&quot;  
+## 9  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 10  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 11  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 12  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 13  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 14  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 15  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 16  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 17  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 18  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 19  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot;*&quot;    &quot;*&quot;  
+##           CRBI CWalks LeagueN DivisionW PutOuts Assists Errors NewLeagueN
+## 1  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 2  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 3  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 4  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 5  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 6  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 7  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 8  ( 1 )  &quot; &quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 9  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 10  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 11  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 12  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 13  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 14  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 15  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 16  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 17  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 18  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 19  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># You can view performance indicators for each model such as:</span>
+<span class="co"># adjusted R-squared</span>
+<span class="kw">summary</span>(regfit.full)<span class="op">$</span>adjr2</code></pre>
+<pre><code>##  [1] 0.3188503 0.4208024 0.4450753 0.4672734 0.4808971 0.4972001 0.5007849
+##  [8] 0.5137083 0.5180572 0.5222606 0.5225706 0.5217245 0.5206736 0.5195431
+## [15] 0.5178661 0.5162219 0.5144464 0.5126097 0.5106270</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The C_p value</span>
+<span class="kw">summary</span>(regfit.full)<span class="op">$</span>cp</code></pre>
+<pre><code>##  [1] 104.281319  50.723090  38.693127  27.856220  21.613011  14.023870
+##  [7]  13.128474   7.400719   6.158685   5.009317   5.874113   7.330766
+## [13]   8.888112  10.481576  12.346193  14.187546  16.087831  18.011425
+## [19]  20.000000</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># BIC criterion</span>
+<span class="kw">summary</span>(regfit.full)<span class="op">$</span>bic</code></pre>
+<pre><code>##  [1]  -90.84637 -128.92622 -135.62693 -141.80892 -144.07143 -147.91690
+##  [7] -145.25594 -147.61525 -145.44316 -143.21651 -138.86077 -133.87283
+## [13] -128.77759 -123.64420 -118.21832 -112.81768 -107.35339 -101.86391
+## [19]  -96.30412</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using that you can choose your optimal model.</span>
+<span class="co"># For example the model with highest adjuster R-squared</span>
+<span class="kw">which.max</span>(<span class="kw">summary</span>(regfit.full)<span class="op">$</span>adjr2)</code></pre>
+<pre><code>## [1] 11</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or the model with lowest C_p</span>
+<span class="kw">which.min</span>(<span class="kw">summary</span>(regfit.full)<span class="op">$</span>cp)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or if we want to combine various criteria, it may be useful to visualise</span>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))
+<span class="kw">plot</span>(<span class="kw">summary</span>(regfit.full)<span class="op">$</span>adjr2,
+     <span class="dt">xlab =</span> <span class="st">&quot;Number of virables contained in the model&quot;</span>,
+     <span class="dt">ylab=</span><span class="st">&quot;Adjusted R-squared&quot;</span>)
+<span class="kw">plot</span>(<span class="kw">summary</span>(regfit.full)<span class="op">$</span>cp,
+     <span class="dt">xlab =</span> <span class="st">&quot;Number of virables contained in the model&quot;</span>,
+     <span class="dt">ylab=</span><span class="st">&quot;C_p&quot;</span>)
+<span class="kw">plot</span>(<span class="kw">summary</span>(regfit.full)<span class="op">$</span>bic,
+     <span class="dt">xlab =</span> <span class="st">&quot;Number of virables contained in the model&quot;</span>,
+     <span class="dt">ylab=</span><span class="st">&quot;BIC&quot;</span>)
+
+<span class="co"># We can see that probably something close to 10 would be optimal, let&#39;s see the</span>
+<span class="co"># selected 10 variables and their coefficients.</span>
+<span class="kw">coef</span>(regfit.full, <span class="dv">10</span>)</code></pre>
+<pre><code>##  (Intercept)        AtBat         Hits        Walks       CAtBat 
+##  162.5354420   -2.1686501    6.9180175    5.7732246   -0.1300798 
+##        CRuns         CRBI       CWalks    DivisionW      PutOuts 
+##    1.4082490    0.7743122   -0.8308264 -112.3800575    0.2973726 
+##      Assists 
+##    0.2831680</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaps)
+<span class="co"># Please know the library for regsubsets did not have a build in function for</span>
+<span class="co"># predict, so we had to built one ourselves.</span>
+<span class="co"># Here is the code:</span>
+predict.regsubsets =<span class="st"> </span><span class="cf">function</span>(object, newdata, id, ...) {
+    form =<span class="st"> </span><span class="kw">as.formula</span>(object<span class="op">$</span>call[[<span class="dv">2</span>]])
+    mat =<span class="st"> </span><span class="kw">model.matrix</span>(form, newdata)
+    coefi =<span class="st"> </span><span class="kw">coef</span>(object, <span class="dt">id =</span> id)
+    mat[, <span class="kw">names</span>(coefi)] <span class="op">%*%</span><span class="st"> </span>coefi
+}
+
+<span class="co"># Another way to select between the best models from each pair</span>
+<span class="co"># (m0, m1, m2...mp), instead of using criteria such as adjusted R-squared, would</span>
+<span class="co"># be cross validation. We will see how this could be done here. We choose to</span>
+<span class="co"># perform a 10-k fold cv.</span>
+
+<span class="co"># Let&#39;s set the seed again to ensure someone can repeat the test and get the</span>
+<span class="co"># same &#39;randomness&#39;.</span>
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+
+<span class="co"># To perform 10-k fold cross validation, we first need to split the data in 10</span>
+<span class="co"># folds (10 equal sized blocks).</span>
+k &lt;-<span class="st"> </span><span class="dv">10</span>
+<span class="co"># The way we split the data is we make a vector of size equal to nrow(Hitters)</span>
+<span class="co"># (the rows contained in the dataset Hitters), and each row will be assigned to</span>
+<span class="co"># a fold from 1 to 10 (sample 1:10). Since we want multiple rows to be part of</span>
+<span class="co"># the same folds we set replace = TRUE. Also because we haven&#39;t defined any</span>
+<span class="co"># particular split ration, by default the split will be equal across the folds.</span>
+folds &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>k, <span class="kw">nrow</span>(Hitters), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+<span class="co"># We can see that each row of the Hitters dataset has been assigned to one of</span>
+<span class="co"># the 10 k folds, in an equal manner.</span>
+folds</code></pre>
+<pre><code>##   [1]  3  4  6 10  3  9 10  7  7  1  3  2  7  4  8  5  8 10  4  8 10  3  7
+##  [24]  2  3  4  1  4  9  4  5  6  5  2  9  7  8  2  8  5  9  7  8  6  6  8
+##  [47]  1  5  8  7  5  9  5  3  1  1  4  6  7  5 10  3  5  4  7  3  5  8  1
+##  [70]  9  4  9  4  4  5  9  9  4  8 10  5  8  4  4  8  3  8  2  3  2  3  1
+##  [93]  7  9  8  8  5  5  9  7  7  4  3 10  7  3  2  5 10  6 10  8  4  5  2
+## [116]  1  8  2  5  7 10  5  5  2  8  5  6  3  3  6  6  1  1  7 10  6  6  6
+## [139] 10  6  7  7  3  3  8  5  2  8  2  9  7  6  4  5  6  2  6  1  3  3  3
+## [162]  9  5  8  9  5  1  4  8  4  7  9  9  4  4  9  7  8  7 10  3  2  9  6
+## [185]  9  2  8  8 10  6  8  4  2 10  3  6  2  9  4  8  3  3  6  3  2  6  6
+## [208]  2  3  8 10  2  8 10  9  4  7 10 10  4  3  2  4  6 10  6  3  1  5  9
+## [231]  4  2  4  7  4  7  7  6  5  5  4  6 10  2  5  3  5  2  5 10  8 10  5
+## [254]  7  5  2  3  5  4 10  6  4  3</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We also need a variable that will store all the calculated errors. In this</span>
+<span class="co"># case we will have 10 models (one for each fold) for every 19 different sets of</span>
+<span class="co"># variables (M0, M1, M2, ....M19 after performing best subset selection). If we</span>
+<span class="co"># want to be able to keep track of which model came from which fold and subset</span>
+<span class="co"># we need a matrix instead of a simple vector.</span>
+cv.errors &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, k, <span class="dv">19</span>, <span class="dt">dimnames =</span> <span class="kw">list</span>(<span class="ot">NULL</span>, <span class="kw">paste</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">19</span>)))
+<span class="co"># We will fill this with the actual errors later</span>
+cv.errors</code></pre>
+<pre><code>##        1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
+##  [1,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [2,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [3,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [4,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [5,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [6,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [7,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [8,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+##  [9,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+## [10,] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Now we need to create 10 models for each of the 19 subsets, using a different</span>
+<span class="co"># combination of 9 out of the 10 blocks each time (leaving one for testing). We</span>
+<span class="co"># will call the testing one j, in order to be able to distinguish it and only</span>
+<span class="co"># use it for testing. Let&#39;s see this in practice:</span>
+
+<span class="co"># For every j in k (we define j as a single fold. First it will be all the rows</span>
+<span class="co"># who where assigned with 1, then 2, 3 ...)</span>
+<span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>k) {
+  <span class="co"># Create the 19 models using all the data apart from j (!=j)</span>
+  best.fit &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> Hitters[folds<span class="op">!=</span>j,], <span class="dt">nvmax =</span> <span class="dv">19</span>)
+  <span class="co"># Now all we have to do, is for each 10 sets of models with the same params</span>
+  <span class="co"># calculate the average testing error.</span>
+  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">19</span>) {
+    <span class="co"># First we need to find out the values for salary that each model would</span>
+    <span class="co"># predict for our testing j fold.</span>
+    pred =<span class="st"> </span><span class="kw">predict</span>(best.fit, Hitters[folds <span class="op">==</span><span class="st"> </span>j, ], <span class="dt">id =</span> i)
+    <span class="co"># Then we measure the squared difference of the actual salary from the</span>
+    <span class="co"># predicted for each point, and we store their mean in our matrix.</span>
+    cv.errors[j, i] &lt;-<span class="st"> </span><span class="kw">mean</span>((Hitters<span class="op">$</span>Salary[folds<span class="op">==</span>j]<span class="op">-</span>pred)<span class="op">^</span><span class="dv">2</span>)
+  }
+}
+<span class="co"># We can see the difference of the mean squared errors from the predicted to the</span>
+<span class="co"># actual points. That is for every of the 10 folds for each of 19 subsets used.</span>
+cv.errors</code></pre>
+<pre><code>##               1         2         3         4         5         6
+##  [1,] 187479.08 141652.61 163000.36 169584.40 141745.39 151086.36
+##  [2,]  96953.41  63783.33  85037.65  76643.17  64943.58  56414.96
+##  [3,] 165455.17 167628.28 166950.43 152446.17 156473.24 135551.12
+##  [4,] 124448.91 110672.67 107993.98 113989.64 108523.54  92925.54
+##  [5,] 136168.29  79595.09  86881.88  94404.06  89153.27  83111.09
+##  [6,] 171886.20 120892.96 120879.58 106957.31 100767.73  89494.38
+##  [7,]  56375.90  74835.19  72726.96  59493.96  64024.85  59914.20
+##  [8,]  93744.51  85579.47  98227.05 109847.35 100709.25  88934.97
+##  [9,] 421669.62 454728.90 437024.28 419721.20 427986.39 401473.33
+## [10,] 146753.76 102599.22 192447.51 208506.12 214085.78 224120.38
+##               7         8         9        10        11        12
+##  [1,] 193584.17 144806.44 159388.10 138585.25 140047.07 158928.92
+##  [2,]  63233.49  63054.88  60503.10  60213.51  58210.21  57939.91
+##  [3,] 137609.30 146028.36 131999.41 122733.87 127967.69 129804.19
+##  [4,] 104522.24  96227.18  93363.36  96084.53  99397.85 100151.19
+##  [5,]  86412.18  77319.95  80439.75  75912.55  81680.13  83861.19
+##  [6,]  94093.52  86104.48  84884.10  80575.26  80155.27  75768.73
+##  [7,]  62942.94  60371.85  61436.77  62082.63  66155.09  65960.47
+##  [8,]  90779.58  77151.69  75016.23  71782.40  76971.60  77696.55
+##  [9,] 396247.58 381851.15 369574.22 376137.45 373544.77 382668.48
+## [10,] 214037.26 169160.95 177991.11 169239.17 147408.48 149955.85
+##              13        14        15        16        17        18
+##  [1,] 161322.76 155152.28 153394.07 153336.85 153069.00 152838.76
+##  [2,]  59975.07  58629.57  58961.90  58757.55  58570.71  58890.03
+##  [3,] 133746.86 135748.87 137937.17 140321.51 141302.29 140985.80
+##  [4,] 103073.96 106622.46 106211.72 107797.54 106288.67 106913.18
+##  [5,]  85111.01  84901.63  82829.44  84923.57  83994.95  84184.48
+##  [6,]  76927.44  76529.74  78219.76  78256.23  77973.40  79151.81
+##  [7,]  66310.58  70079.10  69553.50  68242.10  68114.27  67961.32
+##  [8,]  78460.91  81107.16  82431.25  82213.66  81958.75  81893.97
+##  [9,] 375284.60 376527.06 374706.25 372917.91 371622.53 373745.20
+## [10,] 194397.12 194448.21 174012.18 172060.78 184614.12 184397.75
+##              19
+##  [1,] 153197.11
+##  [2,]  58949.25
+##  [3,] 140392.48
+##  [4,] 106919.66
+##  [5,]  84284.62
+##  [6,]  78988.92
+##  [7,]  67943.62
+##  [8,]  81848.89
+##  [9,] 372365.67
+## [10,] 183156.97</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We want to get one average value for each of 19 models so we can compare then</span>
+<span class="co"># and choose the optimal.</span>
+<span class="co"># The function apply will help us with that.</span>
+mean.cv.error &lt;-<span class="st"> </span><span class="kw">apply</span>(cv.errors, <span class="dv">2</span>, mean)
+mean.cv.error</code></pre>
+<pre><code>##        1        2        3        4        5        6        7        8 
+## 160093.5 140196.8 153117.0 151159.3 146841.3 138302.6 144346.2 130207.7 
+##        9       10       11       12       13       14       15       16 
+## 129459.6 125334.7 125153.8 128273.5 133461.0 133974.6 131825.7 131882.8 
+##       17       18       19 
+## 132750.9 133096.2 132804.7</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets plot them to see which models have the lowest errors</span>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mean.cv.error, <span class="dt">type=</span><span class="st">&#39;b&#39;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-62-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see that 10 and 11 are the smallest ones ( with 11 been the smallest),</span>
+<span class="co"># which is quite close to what we got from using criteria like the adjusted</span>
+<span class="co"># R-squared.</span>
+
+
+<span class="co"># Note:</span>
+<span class="co"># An alternative to CV, that would be more computationally advantageous, is</span>
+<span class="co"># simple validation. We have mentioned that when introducing cross validation.</span>
+<span class="co"># Basically we only split the data in two, a training and testing data set. We</span>
+<span class="co"># create all our models until Mp (by best selection or other methods) using the</span>
+<span class="co"># training data. We then use the testing data to measure the sum of squared</span>
+<span class="co"># errors, or R-squared of that test data. We choose the one with the smallest</span>
+<span class="co"># test error. Of course this calculation would be highly dependant on how the</span>
+<span class="co"># data was split, and there is risk in not getting accurate measurements for the</span>
+<span class="co"># error.</span></code></pre>
+<p>As you can see this is a very inclusive process, which is very useful when you have only a few predictors to choose
+from. It is not however, computationally light. For <span class="math inline">\(p\)</span> number of predictors, we have <span class="math inline">\(p!\)</span> possible combinations. So
+even if we have something like 10 features, we end up with having to train 3628800 models!This is why the following
+approach was developed.</p>
+</div>
+<div id="stepwise-selection" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Stepwise Selection</h3>
+<p>In this approach we either start from the null model and incrementally add predictors (forward), or start with all the
+predictors and incrementally reduce them (backward).The computational advantages from reducing the amount of models
+required comes from maintaining the previously selected best model, and only adding the most valuable predictor from the
+remaining ones, per iteration.</p>
+<p>Forward Stepwise Selection</p>
+<ul>
+<li><p>Again, we will define the ‘null Model’, this is a model of 0 predictors <span class="math inline">\(M_0\)</span>, that simply uses the total average of
+the reaction to give a prediction</p></li>
+<li><p>And start with considering all models that use one single predictor. Measure their R-squared and choose the best one,
+this is the <span class="math inline">\(M_1\)</span> (up to know its the same as above)</p></li>
+<li><p>Now we will start, one by one adding more predictors to <span class="math inline">\(M_1\)</span>, each time measuring their performance and choosing to
+add the predictor that is adding the most value (increases the R-squared the most). First we create the <span class="math inline">\(M_2\)</span> model,
+which has two predictors. The one predictor comes from <span class="math inline">\(M_1\)</span> and the other will be selected form the remaining ones.
+To select that we need to add each remaining predictor to <span class="math inline">\(M_1\)</span> and choose the one that yields the highest R-squared.</p></li>
+<li><p>Similarly we create the <span class="math inline">\(M_3\)</span> model. We keep the two predictors from <span class="math inline">\(M_2\)</span> and select another one from the remaining,
+which will add the most value (as found from fitting a model for all the remaining predictors and measuring their
+R-squared)</p></li>
+<li><p>We repeat until we have used all the predictors in the <span class="math inline">\(M_p\)</span> model</p></li>
+<li><p>Just like before, we will choose to cross validate <span class="math inline">\(M_0\)</span>, <span class="math inline">\(M_1\)</span>, <span class="math inline">\(M_2\)</span>, <span class="math inline">\(M_3\)</span>…<span class="math inline">\(M_p\)</span>, or measure some other
+performance criteria that accounts for over-fitting (or take a combination). Then we can choose the optimal model.</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">forward &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Salary<span class="op">~</span>., <span class="dt">data =</span> Hitters, <span class="dt">nvmax =</span> <span class="dv">19</span>, <span class="dt">method =</span> <span class="st">&quot;forward&quot;</span>)
+<span class="kw">summary</span>(forward)</code></pre>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(Salary ~ ., data = Hitters, nvmax = 19, method = &quot;forward&quot;)
+## 19 Variables  (and intercept)
+##            Forced in Forced out
+## AtBat          FALSE      FALSE
+## Hits           FALSE      FALSE
+## HmRun          FALSE      FALSE
+## Runs           FALSE      FALSE
+## RBI            FALSE      FALSE
+## Walks          FALSE      FALSE
+## Years          FALSE      FALSE
+## CAtBat         FALSE      FALSE
+## CHits          FALSE      FALSE
+## CHmRun         FALSE      FALSE
+## CRuns          FALSE      FALSE
+## CRBI           FALSE      FALSE
+## CWalks         FALSE      FALSE
+## LeagueN        FALSE      FALSE
+## DivisionW      FALSE      FALSE
+## PutOuts        FALSE      FALSE
+## Assists        FALSE      FALSE
+## Errors         FALSE      FALSE
+## NewLeagueN     FALSE      FALSE
+## 1 subsets of each size up to 19
+## Selection Algorithm: forward
+##           AtBat Hits HmRun Runs RBI Walks Years CAtBat CHits CHmRun CRuns
+## 1  ( 1 )  &quot; &quot;   &quot; &quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 2  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 3  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 4  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 5  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 6  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 7  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;  
+## 8  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 9  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 10  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 11  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 12  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 13  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 14  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 15  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 16  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 17  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 18  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 19  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot;*&quot;    &quot;*&quot;  
+##           CRBI CWalks LeagueN DivisionW PutOuts Assists Errors NewLeagueN
+## 1  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 2  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 3  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 4  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 5  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 6  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 7  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 8  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 9  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 10  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 11  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 12  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 13  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 14  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 15  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 16  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 17  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 18  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 19  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</code></pre>
+<p>Backward Stepwise Selection</p>
+<ul>
+<li><p>This time we start from the <span class="math inline">\(M_p\)</span> model, which contains all the predictors</p></li>
+<li><p>We remove one predictor from <span class="math inline">\(M_p\)</span> and measure the R-squared. We do this for all the predictors in <span class="math inline">\(M_p\)</span>. Now we have
+measurements for all possible combinations with predictors p-1. We choose the one with the highest R-squared, this is
+the <span class="math inline">\(M_p-1\)</span> model. Note that since we removed a predictor the R-squared of the new model will be smaller (we have
+explained that additional predictors will improve these measurement even if they are irrelevant). However, this does
+not mean it is not potentially a better model, when we compute its BIC, AIC or adjusted R-squared or if we choose to
+cross validate, the issues of over-fitting will taken into account.</p></li>
+<li><p>We repeat the process until we reach <span class="math inline">\(M_0\)</span>, until all the predictors have been removed</p></li>
+<li><p>Like always, we will choose to cross validate <span class="math inline">\(M_p\)</span>, <span class="math inline">\(M_p-1\)</span>, <span class="math inline">\(M_p-2\)</span>, <span class="math inline">\(M_p-3\)</span>….<span class="math inline">\(M_0\)</span>, or measure some other
+performance criteria that accounts for over-fitting (or take a combination). Then we can choose the optimal model.</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">backward &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Salary<span class="op">~</span>., <span class="dt">data =</span> Hitters, <span class="dt">nvmax =</span> <span class="dv">19</span>, <span class="dt">method =</span> <span class="st">&quot;backward&quot;</span>)
+<span class="kw">summary</span>(backward)</code></pre>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(Salary ~ ., data = Hitters, nvmax = 19, method = &quot;backward&quot;)
+## 19 Variables  (and intercept)
+##            Forced in Forced out
+## AtBat          FALSE      FALSE
+## Hits           FALSE      FALSE
+## HmRun          FALSE      FALSE
+## Runs           FALSE      FALSE
+## RBI            FALSE      FALSE
+## Walks          FALSE      FALSE
+## Years          FALSE      FALSE
+## CAtBat         FALSE      FALSE
+## CHits          FALSE      FALSE
+## CHmRun         FALSE      FALSE
+## CRuns          FALSE      FALSE
+## CRBI           FALSE      FALSE
+## CWalks         FALSE      FALSE
+## LeagueN        FALSE      FALSE
+## DivisionW      FALSE      FALSE
+## PutOuts        FALSE      FALSE
+## Assists        FALSE      FALSE
+## Errors         FALSE      FALSE
+## NewLeagueN     FALSE      FALSE
+## 1 subsets of each size up to 19
+## Selection Algorithm: backward
+##           AtBat Hits HmRun Runs RBI Walks Years CAtBat CHits CHmRun CRuns
+## 1  ( 1 )  &quot; &quot;   &quot; &quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 2  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 3  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 4  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 5  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 6  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 7  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 8  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 9  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 10  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 11  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 12  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 13  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 14  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;  
+## 15  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 16  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 17  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 18  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;  
+## 19  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot;*&quot;    &quot;*&quot;  
+##           CRBI CWalks LeagueN DivisionW PutOuts Assists Errors NewLeagueN
+## 1  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 2  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 3  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 4  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 5  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 6  ( 1 )  &quot; &quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 7  ( 1 )  &quot; &quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 8  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 9  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;       
+## 10  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 11  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 12  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;       
+## 13  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 14  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 15  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 16  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;       
+## 17  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 18  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;       
+## 19  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</code></pre>
+<p>Forward and Backward selection will require a lot less computational power for larger p. However, since they do not
+check all possible combinations there is a risk that the concluding model may be not the most optimal. When having to
+choose between forward and backward, you should consider how much data is available. If you do not have samples that
+are greater than your predictors, backwards propagation will not perform well. Since it starts with a model using all
+the predictors, a lot of issues with dimensionality will occur (as we previously discussed). You may also want to
+consider whether you think most of your predictors are valuable (i would go with backwards) or only some of them are
+(I would go with forward). You may be able to stop the selection if at some point you do not see improvements, in order
+to be more resource and time efficient.</p>
+<p>If you want some middle ground between computational efficiency and getting closer to the optimal model, you can try a
+hybrid of forward and backward stepwise selection. In this case you would start in a similar manner to forward
+selection, however after adding a new predictor each iteration (or in some of the iterations) you could also check to
+see which predictor you could remove. By constantly adding and removing predictors you get to see more variations of the
+models. This would start approaching the best subset selection while at the same time keep the focus only on incremental
+changes that offer the most value.</p>
+</div>
+</div>
+<div id="shrinkageregularisation-methods" class="section level2">
+<h2><span class="header-section-number">4.5</span> Shrinkage/Regularisation methods</h2>
+<p>Such methods are used when we want to focus on reducing the variance of a linear mode (remember variance is associated
+with over-fitting, when our model has a lower training error but high testing error). Some reasons why you need to
+further reduce variance could be:</p>
+<ul>
+<li><p>You have only a few training samples. As we discussed in ‘curse of dimensionality’ when we have only a few samples in
+relation to how much predictors we have, our models will tend to be overconfident and do well with training data but
+not testing data. Even in the case of having less samples than predictors, those methods will be able to provide a
+working model.</p></li>
+<li><p>You are more interested in the predictive abilities of your model rather than its inference. In this case you are more
+interested on reducing the variance rather than the bias of the model. You want your model to do well on testing/new
+data.</p></li>
+<li><p>Multicollinearity is present on your model. Correlation between predictors causes your model to take into account the
+same effects (from predictors) multiple times, as a result your model is overconfident. You will have increased
+measurement of training error, but again a significantly worse measurement for testing error.</p></li>
+</ul>
+<p>Those methods are very similar to least squares, as we know it, however they will try to ‘shrink’ the estimates of the
+coefficients (move them more towards zero).</p>
+<p>Why would that cause a reduction in variance? If we remember the linear equation <span class="math inline">\(y= b_0 + b_1x_1 + b_2x_2..\)</span>, where
+<span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span> are our coefficients, the more they get closer to zero the more <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> will tend to zero. In other
+words the effect of the predictors <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> (as it is measured from the given test sample) will have less of an
+effect to <span class="math inline">\(y\)</span> (the reaction). So if our current sample will have less of an effect in defining the line, then that line
+is more generalised and (since it is less determined by just one sample) potentially it will perform better on
+testing/new data.</p>
+<p>There are a few ways to shrink (or as it also referred to as ‘regularise’) the coefficients, which we will be looking at
+in this chapter.</p>
+<div id="ridge-regression" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Ridge regression</h3>
+<p>As we know this methods are all close to linear regression. Ridge regression will indeed, try to minimise the function
+of the leat squared error. However, it also wants to minimise the coefficients for our predictors. So we will also add
+the coefficient estimations to that function as a penalty. The weight that this penalty will have is going to be
+specific to the particular problem, but is generally represented as <span class="math inline">\(\lambda\)</span>.</p>
+<p>In other words least regression attempts to minimise:</p>
+<p><span class="math inline">\(\sum RSS +\lambda (b_1^2 + b_2^2 + ...)\)</span></p>
+<p>To calculate the <span class="math inline">\(\lambda\)</span> we use cross validation, we simply try out different values for it, and pick the one that
+yields the model with the least error. Generally, the closer the <span class="math inline">\(\lambda\)</span> is to zero, the less of an affect the penalty
+will have (e.g. if it is zero we are basically just minimising the least squares), while the grater it is the more the
+coefficients will tend to zero.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This library has the function glmnet, which allows us to perform ridge</span>
+<span class="co"># regression and other such methods</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;glmnet&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(glmnet)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## Loading required package: foreach</code></pre>
+<pre><code>## Loaded glmnet 2.0-16</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># For our ridge regression we will need to choose some values for lambda, in</span>
+<span class="co"># order to compare the models they yield and find out the optimal value for</span>
+<span class="co"># lambda.</span>
+<span class="co"># A standard inclusive set, that we will use, is from 10^-2 until 10^10</span>
+grid &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">-2</span>, <span class="dt">length =</span> <span class="dv">100</span>)
+
+<span class="co"># This function requires the parameter given a bit deferent that the usual y~.</span>
+<span class="co"># For the predictors it wants them as a matrix, model.matrix() turns then in the</span>
+<span class="co"># required format and also deals with quantitative features.</span>
+x &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(Salary<span class="op">~</span>.,Hitters)[,<span class="op">-</span><span class="dv">1</span>]
+<span class="co"># The reaction needs to also be clearly defined</span>
+y &lt;-<span class="st"> </span>Hitters<span class="op">$</span>Salary
+
+<span class="co"># Now that we have everything we can perform ridge regression:</span>
+<span class="co"># alpha means we want to perform ridge regression (glmnet also perform other</span>
+<span class="co"># methods)</span>
+ridge.model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x, y, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> grid)
+<span class="co"># We can see the coefficients of a model with certain lambda using the</span>
+<span class="co"># following:</span>
+<span class="co"># This returns the coefficients with lambda = 50 (the intercept and the</span>
+<span class="co"># following 19 coefficients)</span>
+<span class="kw">coef</span>(ridge.model)[, <span class="dv">50</span>]</code></pre>
+<pre><code>##   (Intercept)         AtBat          Hits         HmRun          Runs 
+## 407.356050200   0.036957182   0.138180344   0.524629976   0.230701523 
+##           RBI         Walks         Years        CAtBat         CHits 
+##   0.239841459   0.289618741   1.107702929   0.003131815   0.011653637 
+##        CHmRun         CRuns          CRBI        CWalks       LeagueN 
+##   0.087545670   0.023379882   0.024138320   0.025015421   0.085028114 
+##     DivisionW       PutOuts       Assists        Errors    NewLeagueN 
+##  -6.215440973   0.016482577   0.002612988  -0.020502690   0.301433531</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or using the predict() function</span>
+<span class="kw">predict</span>(ridge.model, <span class="dt">s =</span> <span class="dv">50</span>, <span class="dt">type=</span><span class="st">&quot;coefficients&quot;</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</code></pre>
+<pre><code>##  [1]  4.876610e+01 -3.580999e-01  1.969359e+00 -1.278248e+00  1.145892e+00
+##  [6]  8.038292e-01  2.716186e+00 -6.218319e+00  5.447837e-03  1.064895e-01
+## [11]  6.244860e-01  2.214985e-01  2.186914e-01 -1.500245e-01  4.592589e+01
+## [16] -1.182011e+02  2.502322e-01  1.215665e-01 -3.278600e+00 -9.496680e+00</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># In order to choose which lambda to use, we need to follow a similar procedure</span>
+<span class="co"># to what we have done previously. We would split our data in two sets, training</span>
+<span class="co"># and testing. We would use the training to create our models and the test to</span>
+<span class="co"># measure their testing mean squared error. We would then pick the one with the</span>
+<span class="co"># least error. Or we could manually try out different lambdas and see at which</span>
+<span class="co"># lambda we are getting best results. We should also compare our results to</span>
+<span class="co"># linear regression where lambda simple equals zero. Let&#39;s see an example:</span>
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="co"># Remember x is a matrix of all rows containing values of the predictors, we</span>
+<span class="co"># split their indexes in 80%-20% for training and testing.</span>
+train &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(x), <span class="kw">nrow</span>(x)<span class="op">*</span><span class="fl">0.8</span>)
+train</code></pre>
+<pre><code>##   [1]  70  98 150 237  53 232 243 170 161  16 259  45 173  97 192 124 178
+##  [18] 245  94 190 228  52 158  31  64  92   4  91 205  80 113 140 115  43
+##  [35] 244 153 181  25 163  93 184 144 174 122 117 251   6 104 241 149 102
+##  [52] 183 224 242  15  21  66 107 136  83 186  60 211  67 130 210  95 151
+##  [69]  17 256 207 162 200 239 236 168 249  73 222 177 234 199 203  59 235
+##  [86]  37 126  22 230 226  42  11 110 214 132 134  77  69 188 100 206  58
+## [103]  44 159 101  34 208  75 185 201 261 112  54  65  23   2 106 254 257
+## [120] 154 142  71 166 221 105  63 143  29 240 212 167 172   5  84 120 133
+## [137]  72 191 248 138 182  74 179 135  87 196 157 119  13  99 263 125 247
+## [154]  50  55  20  57   8  30 194 139 238  46  78  88  41   7  33 141  32
+## [171] 180 164 213  36 215  79 225 229 198  76 258 146 127 262 233 209 155
+## [188]  56 137 165  85 121 147 145 108 220 156 123 219  51 195  14 246 152
+## [205] 169 129  96 223 189  39</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">test &lt;-<span class="st"> </span>(<span class="op">-</span>train)
+<span class="co"># This is the indexes of the reaction attribute for the test data.</span>
+y.test =<span class="st"> </span>y[test]
+<span class="co"># Set up a vector to store mean squared error for each model for each value of</span>
+<span class="co"># lambda.</span>
+<span class="co"># In this case we have selected to start measuring the perfomance of various</span>
+<span class="co"># lambda values, that have a siginificant distance from each other. We can then</span>
+<span class="co"># see which performs better out of them and then make even more trials with</span>
+<span class="co"># numbers close to that (notice how one of the values of lambda is zero. This</span>
+<span class="co"># will result in performing simple least squares (linear regression). It is</span>
+<span class="co"># useful to include such a model, in the comparison, to ensure ridge regression</span>
+<span class="co"># is actually optimal for our problem)</span>
+errors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>)
+
+<span class="co"># Now we can perform ridge regression just like before, using only the training</span>
+<span class="co"># data.</span>
+ridge.model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x[train,], y[train], <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> grid)
+<span class="co"># And of each of the models with the lambda value we have chosen we will measure</span>
+<span class="co"># the mean squared error.</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>) {
+ pred &lt;-<span class="st"> </span><span class="kw">predict</span>(ridge.model, <span class="dt">s =</span> errors[i], <span class="dt">newx =</span> x[test,])
+ mserror &lt;-<span class="st"> </span><span class="kw">mean</span>((pred <span class="op">-</span><span class="st"> </span>y.test)<span class="op">^</span><span class="dv">2</span>)
+ errors[i] &lt;-<span class="st"> </span>mserror
+}
+errors</code></pre>
+<pre><code>## [1] 66185.18 66082.36 66698.36 68681.08 70083.97 73561.11 74977.37</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We see that a large lambda seems to be improving the error (7 is the index for</span>
+<span class="co"># 100)</span>
+<span class="kw">which.min</span>(errors)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Let&#39;s see the suggested coefficients for lambda = 100</span>
+<span class="kw">coef</span>(ridge.model)[, <span class="dv">100</span>]</code></pre>
+<pre><code>##  (Intercept)        AtBat         Hits        HmRun         Runs 
+##  198.9362665   -1.8765543    5.9755878    3.5756152   -0.8989841 
+##          RBI        Walks        Years       CAtBat        CHits 
+##   -0.8334690    7.0608227  -11.7279516   -0.1450989    0.2072647 
+##       CHmRun        CRuns         CRBI       CWalks      LeagueN 
+##    0.2510835    1.5068197    0.5427306   -1.0010594   71.6000255 
+##    DivisionW      PutOuts      Assists       Errors   NewLeagueN 
+## -140.2565292    0.2298606    0.3043727   -1.1183827   -1.3603144</code></pre>
+<p>We noticed that even with such a large lambda the coefficients have been minimised but none of them is zero. Effectively
+what this means is that we cannot exclude any predictor. As we know, having less predictors could potentially improve
+our model’s predictive accuracy and if the coefficients are very small we have to consider if it is worth keeping the
+relative predictors. This is why the following method, LASSO was developed. It works very similar to ridge regression,
+however it can produce models coefficients equal to zero.</p>
+<p>Note: in this example we looking at linear regression. However, ridge regression and the following methods, can also be
+applied to logistic regression. The only difference would be that we would be looking to minimise the odds of the
+likelihood, instead of the mean squared error (plus of course, the estimates for the coefficients).</p>
+</div>
+<div id="lasso-regression" class="section level3">
+<h3><span class="header-section-number">4.5.2</span> Lasso regression</h3>
+<p>The lasso regression tries to minimise the following function:</p>
+<p><span class="math inline">\(\sum RSS +\lambda |b_1| + |b_2| + ...\)</span></p>
+<p>This is very similar to Ridge regression, as we have already mentioned. Lasso minimises the absolute value instead of
+the squares of all of the coefficients. The lambda is also found in the same manner, using cross validation.</p>
+<p>The reason you would choose Lasso over Ridge regression, is if you where looking to perform feature selection. That is,
+if you knew that some of the attributes in your dataset are not actually useful. Unlike Ridge, Lasso can result in
+coefficients with estimated value of zero.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="co"># alpha = 1, gives us the Lasso regression.</span>
+lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x[train,], y[train], <span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> grid)
+
+<span class="co"># This time we will perform cross validation to find the best lambda using the</span>
+<span class="co"># build in cv.glmnet function.</span>
+cv.out &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(x[train,], y[train], <span class="dt">alpha =</span> <span class="dv">1</span>)
+<span class="co"># Get the lambda with least mean squared error.</span>
+Bestlambda &lt;-<span class="st"> </span>cv.out<span class="op">$</span>lambda.min
+Bestlambda</code></pre>
+<pre><code>## [1] 2.898582</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Calculate the error.</span>
+pred &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, <span class="dt">s =</span> Bestlambda, <span class="dt">newx =</span>x[test,])
+<span class="kw">mean</span>((pred<span class="op">-</span><span class="st"> </span>y.test)<span class="op">^</span><span class="dv">2</span>)</code></pre>
+<pre><code>## [1] 69073.69</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># View the coefficients for the model produced using the optimal lambda.</span>
+<span class="co"># First we should make a model using all the data, since we now know the lambda.</span>
+model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x, y, <span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> grid)
+<span class="kw">predict</span>(model, <span class="dt">type=</span><span class="st">&quot;coefficients&quot;</span>, <span class="dt">s =</span> Bestlambda)</code></pre>
+<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                        1
+## (Intercept)  118.2619108
+## AtBat         -1.4924718
+## Hits           5.5443278
+## HmRun          .        
+## Runs           .        
+## RBI            .        
+## Walks          4.6285657
+## Years         -9.1334086
+## CAtBat         .        
+## CHits          .        
+## CHmRun         0.4924698
+## CRuns          0.6382992
+## CRBI           0.3935094
+## CWalks        -0.5048902
+## LeagueN       31.7149476
+## DivisionW   -119.2049416
+## PutOuts        0.2708047
+## Assists        0.1620721
+## Errors        -1.9481096
+## NewLeagueN     .</code></pre>
+<p>As expected a couple of the coefficients were estimated at zero, reducing the number of predictors in our model. We have
+seen an alternative regularisation method for estimating coefficients when we know most of our features are useful
+(ridge regression) and an alternative for when we suspect some of them are not useful (lasso). What if we have no idea
+if our features are useful or not, what if we have so many features that we cannot know? In this case you would use the
+last option elastic net regression which is basically a hybrid of ridge and lasso regression.</p>
+</div>
+<div id="elastic-net-regression" class="section level3">
+<h3><span class="header-section-number">4.5.3</span> Elastic Net Regression</h3>
+<p>The Elastic Net regression tries to minimise the following function:</p>
+<p><span class="math inline">\(\sum RSS +\lambda_1 |b_1| + |b_2| + ...+\lambda_2 (b_1^2 + b_2^2 + ...)\)</span></p>
+<p>It is clear that this is a combination of ridge and lasso regression. It tries to combine the benefits of the two and is
+usually used for the case where too many features are available, and we cannot distinguishes if they are useful or not.
+Elastic net regression is also found to tackle multicollinearity more effectively. The optimal values for <span class="math inline">\(\lambda_1\)</span>
+and <span class="math inline">\(\lambda_2\)</span>, are found using cross validation, where we trial different combinations of values for each parameter.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="co"># alpha = 0.5 for elastic net</span>
+elnet &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(x[train,], y[train], <span class="dt">alpha =</span> <span class="fl">0.5</span>)
+Bestlambda &lt;-<span class="st"> </span>elnet<span class="op">$</span>lambda.min
+Bestlambda</code></pre>
+<pre><code>## [1] 37.2646</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#error</span>
+pred &lt;-<span class="st"> </span><span class="kw">predict</span>(elnet, <span class="dt">s =</span> Bestlambda, <span class="dt">newx =</span>x[test,])
+<span class="kw">mean</span>((pred <span class="op">-</span><span class="st"> </span>y.test)<span class="op">^</span><span class="dv">2</span>)</code></pre>
+<pre><code>## [1] 75313.38</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#coefficients</span>
+model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x, y, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">lambda =</span> grid)
+<span class="kw">predict</span>(model, <span class="dt">type =</span><span class="st">&quot;coefficients&quot;</span>, <span class="dt">s =</span> Bestlambda)</code></pre>
+<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                        1
+## (Intercept)  30.16402739
+## AtBat         .         
+## Hits          1.79149853
+## HmRun         .         
+## Runs          .         
+## RBI           .         
+## Walks         2.21659602
+## Years         .         
+## CAtBat        .         
+## CHits         0.05473417
+## CHmRun        0.35259639
+## CRuns         0.17805457
+## CRBI          0.24176171
+## CWalks        .         
+## LeagueN       1.83589836
+## DivisionW   -96.60001610
+## PutOuts       0.21211648
+## Assists       .         
+## Errors        .         
+## NewLeagueN    .</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="logistic-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="dimension-reducing-algorithms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

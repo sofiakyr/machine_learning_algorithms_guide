@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Machine Learning Algorithms Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Machine Learning Algorithms Guide" />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+<link rel="next" href="linear-regression.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Machine Learning Algorithms Guide</h1>
+<p class="author"><em>Sofia Kyriazidi</em></p>
+<p class="date"><em>2018-12-19 11:15:30</em></p>
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk
+through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R,
+in a step by step approach. We will discuss and implement optimisation techniques, explain use cases, measure their
+performance and understand how to interpret and use their outcomes. On top of that, the guide is accompanied by live
+applications that make use the algorithms to help you understand their value, advantages and drawbacks of various
+approaches. This guide does not require any prior knowledge, although some basic mathematical and programming background
+would make things easier. For those that need to occasionally refresh their statistics, there is a chapter devoted to
+that.</p>
+<p>Chapters coming up up soon:</p>
+<ul>
+<li><p>General Additive Models (GAMs)</p></li>
+<li><p>Bayer’s for Classification</p></li>
+<li><p>Other classification Algorithms (k-means and knn)</p></li>
+<li><p>Deception Trees</p></li>
+<li><p>Support-Vector Machines</p></li>
+<li><p>Boosting</p></li>
+</ul>
+<p>For any queries contact at: <a href="mailto:sophia.97@windowslive.com">sophia.97@windowslive.com</a></p>
+<p>Credits should be given to to the book ‘An introduction to Statistical Learning’ written by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, which helped a lot in my learning and origination of this project. We will be referring to this book and other resources thought the guide.</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="linear-regression.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

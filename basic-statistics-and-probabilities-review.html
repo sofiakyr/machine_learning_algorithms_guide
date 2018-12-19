@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>8 Basic Statistics and Probabilities Review | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="8 Basic Statistics and Probabilities Review | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8 Basic Statistics and Probabilities Review | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="recommendation-systems.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="basic-statistics-and-probabilities-review" class="section level1">
+<h1><span class="header-section-number">8</span> Basic Statistics and Probabilities Review</h1>
+<div id="a-useful-cheatsheet-in-probabilities" class="section level2">
+<h2><span class="header-section-number">8.1</span> A useful cheatsheet in Probabilities</h2>
+<div class="figure">
+<img src="images/probabilities.png" alt="1.1 A useful cheatsheet in Probabilities" />
+<p class="caption">1.1 A useful cheatsheet in Probabilities</p>
+</div>
+</div>
+<div id="a-useful-cheatsheet-in-distributions" class="section level2">
+<h2><span class="header-section-number">8.2</span> A useful cheatsheet in Distributions</h2>
+<div class="figure">
+<img src="images/distributions.png" alt="1.2 A useful cheatsheet in Distributions" />
+<p class="caption">1.2 A useful cheatsheet in Distributions</p>
+</div>
+</div>
+<div id="basic-probability-exercises" class="section level2">
+<h2><span class="header-section-number">8.3</span> Basic probability exercises</h2>
+<div id="coin-tossing" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> Coin tossing:</h3>
+<p>We are going to try and examine if the probability of getting heads or tails when tossing a coin if 0.5 by
+conducting n Bernoulli trials, summing the results of heads or tails and seeing if they are about half</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#using the random number generator</span>
+N &lt;-<span class="st"> </span><span class="dv">100</span>
+<span class="co">#will return true (1) if the output from 0 to 1 is &gt;0.5</span>
+flips &lt;-<span class="st"> </span><span class="kw">runif</span>(N, <span class="dt">min=</span><span class="dv">0</span>, <span class="dt">max=</span><span class="dv">1</span>)<span class="op">&gt;</span><span class="fl">0.5</span>
+<span class="co">#we sum them up, it will add all the ones for true and zero&#39;s for false of the above list of flips</span>
+<span class="co">#so we expect half of them to be true and so to get a result close to 0.5</span>
+<span class="co">#we can increase the N to get closer</span>
+<span class="kw">sum</span>(flips)<span class="op">/</span>N</code></pre>
+<pre><code>## [1] 0.59</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#using sample function to perform a simulation</span>
+sample.space &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)
+flips &lt;-<span class="st"> </span><span class="kw">sample</span>(sample.space, N, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))
+<span class="kw">sum</span>(flips)<span class="op">/</span>N</code></pre>
+<pre><code>## [1] 0.49</code></pre>
+</div>
+<div id="the-famous-birthday-problem" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> The famous birthday problem:</h3>
+<p>Finding the probability that at least two people having the same birthday from a sample of n people.
+we ignore leap years, seasonal variations</p>
+<p>All the probable birthdays of the people would be 365^k if everyones birthday was unique (no one has the same birthday), there would be factorial(365)/factorial(365-k) ways for that to be true, from the permutations formula so the probability that at least two people have the same birthday would be 1 - (probability no one having the same birthday)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#this library allows us to use larger numbers</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;Rmpfr&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Rmpfr&quot;</span>)</code></pre>
+<pre><code>## Loading required package: gmp</code></pre>
+<pre><code>## 
+## Attaching package: &#39;gmp&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:Matrix&#39;:
+## 
+##     crossprod, tcrossprod</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     %*%, apply, crossprod, matrix, tcrossprod</code></pre>
+<pre><code>## C code of R package &#39;Rmpfr&#39;: GMP using 64 bits per limb</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Rmpfr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     dbinom, dnorm, dpois, pnorm</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     cbind, pmax, pmin, rbind</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create function to calculate permutations, this is the standard formula however we use the rmpfr library</span>
+<span class="co">#that will let us deal with larger numbers</span>
+perm &lt;-<span class="st"> </span><span class="cf">function</span>(n, k) {
+  <span class="kw">factorialMpfr</span>(n)<span class="op">/</span><span class="kw">factorialMpfr</span>(n<span class="op">-</span>k)
+}
+
+<span class="co">#this is our n</span>
+count &lt;-<span class="st"> </span><span class="dv">100</span>
+<span class="co">#double so we can plot it</span>
+p &lt;-<span class="st"> </span><span class="kw">double</span>(count)
+
+<span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>count){
+  <span class="co">#the formula from above</span>
+  d&lt;-(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">perm</span>(<span class="dv">365</span>, k)<span class="op">/</span><span class="st"> </span>(<span class="kw">mpfr</span>(<span class="dv">365</span>, <span class="dt">precBits =</span> <span class="dv">1024</span>)<span class="op">^</span>k))<span class="op">*</span><span class="dv">100</span>
+  p[k] &lt;-<span class="st"> </span><span class="kw">asNumeric</span>(d)
+}
+
+<span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span>count, p, <span class="dt">xlab=</span><span class="st">&quot;number of people&quot;</span>, <span class="dt">ylab =</span><span class="st">&quot;probability in %&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
+</div>
+</div>
+<div id="understanding-p-values" class="section level2">
+<h2><span class="header-section-number">8.4</span> Understanding P-values</h2>
+<p>The p value if used to decide whether an Ho should be accepted or rejected. It is related to the probability of the event happening, assuming it is random (h0 is true) BUT it does not always equal that.</p>
+<p>p-value is : probability of event happening at random + probability of all other events of an equal chance + probability of all events that are less likely to happen</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#let&#39;s take the example of tossing a coin and landing 5 heads on a row, what is the p-value</span>
+possibleOutcomes&lt;-<span class="st"> </span><span class="dv">2</span><span class="op">^</span><span class="dv">5</span>
+possibleOutcomes</code></pre>
+<pre><code>## [1] 32</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">P4heads &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>possibleOutcomes
+P4heads</code></pre>
+<pre><code>## [1] 0.03125</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#the probability of landing 5 tails in a row is equally likely</span>
+P4tails &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>possibleOutcomes
+<span class="co">#there is no other outcome less likely so we can get the p value from</span>
+pValue &lt;-<span class="st"> </span>P4heads <span class="op">+</span><span class="st"> </span>P4tails
+pValue</code></pre>
+<pre><code>## [1] 0.0625</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#the probability was 0.031, however the p-value is 0.03, which is less than the usual threshold of 0.05 and so we could accept the H0</span>
+<span class="co">#this could occur at random</span>
+
+<span class="co">#what would the p value be if we got 4 heads and 1 tail</span>
+WaysForHeads1tail &lt;-<span class="st"> </span><span class="kw">factorial</span>(<span class="dv">5</span>)<span class="op">/</span><span class="kw">factorial</span>(<span class="dv">4</span>)<span class="op">*</span><span class="kw">factorial</span>(<span class="dv">5-4</span>)
+P4heads1tail &lt;-<span class="st"> </span>WaysForHeads1tail<span class="op">/</span>possibleOutcomes
+P4heads1tail</code></pre>
+<pre><code>## [1] 0.15625</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#the probability of something equally likely having (4 tails and 1 head)</span>
+P4tails1head &lt;-<span class="st"> </span>P4heads1tail
+<span class="co">#probability of something less likely happening (5 heads or 5 tails), is already calculated so p would be:</span>
+pValue &lt;-<span class="st"> </span>P4heads1tail <span class="op">+</span><span class="st"> </span>P4tails1head <span class="op">+</span><span class="st"> </span>P4heads <span class="op">+</span><span class="st"> </span>P4tails
+<span class="co">#also quite high so event could easily occurs at random</span>
+pValue</code></pre>
+<pre><code>## [1] 0.375</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#what if we were dealing with continuous distributions, e.g hight measurements?</span>
+<span class="co">#in this case we use a density function where the area under the graph represents the probability for that x1 to x2 occurring.</span>
+
+<span class="co">#if we had the following height sample, what is the probability of a person having a height from 1.60 to 1.68</span>
+heights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.50</span>, <span class="fl">1.45</span>, <span class="fl">1.54</span>, <span class="fl">1.60</span>,<span class="fl">1.61</span>,<span class="fl">1.62</span>,<span class="fl">1.66</span>,<span class="fl">1.64</span>,<span class="fl">1.66</span>, <span class="fl">1.66</span>, <span class="fl">1.66</span>, <span class="fl">1.66</span>, <span class="fl">1.69</span>, <span class="fl">1.70</span>, <span class="fl">1.71</span>, <span class="fl">1.72</span>, <span class="fl">1.73</span>, <span class="fl">1.74</span>, <span class="fl">1.75</span>, <span class="fl">1.80</span>, <span class="fl">1.85</span>, <span class="fl">1.90</span>)
+
+<span class="co">#this how the graph looks like, where the blue line represents the pdf (probability density function)</span>
+<span class="co">#assuming the heights of the population follows a normal distribution</span>
+h&lt;-<span class="kw">hist</span>(heights, <span class="dt">breaks=</span><span class="dv">10</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+xfit&lt;-<span class="kw">seq</span>(<span class="kw">min</span>(heights),<span class="kw">max</span>(heights),<span class="dt">length=</span><span class="dv">40</span>)
+yfit&lt;-<span class="kw">dnorm</span>(xfit,<span class="dt">mean=</span><span class="kw">mean</span>(heights),<span class="dt">sd=</span><span class="kw">sd</span>(heights))
+yfit &lt;-<span class="st"> </span>yfit<span class="op">*</span><span class="kw">diff</span>(h<span class="op">$</span>mids[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])<span class="op">*</span><span class="kw">length</span>(heights)
+<span class="kw">lines</span>(xfit, yfit, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">lwd=</span><span class="dv">2</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-89-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># generally we can get the area under the graph by calculating the integral from x1 to x2, in a normal distribution we can use the z scores instead</span>
+<span class="co">#to calculate the area from an x point to the mean, by relating to the standard normal distribution. We also know that the total area which represents</span>
+<span class="co">#all the probabilities would be one, also the area from the left or right to the mean would be 0.5 due to the symmetry.</span>
+
+<span class="co">#so in order to get what we are looking for we need to add the area from x1 to the mean and the area from x2 to the mean</span>
+m &lt;-<span class="st"> </span><span class="kw">mean</span>(heights)
+s &lt;-<span class="st"> </span><span class="kw">sd</span>(heights)
+m</code></pre>
+<pre><code>## [1] 1.675</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#from x1 to m</span>
+<span class="co">#the score is</span>
+z1 &lt;-<span class="st"> </span>(<span class="fl">1.60</span><span class="op">-</span>m)<span class="op">/</span>s
+<span class="co">#the area from z1 to end</span>
+areaX1ToEnd &lt;-<span class="st"> </span><span class="kw">pnorm</span>(z1)
+areaX1ToEnd</code></pre>
+<pre><code>## [1] 0.2360952</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#knowing that the aria from the mean to the end is 0.5, then the area from the mean to x1 is</span>
+areaX1 &lt;-<span class="st"> </span><span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>areaX1ToEnd
+areaX1</code></pre>
+<pre><code>## [1] 0.2639048</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#from x2 to m</span>
+z2 &lt;-<span class="st"> </span>(<span class="fl">1.68</span><span class="op">-</span>m)<span class="op">/</span>s
+areaX2ToEnd &lt;-<span class="st"> </span><span class="kw">pnorm</span>(z2)
+areaX2ToEnd</code></pre>
+<pre><code>## [1] 0.5191132</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">areaX2 &lt;-<span class="st">  </span>areaX2ToEnd <span class="fl">-0.5</span>
+areaX2</code></pre>
+<pre><code>## [1] 0.01911318</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#since the one x is on the left of the mean and the other on the right we can just add them, otherwise we would have to also remove a common area</span>
+TotalArea &lt;-<span class="st"> </span>areaX1<span class="op">+</span>areaX2
+TotalArea</code></pre>
+<pre><code>## [1] 0.2830179</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#that is equal to 30% probability that a persons hight is exactly in-between 1.60 to 1.68</span>
+<span class="co">#to measure the p value we need to also measure the probability of someone having a height less that 1.60</span>
+areaX1ToEnd</code></pre>
+<pre><code>## [1] 0.2360952</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#and the probability of someone having a height greater than 1.68</span>
+areaX2ToEnd</code></pre>
+<pre><code>## [1] 0.5191132</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#and add them up</span>
+pValue &lt;-<span class="st"> </span>TotalArea <span class="op">+</span><span class="st"> </span>areaX1ToEnd <span class="op">+</span><span class="st"> </span>areaX2ToEnd
+pValue</code></pre>
+<pre><code>## [1] 1.038226</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#that is a large p value and therefor shows that having a height close to the mean is not uncommon</span></code></pre>
+</div>
+<div id="confidence-intervals-problems" class="section level2">
+<h2><span class="header-section-number">8.5</span> Confidence Intervals Problems</h2>
+<div id="confidence-intervals-with-t-values" class="section level3">
+<h3><span class="header-section-number">8.5.1</span> Confidence Intervals with t-values</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#the test scores of 9 randomly selected students are 83, 73, 71, 77, 77, 59, 92</span>
+<span class="co">#Compute the 99% confidence interval of the true mean.</span>
+
+studentScores &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">83</span>, <span class="dv">73</span>, <span class="dv">71</span>, <span class="dv">77</span>, <span class="dv">77</span>, <span class="dv">59</span>, <span class="dv">92</span>)
+scoreMean &lt;-<span class="st"> </span><span class="kw">mean</span>(studentScores)
+n &lt;-<span class="st"> </span><span class="kw">length</span>(studentScores)
+
+<span class="co">#since we do not know the standard deviation of the actual population, rather we only know the s of the sample and our sample n&lt;30 we will use t</span>
+<span class="co"># values to calculate the error</span>
+error &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="fl">0.99</span>,<span class="dt">df=</span>n<span class="dv">-1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(studentScores)<span class="op">/</span><span class="kw">sqrt</span>(n)
+
+<span class="co">#so then our value is the sample mean +/- he error</span>
+left &lt;-<span class="st"> </span>scoreMean <span class="op">-</span><span class="st"> </span>error
+right &lt;-<span class="st"> </span>scoreMean <span class="op">+</span><span class="st"> </span>error
+left</code></pre>
+<pre><code>## [1] 63.8285</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">right</code></pre>
+<pre><code>## [1] 88.1715</code></pre>
+<div id="confidence-intervals-with-s-values" class="section level4">
+<h4><span class="header-section-number">8.5.1.1</span> Confidence Intervals with s-values</h4>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Estimate the avarage weight for the adult male population.The avarage weight of 100 randomly selected adult males is 180lbs. Assume a population</span>
+<span class="co">#standard deviation of 20lbs. Compute a 95% confidence interval for the population avarage weight.</span>
+
+n &lt;-<span class="st"> </span><span class="dv">100</span>
+meanWeight &lt;-<span class="st"> </span><span class="dv">180</span>
+sPopulation &lt;-<span class="st"> </span><span class="dv">20</span>
+
+<span class="co">#we can calculate the interval from a normal distribution</span>
+error &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.95</span>)<span class="op">*</span><span class="st"> </span>sPopulation<span class="op">/</span><span class="kw">sqrt</span>(n)
+left &lt;-<span class="st"> </span>meanWeight <span class="op">-</span><span class="st"> </span>error
+right &lt;-<span class="st"> </span>meanWeight <span class="op">+</span><span class="st"> </span>error
+left</code></pre>
+<pre><code>## [1] 176.7103</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">right</code></pre>
+<pre><code>## [1] 183.2897</code></pre>
+</div>
+</div>
+</div>
+<div id="chi-squared-test" class="section level2">
+<h2><span class="header-section-number">8.6</span> Chi-squared test</h2>
+<div id="chi-squared-test-manually-step-by-step-example" class="section level3">
+<h3><span class="header-section-number">8.6.1</span> Chi-squared test manually step by step example</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#We want to find whether a dice is fair or not. The observed values were 22 for 1, 24 for 2, 38 for 3, 30 for 4, 46 for 5, 44 for 6.</span>
+
+
+####################### First step: state the null and alernative hypothesis############################################
+
+<span class="co">#H0(null hypothesis): dice is fair so p=1/6</span>
+<span class="co">#Ha(alternative hypothesis): dice is not faire  p != 1/6</span>
+
+trialDice &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">22</span>,<span class="dv">24</span>,<span class="dv">38</span>,<span class="dv">30</span>, <span class="dv">46</span>, <span class="dv">44</span>), <span class="dt">ncol=</span><span class="dv">6</span>)
+<span class="kw">colnames</span>(trialDice) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)
+<span class="kw">rownames</span>(trialDice) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frequencies&quot;</span>)
+trial.tableDice &lt;-<span class="st"> </span><span class="kw">as.table</span>(trialDice)
+trial.tableDice</code></pre>
+<pre><code>##              1  2  3  4  5  6
+## frequencies 22 24 38 30 46 44</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.tableDice[<span class="st">&quot;frequencies&quot;</span>,])
+expectedFr &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="dv">6</span><span class="op">*</span>n
+####################### Second step: choose the level of significance (a) #############################################
+
+<span class="co">#a is the area under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.</span>
+<span class="co">#We will use a=0.01 for</span>
+a &lt;-<span class="st"> </span><span class="fl">0.01</span>
+
+
+####################### Third step: Find critical value ###############################################################
+
+<span class="co">#critical value is the point (z value) that separates the tails as defined from a to the main curve</span>
+<span class="co">#the standard deviation of the population is given so we will use a  z test</span>
+<span class="co">#(1-0.01)for R</span>
+criticalValue &lt;-<span class="kw">qchisq</span>(<span class="fl">0.99</span>, <span class="dt">df=</span><span class="dv">5</span>)
+criticalValue</code></pre>
+<pre><code>## [1] 15.08627</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">####################### Four step: Find test statistic ###############################################################
+
+tStat =<span class="st"> </span><span class="kw">sum</span>((trial.tableDice[<span class="st">&quot;frequencies&quot;</span>,]<span class="op">-</span><span class="st"> </span>expectedFr )<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>expectedFr
+tStat</code></pre>
+<pre><code>## [1] 15.29412</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">####################### Five step: Draw a conclusion ###############################################################
+
+<span class="co"># tsat&lt;criticalValue and so it falls in the rejected area, so we can reject the null hypothesis and accept the Ha</span></code></pre>
+</div>
+<div id="chi-squared-test-with-contigency-tables-manual-step-by-step-example" class="section level3">
+<h3><span class="header-section-number">8.6.2</span> Chi-squared test with contigency tables, manual step-by-step example</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Does the sex of a person affects their choise of political part they support. We have 26 male rep, 13 male dem, 5 male other and</span>
+<span class="co">#20 female rep, 29 female dem, 7 female other</span>
+
+####################### First step: state the null and alernative hypothesis############################################
+
+<span class="co">#H0(null hypothesis): not affected</span>
+<span class="co">#Ha(alternative hypothesis): affected</span>
+
+<span class="co">#create our contingency table</span>
+trial &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">26</span>,<span class="dv">20</span>,<span class="dv">13</span>,<span class="dv">29</span>, <span class="dv">5</span>, <span class="dv">7</span>), <span class="dt">ncol =</span> <span class="dv">3</span>)
+<span class="kw">colnames</span>(trial) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rep&quot;</span>, <span class="st">&quot;dem&quot;</span>, <span class="st">&quot;other&quot;</span>)
+<span class="kw">rownames</span>(trial) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;males&quot;</span>, <span class="st">&quot;females&quot;</span>)
+trial.table &lt;-<span class="st"> </span><span class="kw">as.table</span>(trial)
+trial.table</code></pre>
+<pre><code>##         rep dem other
+## males    26  13     5
+## females  20  29     7</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">totalFemales &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.table[<span class="st">&quot;females&quot;</span>,])
+totalMales &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.table[<span class="st">&quot;males&quot;</span>,])
+totalRep &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.table[,<span class="st">&quot;rep&quot;</span>])
+totalDem &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.table[,<span class="st">&quot;dem&quot;</span>])
+totalOther &lt;-<span class="st"> </span><span class="kw">sum</span>(trial.table[,<span class="st">&quot;other&quot;</span>])
+totalSubjects &lt;-<span class="st"> </span>totalFemales <span class="op">+</span><span class="st"> </span>totalMales
+
+<span class="co">#expected values if Ho holds</span>
+ExpMaleRep &lt;-<span class="st"> </span>totalMales <span class="op">*</span><span class="st"> </span>totalRep <span class="op">/</span><span class="st"> </span>totalSubjects
+ExpMaleDem &lt;-<span class="st"> </span>totalMales <span class="op">*</span><span class="st"> </span>totalDem <span class="op">/</span><span class="st"> </span>totalSubjects
+ExpMaleOther &lt;-<span class="st"> </span>totalMales <span class="op">*</span><span class="st"> </span>totalOther <span class="op">/</span><span class="st"> </span>totalSubjects
+ExFemaleRep &lt;-<span class="st"> </span>totalFemales <span class="op">*</span><span class="st"> </span>totalRep <span class="op">/</span><span class="st"> </span>totalSubjects
+ExFemaleDem &lt;-<span class="st"> </span>totalFemales <span class="op">*</span><span class="st"> </span>totalDem <span class="op">/</span><span class="st"> </span>totalSubjects
+ExFemaleOther &lt;-<span class="st"> </span>totalFemales <span class="op">*</span><span class="st"> </span>totalOther <span class="op">/</span><span class="st"> </span>totalSubjects
+
+exp &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(ExpMaleRep,ExFemaleRep,ExpMaleDem,ExFemaleDem,ExpMaleOther,ExFemaleOther), <span class="dt">ncol=</span><span class="dv">3</span>)
+<span class="kw">colnames</span>(exp) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rep&quot;</span>, <span class="st">&quot;dem&quot;</span>, <span class="st">&quot;other&quot;</span>)
+<span class="kw">rownames</span>(exp) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;males&quot;</span>, <span class="st">&quot;females&quot;</span>)
+exp.table &lt;-<span class="st"> </span><span class="kw">as.table</span>(exp)
+exp.table</code></pre>
+<pre><code>##           rep   dem other
+## males   20.24 18.48  5.28
+## females 25.76 23.52  6.72</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">####################### Second step: choose the level of significance (a) #############################################
+
+<span class="co">#a is the area under the curve in each tail where if ou result lies the H0 will be rejected (rejectipon region), in this case this is not given to use.</span>
+<span class="co">#We will use a=0.05 for</span>
+
+<span class="co">#example chi square distribution for visibility</span>
+x &lt;-<span class="st"> </span><span class="kw">rchisq</span>(<span class="dv">100</span>, <span class="dv">5</span>)
+<span class="kw">hist</span>(x, <span class="dt">prob=</span><span class="ot">TRUE</span>)
+<span class="kw">curve</span>( <span class="kw">dchisq</span>(x, <span class="dt">df=</span><span class="dv">5</span>), <span class="dt">col=</span><span class="st">&#39;green&#39;</span>, <span class="dt">add=</span><span class="ot">TRUE</span>)
+<span class="co">#aria after red line falles in rejectred area (this is an example)</span>
+<span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">10</span>, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-93-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="fl">0.05</span>
+
+####################### Third step: Find critical value ###############################################################
+
+<span class="co">#critical value is the point (z value) that separates the tails as defined from a to the main curve</span>
+<span class="co">#the standard deviation of the population is given so we will use a  z test</span>
+<span class="co">#(1-0.05)for R</span>
+criticalValue &lt;-<span class="kw">qchisq</span>( <span class="fl">0.95</span>, <span class="dt">df=</span><span class="dv">2</span>)
+criticalValue</code></pre>
+<pre><code>## [1] 5.991465</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">####################### Four step: Find test statistic ###############################################################
+
+eachExquaer =<span class="st"> </span>(trial.table <span class="op">-</span><span class="st"> </span>exp.table )<span class="op">^</span><span class="dv">2</span><span class="op">/</span>exp.table
+tStat &lt;-<span class="st"> </span><span class="kw">sum</span>(eachExquaer)
+tStat</code></pre>
+<pre><code>## [1] 5.855499</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">####################### Five step: Draw a conclusion ###############################################################
+
+<span class="co"># tsat&gt;criticalValue and so it does not falls in the rejected area, so we can accept the null hypothesis and we cannot accept the Ha</span>
+
+######################################################################################################
+########################## CHI-SQUARE <span class="al">TEST</span> Of INDEPENDANCY IN R ######################################
+######################################################################################################
+
+<span class="kw">chisq.test</span>(trial.table)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  trial.table
+## X-squared = 5.8555, df = 2, p-value = 0.05352</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#this returned our x-squared value wich validated our t-statistic and a p-value of 0.05352, which is significant and therefore we can not reject the H0</span>
+
+
+<span class="kw">chisq.test</span>(trial.table)<span class="op">$</span>expected</code></pre>
+<pre><code>##           rep   dem other
+## males   20.24 18.48  5.28
+## females 25.76 23.52  6.72</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#this returns the expected values, it validetes the ones we calculated previously on exp.table and it can be used to compere with our actual values</span>
+
+<span class="co">#to confirm this</span>
+Rexpected &lt;-<span class="st"> </span><span class="kw">chisq.test</span>(trial.table)<span class="op">$</span>expected
+<span class="co">#returns true for all values :) :)</span>
+Rexpected <span class="op">==</span><span class="st"> </span>exp.table</code></pre>
+<pre><code>##          rep  dem other
+## males   TRUE TRUE  TRUE
+## females TRUE TRUE  TRUE</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#lets make some charts</span>
+<span class="kw">barplot</span>(trial.table, <span class="dt">legend=</span> <span class="ot">TRUE</span>, <span class="dt">beside =</span> T)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-93-2.png" width="672" /></p>
+</div>
+<div id="chi-square-goodness-of-fit-in-r" class="section level3">
+<h3><span class="header-section-number">8.6.3</span> Chi-square goodness of fit in R</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#we use the dice example again</span>
+frequenciesGiven&lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">22</span>,<span class="dv">24</span>,<span class="dv">38</span>,<span class="dv">30</span>, <span class="dv">46</span>, <span class="dv">44</span>)
+<span class="co">#calculated on top of the page</span>
+pForEach&lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>,<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>,<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>,<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>)
+
+<span class="co">#this validates our previous results and so it gives a p=0.009177 which is a very small probability for the H0 to be tru, therefore we accept the Ha</span>
+<span class="kw">chisq.test</span>(frequenciesGiven, <span class="dt">p=</span>pForEach)</code></pre>
+<pre><code>## 
+##  Chi-squared test for given probabilities
+## 
+## data:  frequenciesGiven
+## X-squared = 15.294, df = 5, p-value = 0.009177</code></pre>
+</div>
+<div id="fishers-exact-test-in-r" class="section level3">
+<h3><span class="header-section-number">8.6.4</span> Fisher’s Exact test in R</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#this is used for non-parametric data (not following a normal distribution)</span>
+<span class="co">#legend has it, it was discovered when testing if a lady in the UK could tell if milk was poured before or after</span>
+<span class="co">#so lets take this example. Assume 20 trials out of which the lady gets guesses 9 times correctly that tea was poured before, out of the 10 in which it actually was.</span>
+n &lt;-<span class="st"> </span><span class="dv">20</span>
+s &lt;-<span class="st"> </span><span class="dv">9</span>
+milkBefore &lt;-<span class="st"> </span><span class="dv">10</span>
+
+<span class="co">#there are 4 ways out of 8 to choose the tea that was made with milk before tea</span>
+comb =<span class="st"> </span><span class="cf">function</span>(n, x) {
+  <span class="kw">factorial</span>(n) <span class="op">/</span><span class="st"> </span>(<span class="kw">factorial</span>(n<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span><span class="kw">factorial</span>(x))
+}
+
+totalWays &lt;-<span class="st"> </span><span class="kw">comb</span>(n,milkBefore)
+totalWays</code></pre>
+<pre><code>## [1] 184756</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#the lady got 4, so we need to calculate in how many ways she could have gotten 4 out of 5</span>
+<span class="co">#there are ten ways in 10 orders</span>
+waysToGuessSuccess &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">*</span><span class="dv">10</span>
+waysToGuessSuccess</code></pre>
+<pre><code>## [1] 100</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#if we assume the H0, the probability that she got it correctly at random would be:</span>
+p &lt;-<span class="st"> </span>waysToGuessSuccess <span class="op">/</span><span class="st"> </span>totalWays
+p</code></pre>
+<pre><code>## [1] 0.0005412544</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># p= 0.02, which is quite small smaller that 0.05 which is usually the threshold so we can reject the H0. According to this trial the lady can, most likely,</span>
+<span class="co">#tell whether or not milk was poured before or after the tea</span>
+
+<span class="co">#let&#39;s try this using R built in functionality</span>
+TeaTasting &lt;-
+<span class="st">  </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">9</span>),
+         <span class="dt">nrow =</span> <span class="dv">2</span>,
+         <span class="dt">dimnames =</span> <span class="kw">list</span>(<span class="dt">Guess =</span> <span class="kw">c</span>(<span class="st">&quot;Milk&quot;</span>, <span class="st">&quot;Tea&quot;</span>),
+                         <span class="dt">Truth =</span> <span class="kw">c</span>(<span class="st">&quot;Milk&quot;</span>, <span class="st">&quot;Tea&quot;</span>)))
+
+<span class="kw">fisher.test</span>(TeaTasting, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>)</code></pre>
+<pre><code>## 
+##  Fisher&#39;s Exact Test for Count Data
+## 
+## data:  TeaTasting
+## p-value = 0.0005467
+## alternative hypothesis: true odds ratio is greater than 1
+## 95 percent confidence interval:
+##  4.338108      Inf
+## sample estimates:
+## odds ratio 
+##    51.3254</code></pre>
+</div>
+</div>
+<div id="anova" class="section level2">
+<h2><span class="header-section-number">8.7</span> Anova</h2>
+<div id="two-way-anova-with-interaction-testing" class="section level3">
+<h3><span class="header-section-number">8.7.1</span> Two-way ANOVA with interaction testing</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#built in data set</span>
+<span class="kw">head</span>(warpbreaks)</code></pre>
+<pre><code>##   breaks wool tension
+## 1     26    A       L
+## 2     30    A       L
+## 3     54    A       L
+## 4     25    A       L
+## 5     70    A       L
+## 6     52    A       L</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(warpbreaks)</code></pre>
+<pre><code>##      breaks      wool   tension
+##  Min.   :10.00   A:27   L:18   
+##  1st Qu.:18.25   B:27   M:18   
+##  Median :26.00          H:18   
+##  Mean   :28.15                 
+##  3rd Qu.:34.00                 
+##  Max.   :70.00</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#standard model</span>
+model1 &lt;-<span class="st"> </span><span class="kw">aov</span>(breaks <span class="op">~</span><span class="st"> </span>wool <span class="op">+</span><span class="st"> </span>tension, <span class="dt">data =</span> warpbreaks)
+<span class="co">#we can see that tension is significant to the breaks</span>
+<span class="kw">summary</span>(model1)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## wool         1    451   450.7   3.339 0.07361 . 
+## tension      2   2034  1017.1   7.537 0.00138 **
+## Residuals   50   6748   135.0                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#add an interaction manually, product of wool and tension</span>
+model2 &lt;-<span class="st"> </span><span class="kw">aov</span>(breaks <span class="op">~</span><span class="st"> </span>wool <span class="op">+</span><span class="st"> </span>tension <span class="op">+</span><span class="st"> </span>wool<span class="op">:</span>tension, <span class="dt">data =</span> warpbreaks)
+<span class="co">#we see that the interaction of wool with tension (combination) is fairly significant</span>
+<span class="kw">summary</span>(model2)</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## wool          1    451   450.7   3.765 0.058213 .  
+## tension       2   2034  1017.1   8.498 0.000693 ***
+## wool:tension  2   1003   501.4   4.189 0.021044 *  
+## Residuals    48   5745   119.7                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#check for all interactions, should return the same model</span>
+model3 &lt;-<span class="st"> </span><span class="kw">aov</span>(breaks <span class="op">~</span><span class="st"> </span>wool <span class="op">*</span><span class="st"> </span>tension, <span class="dt">data =</span> warpbreaks)
+<span class="kw">summary</span>(model3)</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## wool          1    451   450.7   3.765 0.058213 .  
+## tension       2   2034  1017.1   8.498 0.000693 ***
+## wool:tension  2   1003   501.4   4.189 0.021044 *  
+## Residuals    48   5745   119.7                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="manual-step-by-step-example" class="section level3">
+<h3><span class="header-section-number">8.7.2</span> Manual step-by-step example</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#this is a balanced test since for every poisson the same amount of tests/treatments were used</span>
+survivalTimeDS &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/poison_balanced.tsv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)
+
+<span class="co">#we can see the boxplot to get an idea of the variance</span>
+<span class="kw">boxplot</span>(survivalTime<span class="op">~</span><span class="st"> </span>treatment<span class="op">*</span><span class="st"> </span>poison ,<span class="dt">data=</span>survivalTimeDS)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(survivalTimeDS)</code></pre>
+<pre><code>##      poison  treatment  survivalTime   
+##  Min.   :1   A:12      Min.   :0.1800  
+##  1st Qu.:1   B:12      1st Qu.:0.3000  
+##  Median :2   C:12      Median :0.4000  
+##  Mean   :2   D:12      Mean   :0.4794  
+##  3rd Qu.:3             3rd Qu.:0.6225  
+##  Max.   :3             Max.   :1.2400</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#H0: type of poison has no affect</span>
+<span class="co">#H0: type o treatment has no affect</span>
+<span class="co">#H0: combination of poison and type has no affect</span>
+
+############################ inspect the mean survival time for each combination #######################################
+<span class="kw">library</span>(plyr)
+<span class="co">#per poison</span>
+meanPerPoison &lt;-<span class="kw">ddply</span>(survivalTimeDS, .(poison), summarize, <span class="dt">mean=</span><span class="kw">mean</span>(survivalTime))
+meanPerPoison</code></pre>
+<pre><code>##   poison     mean
+## 1      1 0.617500
+## 2      2 0.544375
+## 3      3 0.276250</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#per treatment</span>
+meanPerTreatment &lt;-<span class="kw">ddply</span>(survivalTimeDS, .(treatment), summarize, <span class="dt">mean=</span><span class="kw">mean</span>(survivalTime))
+meanPerTreatment</code></pre>
+<pre><code>##   treatment      mean
+## 1         A 0.3141667
+## 2         B 0.6766667
+## 3         C 0.3925000
+## 4         D 0.5341667</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#for each poisson each treatment</span>
+meanPoisonTreat &lt;-<span class="kw">ddply</span>(survivalTimeDS, .(treatment, poison), summarize, <span class="dt">mean=</span><span class="kw">mean</span>(survivalTime))
+meanPoisonTreat</code></pre>
+<pre><code>##    treatment poison   mean
+## 1          A      1 0.4125
+## 2          A      2 0.3200
+## 3          A      3 0.2100
+## 4          B      1 0.8800
+## 5          B      2 0.8150
+## 6          B      3 0.3350
+## 7          C      1 0.5675
+## 8          C      2 0.3750
+## 9          C      3 0.2350
+## 10         D      1 0.6100
+## 11         D      2 0.6675
+## 12         D      3 0.3250</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#total</span>
+meanTimeForAll &lt;-<span class="st"> </span><span class="kw">mean</span>(survivalTimeDS<span class="op">$</span>survivalTime)
+meanTimeForAll</code></pre>
+<pre><code>## [1] 0.479375</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">##########################Sum square of first factor(poison)#############################################################
+
+<span class="co">#this is given by calculating the squared difference of the grand mean to the mean for each</span>
+<span class="co">#poison and then summing the result</span>
+
+<span class="co">#for robustness we make a function that selects the mean for a given poison and does the calculations</span>
+sumOfSquaresForPoisonF &lt;-<span class="st"> </span><span class="cf">function</span>(poisonGiven){
+  <span class="co">#we multiply by 4 because we have 4 treatments per poison</span>
+  <span class="dv">4</span><span class="op">*</span>(((<span class="kw">subset</span>(meanPerPoison,poison<span class="op">==</span>poisonGiven,<span class="dt">select=</span><span class="st">&quot;mean&quot;</span>))[<span class="dv">1</span>,]<span class="op">-</span>meanTimeForAll)<span class="op">^</span><span class="dv">2</span>)
+}
+<span class="co">#then we apply this function for poison 1,2,3 and sum the result</span>
+sumOfSquaresForPoison &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">mapply</span>(sumOfSquaresForPoisonF, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)))
+
+
+##########################Sum square of second factor(treatment)######################################################
+<span class="co">#as above but for treatments this time</span>
+
+sumOfSquaresForTreatmentsF &lt;-<span class="st"> </span><span class="cf">function</span>(treatmentGiven){
+  <span class="co">#we multiply by 3 because we have 3 poisons per treatment</span>
+  <span class="dv">3</span><span class="op">*</span>(((<span class="kw">subset</span>(meanPerTreatment,treatment<span class="op">==</span>treatmentGiven,<span class="dt">select=</span><span class="st">&quot;mean&quot;</span>))[<span class="dv">1</span>,]<span class="op">-</span>meanTimeForAll)<span class="op">^</span><span class="dv">2</span>)
+}
+
+
+sumOfSquaresForTreatments &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">mapply</span>(sumOfSquaresForTreatmentsF, <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>)))
+sumOfSquaresForTreatments</code></pre>
+<pre><code>## [1] 0.2303016</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">########################## Sum square within error ######################################################################
+
+<span class="co">#This is the square sum for each survival time in our dataset minus the average for that poison and treatment</span>
+
+sumOfSquaresWithErrorF &lt;-<span class="st"> </span><span class="cf">function</span>(treatmentGiven, poisonGiven){
+  subTrPoi &lt;-<span class="st"> </span><span class="kw">subset</span>(survivalTimeDS, treatment<span class="op">==</span>treatmentGiven <span class="op">&amp;</span><span class="st"> </span>poison<span class="op">==</span><span class="st"> </span>poisonGiven)
+  meanOfTrPoi &lt;-<span class="st"> </span><span class="kw">subset</span>(meanPoisonTreat, treatment<span class="op">==</span>treatmentGiven<span class="op">&amp;</span><span class="st"> </span>poison<span class="op">==</span><span class="st"> </span>poisonGiven,<span class="dt">select=</span><span class="st">&quot;mean&quot;</span>)
+  sumTrPoi &lt;-<span class="st"> </span><span class="kw">sum</span>((subTrPoi<span class="op">$</span>survivalTime <span class="op">-</span><span class="st"> </span>meanOfTrPoi)<span class="op">^</span><span class="dv">2</span>)
+  <span class="kw">return</span>(sumTrPoi)
+}
+<span class="co">#to get all combinations A1, A2,A3,B1....we need to use outer product</span>
+x &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;D&quot;</span>))
+y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)
+product &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(x, y)
+
+<span class="co">#apply the function to all possible combinations and sum them up</span>
+sumOfSquaresWithError &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">mapply</span>( sumOfSquaresWithErrorF,<span class="dt">treatmentGiven=</span> <span class="kw">as.character</span>(product[<span class="dv">1</span>,<span class="st">&quot;Var1&quot;</span>]),<span class="dt">poisonGiven=</span>product[<span class="dv">1</span>,<span class="st">&quot;Var2&quot;</span>]))
+sumOfSquaresWithError</code></pre>
+<pre><code>## [1] 0.01050625</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">########################## Sum of Square Total ################################
+sumSquareTotal &lt;-<span class="st"> </span><span class="kw">sum</span>((survivalTimeDS<span class="op">$</span>survivalTime <span class="op">-</span><span class="st"> </span>meanTimeForAll)<span class="op">^</span><span class="dv">2</span>)
+sumSquareTotal</code></pre>
+<pre><code>## [1] 3.005081</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">######################### sum square of both factors ############################################
+<span class="co">#sum of both factors is given by</span>
+sumOfSquareBothFactors &lt;-<span class="st"> </span>sumSquareTotal <span class="op">-</span><span class="st"> </span>sumOfSquaresWithError <span class="op">-</span>sumOfSquaresForTreatments <span class="op">-</span><span class="st"> </span>sumOfSquaresForPoison
+
+######################### calculating the degrees of freedom for each sum of squares ############
+
+<span class="co">#for first factor (poison)</span>
+dfFirstFactor &lt;-<span class="st"> </span><span class="dv">3-1</span>
+<span class="co">#for second factor (treatment)</span>
+dfSecondFactor &lt;-<span class="st"> </span><span class="dv">4-1</span>
+<span class="co">#for within error we add up n-1 of each treatment for each poison so:</span>
+<span class="co">#(4-1) a treatment for a poison *3 one treatment for each poison *4 each treatment for each poison</span>
+dfWithinError &lt;-<span class="st"> </span>(<span class="dv">4-1</span>)<span class="op">*</span><span class="dv">3</span><span class="op">*</span><span class="dv">4</span>
+<span class="co">#sum of both squares, we multiply df of first and second</span>
+dfSumOfBoth &lt;-<span class="st"> </span>dfFirstFactor <span class="op">*</span><span class="st"> </span>dfSecondFactor
+<span class="co">#total degree of freedoms, this is the sum of all of them</span>
+dfTotal &lt;-<span class="st"> </span>dfFirstFactor <span class="op">+</span><span class="st"> </span>dfSecondFactor <span class="op">+</span><span class="st"> </span>dfWithinError <span class="op">+</span><span class="st"> </span>dfSumOfBoth
+dfTotal</code></pre>
+<pre><code>## [1] 47</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">######################### calculating the mean square of sum of square within error ############
+
+<span class="co">#we will need this to calculate the f-scores which will allow us to draw our conclusions for each H0</span>
+<span class="co">#this is the sum of squares within error divided by its degrees of freedom so:</span>
+meanSquareOfSumWithinError &lt;-<span class="st"> </span>sumOfSquaresWithError<span class="op">/</span>dfWithinError
+meanSquareOfSumWithinError</code></pre>
+<pre><code>## [1] 0.0002918403</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">######################### H0: poison does not affect the survival time ############################
+
+<span class="co">#we need to calculate the F-score for this which is meanSquareOfFirstFactor/meanSquareWithinError</span>
+<span class="co">#so we need the mean square of 1st factor:</span>
+meanSquareOfFirstFactor &lt;-<span class="st"> </span>sumOfSquaresForPoison<span class="op">/</span>dfFirstFactor
+FscoreForPoison &lt;-<span class="st"> </span>meanSquareOfFirstFactor<span class="op">/</span>meanSquareOfSumWithinError
+<span class="co"># F(dfFirstFactor ,dfWithinError) = FscoreForPoison p&lt;0.5 for a 95%confidence interval,</span>
+<span class="co">#we can find the critical value for df of numerator dfFirstFactor and dfWithinError denominator from the F distribution</span>
+cvForPoison &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, <span class="dt">df1=</span>dfFirstFactor, <span class="dt">df2=</span>dfWithinError)
+cvForPoison</code></pre>
+<pre><code>## [1] 3.259446</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#FscoreForPoison falls in the rejection area and so we can reject he H0 and accept that the poison does affect the</span>
+<span class="co">#survival time</span>
+
+####### you can repeat this for the rest of the H0&#39;s ##############################################
+### or we can be sensible and use..... r #####
+
+<span class="co">#however you need to ensure your factors are actually of type factor!!!</span>
+survivalTimeDS<span class="op">$</span>poison &lt;-<span class="st"> </span><span class="kw">as.factor</span>(survivalTimeDS<span class="op">$</span>poison)
+modelForSurvivalTime &lt;-<span class="st"> </span><span class="kw">lm</span>(survivalTime <span class="op">~</span><span class="st"> </span>treatment <span class="op">*</span><span class="st"> </span>poison, <span class="dt">data =</span> survivalTimeDS)
+<span class="co">#type does not matter since our test is balanced</span>
+<span class="kw">library</span>(car)
+<span class="kw">Anova</span>(modelForSurvivalTime, <span class="dt">type=</span><span class="st">&quot;III&quot;</span>)</code></pre>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: survivalTime
+##                   Sum Sq Df F value    Pr(&gt;F)    
+## (Intercept)      0.68062  1 30.6004 2.937e-06 ***
+## treatment        0.45395  3  6.8031 0.0009469 ***
+## poison           0.08222  2  1.8482 0.1721570    
+## treatment:poison 0.25014  6  1.8743 0.1122506    
+## Residuals        0.80073 36                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#from the above we can reject that poison and treatment has no effect and accept that the interaction has no effect</span></code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="recommendation-systems.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

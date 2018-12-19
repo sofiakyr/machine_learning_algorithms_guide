@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>7 Recommendation Systems | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="7 Recommendation Systems | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Recommendation Systems | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="extensions-for-linear-models.html">
+<link rel="next" href="basic-statistics-and-probabilities-review.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="recommendation-systems" class="section level1">
+<h1><span class="header-section-number">7</span> Recommendation Systems</h1>
+<p>The application we will be referring to can be found here: <a href="https://datasupport.site" class="uri">https://datasupport.site</a></p>
+<div id="recommending-similar-books.-content-based-filtering" class="section level2">
+<h2><span class="header-section-number">7.1</span> Recommending similar books. Content based filtering</h2>
+<p>First we will create the algorithm that is used to recommend ‘similar books’ to the one the user just bought. That
+algorithm will simply look at how similar the book we just bought is, to other books available, according to the given
+attributes (author, genre, age). This approach is called Content based filtering.</p>
+<div id="what-is-similarity" class="section level3">
+<h3><span class="header-section-number">7.1.1</span> What is similarity?</h3>
+<p>For us humans, distinguishing similar items is a simple task. We look at the properties of the item (in this case the
+book’s author, theme and age) and we can group together books by the same author, same theme and similar age. If we want
+a machine to perform that task we need to generalise this intuition and describe it using a set of clear instructions.</p>
+<p>In machine learning, similarity if often described by how far two items are from each other. Distance is an effective
+metric as it quantifiable and clear. This distance would be in terms of the given attributes.</p>
+<p>To understand this, we can imagine plotting all of our points, using their attributes as coordinates. The closer each
+point is to another the more ‘similar’ they would be. For example if we only used the <span class="math inline">\(x\)</span> axis (a straight line), whose
+values represent the age of each book. We could then mark where on that line each book is according to its age. Marks
+that are close to each other would show us books that have similar age. To define ‘similarity’ in a more realistic
+manner we need to use the rest of attributes. So instead of just a line we plot our points in a graph where each axis
+(known as dimension) represents an attribute.</p>
+<p>This distance between points can be measured using various techniques such as:</p>
+<ul>
+<li><p>Euclidian distance. Similar to computing distances in 2 dimensional distances, we use the co-ordinates of the points
+to draw a right angled triangle with two known sides and compute the unknown, which represents the distance, using the
+Pythagorean theorem.</p></li>
+<li><p>Correlation distance. Basically measures how ‘in-sync’ (do they both go up or down) the deviations from the mean of
+each point are for each user. Users that have rated the same product higher than their average and the same products
+lower than their average are considered close to each other.</p></li>
+<li><p>Hammer’s distance. Simply measures the percentage of agreement. How many times two users gave the exact same rating.</p></li>
+</ul>
+</div>
+<div id="how-can-we-find-similar-books" class="section level3">
+<h3><span class="header-section-number">7.1.2</span> How can we find similar books?</h3>
+<p>As we discussed above, similarity is described in terms of distance between points. So we would have to ‘plot books over
+the axes of age, author and theme’.
+and find which books are close to each other. Author and theme, are however categorical variables (non-numeric), so we
+can not easily plot them in the way we want to. An simple way to bypass this, would be to assign a numeric ‘dummy’
+variables, representative of each value a categoric attribute takes on. For example, theme love story would be <span class="math inline">\(1\)</span>,
+theme pirates <span class="math inline">\(2\)</span>, aliens <span class="math inline">\(3\)</span>, drama <span class="math inline">\(4\)</span> and so on. Once this is complete we can plot the books in terms of theme using
+those dummy variables. The books with the same theme would be close to each other, correctly describing similarity. What
+is the problem?</p>
+<p>The problem is on the order of dummy variables. When we plot this our model will decide that love story (number <span class="math inline">\(1\)</span>) is
+more similar to pirates (number <span class="math inline">\(2\)</span>), as they are closer to each other, than let’s say drama which happens to be number
+<span class="math inline">\(4\)</span>. We would have to give an order that makes logical sense, which can be exhaustive. Sometimes such an order may not
+even be meaningful or very challenging, in the example of authors what would make an author be more similar to another
+author?</p>
+<p>For that reason, we have chosen to work with Hammer’s distance for the categorical variables (simply looks whether or
+not two values are the same) and absolute distances for the age. We have created our own algorithm, which follows our
+intuition of what similarity is, let’s see how it works!</p>
+<pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># First we load the dataset I have prepared, it contains the following</span>
+<span class="co"># observations:</span>
+<span class="co"># Books, which contain the book number (from 1 to 20), author (a, b, c, d), the</span>
+<span class="co"># genre (pirate, alien, love, drama) and how many years ago the book was written</span>
+books &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;books.txt&quot;</span>)
+
+<span class="co"># For every book that a user buys, we want to recommend &#39;similar&#39; ones. So every</span>
+<span class="co"># time the user clicks &#39;Submit&#39; to buy a specific book. We want to calculate the</span>
+<span class="co"># distances from his book to the rest of the books available and recommend the</span>
+<span class="co"># ones that are closer (efficiency considerations and optimisations are</span>
+<span class="co"># discussed later, for now let&#39;s keep things simple for the purpose of</span>
+<span class="co"># understanding the concepts).</span>
+
+<span class="co"># So the first step is to get the distances of this book to the rest. This is</span>
+<span class="co"># what this function does.</span>
+
+<span class="co"># It receives the book number of the book that was just bought as a parameter</span>
+get.distance &lt;-<span class="st"> </span><span class="cf">function</span>(bookNumber){
+  <span class="co"># It returns a data frame containing various distance metrics</span>
+  df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">CompBook=</span><span class="kw">integer</span>(),
+                   <span class="dt">hammingDist=</span><span class="kw">integer</span>(),
+                   <span class="dt">ageDist =</span> <span class="kw">integer</span>(),
+                   <span class="dt">totalDist =</span> <span class="kw">integer</span>()
+                   )
+  <span class="co"># First we capture the author, genre and age of the book that was bought,</span>
+  <span class="co"># since those values will be used to compare similarity</span>
+  author &lt;-books[books<span class="op">$</span>book<span class="op">==</span>bookNumber,]<span class="op">$</span>author
+  genre &lt;-<span class="st"> </span>books[books<span class="op">$</span>book<span class="op">==</span>bookNumber,]<span class="op">$</span>genre
+  age &lt;-<span class="st"> </span>books[books<span class="op">$</span>book<span class="op">==</span>bookNumber,]<span class="op">$</span>age
+
+
+  <span class="co"># Then for every other book available we</span>
+  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>){
+  <span class="co"># Capture its author, genre and theme</span>
+  authorComp  &lt;-books[books<span class="op">$</span>book<span class="op">==</span>i,]<span class="op">$</span>author
+  genreComp  &lt;-<span class="st"> </span>books[books<span class="op">$</span>book<span class="op">==</span>i,]<span class="op">$</span>genre
+  ageComp  &lt;-<span class="st"> </span>books[books<span class="op">$</span>book<span class="op">==</span>i,]<span class="op">$</span>age
+
+  <span class="co"># Reset our distance metrics to zero</span>
+  hammingDistance &lt;-<span class="st"> </span><span class="dv">0</span>
+  ageDist &lt;-<span class="st"> </span><span class="dv">0</span>
+  totalDist &lt;-<span class="dv">0</span>
+
+  <span class="co"># Compute our Hamming distance</span>
+  <span class="co"># If they do not have the same author, we want the distance to increase so we</span>
+  <span class="co"># add one</span>
+  <span class="cf">if</span> (author <span class="op">!=</span><span class="st"> </span>authorComp){
+    hammingDistance =<span class="st"> </span>hammingDistance<span class="op">+</span><span class="dv">1</span>
+  }
+  <span class="co"># If they do not have the same genre, we want the distance to increase so we</span>
+  <span class="co"># add one more</span>
+  <span class="cf">if</span> (genre <span class="op">!=</span><span class="st"> </span>genreComp){
+    hammingDistance =<span class="st"> </span>hammingDistance<span class="op">+</span><span class="dv">1</span>
+  }
+
+  <span class="co"># For the age, we simply get the absolute difference of the age from the book</span>
+  <span class="co"># we just bough to the book we are comparing it to</span>
+  ageDist &lt;-<span class="st"> </span><span class="kw">abs</span>(age <span class="op">-</span><span class="st"> </span>ageComp)
+
+  <span class="co"># It would not make sense to simple add our hamming distance with the age</span>
+  <span class="co"># distance, as the hamming distance can only go up to 1 for each value,</span>
+  <span class="co"># whereas the age can get up to very high values. Age would become far more</span>
+  <span class="co"># significant than the rest of the attributes. Instead we use domain knowledge</span>
+  <span class="co"># to interpret this value.</span>
+
+  <span class="cf">if</span> (ageDist <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>) {
+  <span class="co"># If the age is greater that 10 years we add 0.5 to the distance (we assume</span>
+  <span class="co"># this has been chosen from domain knowledge and studies available)</span>
+    totalDist &lt;-<span class="st"> </span>hammingDistance <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>
+
+  <span class="co"># If it is only grater that 5 we add 0.25</span>
+  } <span class="cf">else</span> <span class="cf">if</span> (ageDist <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>){
+    totalDist &lt;-<span class="st"> </span>hammingDistance <span class="op">+</span><span class="st"> </span><span class="fl">0.25</span>
+
+  <span class="co"># Otherwise total distance is just the one we have previously calculated, the</span>
+  <span class="co"># hamming distance</span>
+  } <span class="cf">else</span> {
+    totalDist &lt;-hammingDistance
+  }
+
+  <span class="co"># We just need to add our calculated metrics to the data frame we need to</span>
+  <span class="co"># return</span>
+  newdata &lt;-<span class="st"> </span><span class="kw">c</span>(i, hammingDistance,ageDist, totalDist)
+  df&lt;-<span class="st"> </span><span class="kw">rbind</span>(df, newdata)
+  <span class="kw">names</span>(df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;CompBook&quot;</span>, <span class="st">&quot;hammingDist&quot;</span>, <span class="st">&quot;ageDist&quot;</span>, <span class="st">&quot;totalDist&quot;</span>)
+
+  }
+
+  <span class="co"># And return them :)</span>
+  <span class="kw">return</span>(df)
+
+}
+
+<span class="co"># This function, is the one actually called when the user hits submit</span>
+getClosest3 &lt;-<span class="st"> </span><span class="cf">function</span>(bookNumber){
+
+  <span class="co"># It makes use of the previous function to get the calculated distances from</span>
+  <span class="co"># all our points</span>
+  distDataSet &lt;-<span class="st"> </span><span class="kw">get.distance</span>(bookNumber)
+
+  <span class="co"># It removes the distance of our point to itself, as we do not want to</span>
+  <span class="co"># recommend to the user the book he just bough (although technically it has</span>
+  <span class="co"># the smallest distance)</span>
+  distDataSet &lt;-<span class="st"> </span>distDataSet[<span class="op">!</span><span class="st"> </span>(distDataSet<span class="op">$</span>CompBook<span class="op">==</span>bookNumber),]
+
+  <span class="co"># We order the resulting distances in ascending order (smallest first)</span>
+  orderedDistances &lt;-<span class="st"> </span>distDataSet[<span class="kw">order</span>(distDataSet<span class="op">$</span>totalDist,
+                                        <span class="dt">decreasing=</span><span class="ot">FALSE</span>), ]
+
+  <span class="co"># Choose the 3 first from the ordered data frame</span>
+  closest &lt;-<span class="st"> </span><span class="kw">head</span>(orderedDistances, <span class="dv">3</span>)
+
+  <span class="co"># and return them! :)</span>
+  <span class="kw">return</span>(closest<span class="op">$</span>CompBook)
+}</code></pre>
+</div>
+</div>
+<div id="recommending-books-that-were-liked-by-similar-users-collaborative-filtering" class="section level2">
+<h2><span class="header-section-number">7.2</span> Recommending books that were liked by ‘similar’ users, Collaborative filtering</h2>
+<div id="similar-users" class="section level3">
+<h3><span class="header-section-number">7.2.1</span> Similar users?</h3>
+<p>Similar users are just users that have provided similar ratings or feedback, purchased or previewed similar objects and
+so on. In our case, we will focus on users that have provided similar ratings. Although, our recommendations will be
+optimised with more and more data, it does not mean that we require every user to have rated every book for the
+algorithm to work.</p>
+<p>The idea here is that we use the rating matrix (see image 2, its simply a table presenting the rating of every user) and
+try to fill in the gaps, from missing ratings. Our model assumes that if a rating is missing that user has not read the
+respective book. So it wants to predict what his ratings would have been if he had read it. If that prediction returns
+positive, the model will recommend that book to that user.</p>
+<p>The model fills those gaps by looking at the ratings of other user’s that had other similar ratings. Again, similarity
+can be identified by the distance of a user to another, where their coordinates are the ratings for each book.</p>
+<p>Let’s use an example to understand this. We want to recommend some books to reader A, reader A has already read a couple
+of our books and he has rated them. Reader A has not rated book1 and book 10, so we assume he has not read them and we
+want to see if it is worth recommending them.</p>
+<p>First we find some other readers with ratings similar to reader A (from the rating matrix). Then we look at the ratings
+for book 1 and book 10 that were given by the group of similar users. For each book we get the average rating that was
+given by them. We can take a weighted average, weighted by how close each of those reader is to A, the closer the more
+significant. We have found that the average rating, given by readers close to A, is 2 for book 1 and 5 for book 10, so
+we recommend book 10 to reader A.</p>
+<p>The main advantage of this approach is that we do not require information about the books themselves. This can be
+extremely valuable for cases where acquiring that information is exhaustive and maybe even expensive and slow.
+Describing each item often requires manual work by humans that are experts on the relevant field. The disadvantage is
+that we need feedback from the users in order to recommend items. Not all users give feedback and often users tend to
+give feedback only on extreme cases such as very good or very bad, leading to models missing out on valuable insight for
+a lot of products.</p>
+<pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># We load the data, this is a list that I have prepared, it contains the user,</span>
+<span class="co"># the book and the rating per row.</span>
+<span class="co"># Each user has rated some of our books from 1 to 5 (where 5 is perfect)</span>
+<span class="co"># Not every users has rated every book</span>
+readersFeedback &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;readersFeedback.txt&quot;</span>)
+
+<span class="co"># From that data, we need to create the rating matrix as shown in the image. At</span>
+<span class="co"># the moment we have normalised data (user, book, rating) so we have from 1 to</span>
+<span class="co"># 20 entries for each user. This is not useful if we want to find the distance</span>
+<span class="co"># of each user using his ratings. The Ratings are the attributes that need to</span>
+<span class="co"># used as coordinates to plot each point.So we need to transform that data to a</span>
+<span class="co"># data that has one entry for each user, and 20 columns containing ratings, one</span>
+<span class="co"># for each book.</span>
+
+<span class="co"># First we make the 20 vectors containing the ratings for each user, those will</span>
+<span class="co"># become columns</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>){
+  <span class="kw">assign</span>(<span class="kw">paste</span>(<span class="st">&quot;book&quot;</span>,i,<span class="dt">sep=</span><span class="st">&quot;&quot;</span>), readersFeedback[readersFeedback<span class="op">$</span>book<span class="op">==</span>i,]<span class="op">$</span>rate)
+}
+<span class="co"># Also make a vector containing the readers numbers in order</span>
+readers &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>)
+
+<span class="co"># Now we make the new data set</span>
+readers.data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(readers, book1, book2, book3, book4, book5, book6,
+                           book7, book8, book9, book10, book11, book12, book13,
+                           book14, book15, book17, book18, book19, book20)
+
+<span class="co"># This library contains the function knnImputation, which can fill in the</span>
+<span class="co"># missing ratings, using the process we discussed previously.</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;DMwR&quot;</span>)
+<span class="kw">library</span>(DMwR)
+
+<span class="co"># This is the function that is called every time a users submits a new rating on</span>
+<span class="co"># our website.</span>
+<span class="co"># It receives all the ratings as parameters (some may be null and this is fine)</span>
+getRecommendations &lt;-<span class="st"> </span><span class="cf">function</span>(book1, book2, book3, book4, book5, book6, book7,
+                               book8, book9, book10, book11, book12, book13,
+                               book14, book15, book16, book17, book18, book19,
+                               book20) {
+
+  <span class="co"># Since we don&#39;t have a log in page, we don&#39;t know who the user is. For now we</span>
+  <span class="co"># can just assume this ratings are coming from a new user.</span>
+  <span class="co"># So we need to add this new user number to our rating matrix</span>
+  newUserId &lt;-<span class="st"> </span><span class="kw">nrow</span>(readers.data) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+
+  <span class="co"># We capture his ratings in this vector</span>
+  newEntry &lt;-<span class="st"> </span><span class="kw">c</span>(newUserId, book1, book2, book3, book4, book5, book6, book7,
+                book8, book9, book10, book11, book12, book13, book14, book15,
+                book16, book17, book18, book19, book20)
+
+  <span class="co"># Then we add his ratings and umber to the existing matrix</span>
+  newMatrix &lt;-<span class="st"> </span><span class="kw">rbind</span>(readers.data,newEntry)
+
+  <span class="co"># We fill in the gaps from missing ratings, as explained before using the</span>
+  <span class="co"># function provided by the library</span>
+  completeMatrix &lt;-<span class="st"> </span><span class="kw">knnImputation</span>(newMatrix,
+                                  <span class="dt">k =</span> <span class="dv">3</span>,
+                                  <span class="dt">scale =</span> T,
+                                  <span class="dt">meth =</span> <span class="st">&quot;weighAvg&quot;</span>,
+                                  <span class="dt">distData =</span> <span class="ot">NULL</span>)
+
+  <span class="co"># Capture the users ratings after we filled in the gaps</span>
+  readersRatingComplete &lt;-<span class="st"> </span>completeMatrix[completeMatrix<span class="op">$</span>readers <span class="op">==</span><span class="st"> </span>newUserId,]
+  <span class="co"># Capture the books that the user has not rated</span>
+  readersRatingsMissing &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">is.na</span>(newEntry))
+
+  <span class="co"># Recommend books that the user has not rated and for which the predicted</span>
+  <span class="co"># ratings are more than 3.4.</span>
+  recommended &lt;-<span class="st"> </span><span class="kw">integer</span>()
+  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">20</span>){
+  <span class="cf">if</span> (i <span class="op">%in%</span><span class="st">  </span>readersRatingsMissing){
+    <span class="cf">if</span>(readersRatingComplete[i]<span class="op">&gt;</span><span class="fl">3.4</span>){
+      recommended &lt;-<span class="st"> </span><span class="kw">c</span>(recommended, readersRatingComplete[i])
+    }
+   }
+  }
+
+  <span class="co"># Return the books that satisfy that :)</span>
+  <span class="kw">return</span>(recommended)
+
+}</code></pre>
+</div>
+</div>
+<div id="recommending-items-that-are-often-bought-together-mining-item-association-rules" class="section level2">
+<h2><span class="header-section-number">7.3</span> Recommending items that are often bought together (mining item association rules)</h2>
+<p>We want to look at the transaction history and recommend items that users tend to buy together or over a short period of
+time. This approach to recommendation systems is called association rules learning. Given that a user just bough an item
+we want to find out how likely he is to buy other ‘associated’ items and recommend the ones we are most confident that
+the user will be interested in.</p>
+<p>To understand how this works, lets use the example where we want to find out if we should recommend book 2 to a user
+that just bought book 1 (only by looking at the transaction history of our shop). In other words, we want to find out
+if the association rule of buying 2 given that we bough 1 is strong enough.</p>
+<p>To measure the strength of ‘association’ between some items, we se use the following metrics:</p>
+<ul>
+<li><p>First we identify what proportion of all the transactions include both book 1 and book 2, this is called the SUPPORT
+of this rule. A high support means that there are a lot of transitions were both items have been bought together.</p></li>
+<li><p>This is some evidence that there is a strong relationship. However there is a chance that book 2 just happens to be
+very popular is found in various transactions, including the ones where book 1 is also bought. We want to be able to
+deal with such cases, this is what CONFIDENCE measures. We want to measure how often book 1 and 2 are sold together as
+opposed to how often book 2 is sold. This is given by the ratio of the proportion of all transactions that included
+both 1, 2 (support) over the proportion of transactions that include book 2. It is nothing more than the conditional
+probability of 2 given 1.</p></li>
+<li><p>Last we want to find out how much the probability of a user buying book 2 has increased once he bought book 1. This is
+called LIFT. We know the original probability of buying book 2, is just the proportion of all transactions that
+include book 2. The probability of buying 2 given that we have just bought 1 is what we just measured above, the
+confidence. If we divide the original probability of buying 2 to the conditional probability of 2 given 1, we can
+measure what is called Lift. A hight lift measurement means that the likelihood of the reader buying 2 once he bought
+1 has increased.</p></li>
+</ul>
+<p>For an association rule to be considered we want to have a hight Support Confidence and Lift.</p>
+<p>We now have an understanding of how we measure ‘association’ between products. But how do we go about selecting which
+products to measure that association for, in the first place. Well one approach is to brute force it. Measure all the
+associations for every 2 possible pairs between our products, then the 3 pairs, the 4 pairs until we reach n pairs of
+products that are possible. From all those measurements we then pick the associations with the highest strengths. This
+is clearly computationally expensive.</p>
+<p>There are various approaches to this problem, a popular one, which we will use is the Apriori algorithm. This algorithm
+investigates associations incrementally, it starts from single variables, pairs of 2, 3 and so on. Every time it checks
+if the pairs satisfy a minimum support value, the pairs that do are used to generate rules. It then moves to the next
+pairs, using only the items that were left out previously. It repeats until no items are left, that can satisfy that
+minimum support threshold.</p>
+<pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># This package will help us implement Apriori to mine association rules</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;arules&quot;</span>)
+<span class="kw">library</span>(arules)
+
+<span class="co"># Our first step is, as always, to load the data. I have prepared a transaction</span>
+<span class="co"># history of 43 transactions, in a normalised &#39;single&#39; transactionId-item</span>
+<span class="co"># format. We want R to recognise the file as a transaction history, in order to</span>
+<span class="co"># be able to implement Apriori with ease. There are two formats that R can work</span>
+<span class="co"># with for transactions. One is single, the one we use (you can view the file</span>
+<span class="co"># for details), where each entry contains the transaction id and the item</span>
+<span class="co"># bought, if there are multiple items bought in the same transaction, there</span>
+<span class="co"># would be multiple entries with the same transaction id.</span>
+<span class="co"># The alternative is basket format, where each entry contains the id and all the</span>
+<span class="co"># products bought in that transaction in a single entry.</span>
+trans &lt;-<span class="st"> </span><span class="kw">read.transactions</span>(<span class="st">&quot;transactionsNoUserName.txt&quot;</span>,
+                           <span class="dt">format =</span> <span class="st">&quot;single&quot;</span>,
+                           <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>,
+                           <span class="dt">cols =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+
+<span class="co"># Now we can implement Apriori, we can set the threshold for support and</span>
+<span class="co"># confidence as shown bellow:</span>
+assoc_rules &lt;-<span class="st"> </span><span class="kw">apriori</span>(trans,
+                       <span class="dt">parameter =</span> <span class="kw">list</span>(<span class="dt">sup =</span> <span class="fl">0.03</span>, <span class="dt">conf =</span> <span class="fl">0.6</span>,<span class="dt">target=</span><span class="st">&quot;rules&quot;</span>))
+<span class="co"># We can inspect rules that were found</span>
+<span class="kw">inspect</span>(assoc_rules)
+
+
+<span class="co"># Last we only need to implement those rules. This is the function that is</span>
+<span class="co"># called every time a user submits a book purchase.</span>
+<span class="co"># Since the user is only buying one book, we only only the rules that are</span>
+<span class="co"># relevant to single item purchase.</span>
+useRules &lt;-<span class="st"> </span><span class="cf">function</span>(bookNumber){
+  <span class="kw">message</span>(<span class="st">&quot;/rules&quot;</span>)
+  <span class="cf">switch</span>(
+    <span class="kw">toString</span>(bookNumber),
+    <span class="st">&quot;1&quot;</span>=<span class="dv">2</span>,
+    <span class="st">&quot;3&quot;</span>=<span class="dv">1</span>,
+    <span class="st">&quot;4&quot;</span>=<span class="dv">2</span>,
+    <span class="st">&quot;12&quot;</span>=<span class="dv">11</span>,
+    <span class="st">&quot;16&quot;</span>=<span class="kw">c</span>(<span class="dv">17</span>,<span class="dv">18</span>),
+    <span class="st">&quot;17&quot;</span>=<span class="dv">2</span>,
+    <span class="st">&quot;18&quot;</span>=<span class="dv">17</span>,
+    <span class="st">&quot;19&quot;</span>=<span class="dv">18</span>,
+    {<span class="dv">0</span>}
+  )
+}</code></pre>
+</div>
+<div id="further-discussions" class="section level2">
+<h2><span class="header-section-number">7.4</span> Further Discussions:</h2>
+<div id="optimisations" class="section level3">
+<h3><span class="header-section-number">7.4.1</span> Optimisations</h3>
+<p>Although our models are currently doing their job pretty good, they would not scale well. For example, if the users
+increased from 15 to 100.000 and our books from 20 to 100.000.000.000 we would be having a lot of trouble. Let’s see
+why…</p>
+<p>At the moment, our content based filtering algorithm requires all the attributes of the book that we just bough to be
+checked against all the attributes of all the books that are available. There could be countless books, and in a more
+complex scenario the attributes we are comparing them to, would not only be three (e.g. we might include book title,
+popularity, publisher, city and so on). Why might really need check every attribute of every book, but we might be able
+to reduce the percentage of books we want to compute the precise distance to. For example if a user just bought a book
+about aliens, is it really worth comparing that book to love stories? Could we before applying the algorithm to every
+single book, filter out ones that we think are completely irrelevant. Even better could we have built some pre-defined
+groups of books that share similar attributes and use them as a guide.</p>
+<p>In the case of collaborative filtering, at the moment every time a user is providing some ratings, we need to update the
+ratings matrix and then re-fill the gaps, using the new information. That is very expensive and not maintainable, in a
+system where we are receiving hundreds of rating per day. What we could do instead is store the new ratings daily in
+some temporary storage and update the permanent rating matrix in batches. Moreover, if we have thousands of books,
+predicting the rating for each user may not be ideal, so we might consider some filtering here as well.</p>
+<p>Generally, a lot of effective predictive systems will choose to employ a combination of methods. For example, we might
+choose to cluster books in certain groups according using content based filtering, those could be very inclusive
+clusters (they would still include multiple books). We could then use collaborate filtering, within each cluster, to
+get more specific recommendations. This would save a lot of computational overhead, as the clusters could be pre-defined
+and the collaborate filtering would require only a portion of the original data (as it would use a rating matrix that
+refers to books only within the cluster).
+Another example would be to use both collaborate filtering and association rules on each case. We could then compare the
+recommendations returned from both the chosen algorithms and only return the ones found in both.</p>
+<p>A last note is to try and use pre-built packages and algorithms when appropriate, as they have been optimised for
+performance. Make sure however, you understand how those algorithms function in order to be able to provide them with
+the most appropriate data, and correct parameters. Furthermore, you need to be able to make adjustments when required,
+interpret their outcomes and measure their performance as objectively as possible.</p>
+</div>
+<div id="alternatives-1" class="section level3">
+<h3><span class="header-section-number">7.4.2</span> Alternatives</h3>
+<p>Another approach to optimisations could be looking at alternative algorithms that may be more ‘accurate’ or efficient or
+maybe just more appropriate for your case. As an example let’s find out about some alternative algorithms on collaborate
+filtering.</p>
+<p>Previously we used Euclidean method, through a library provided by R, to identify similar users through their ratings.
+There are other well-known methods for identifying ‘similar’ users, such as the Pearson method or Jaccard method. In the
+Pearson method each series of rating for every user is treated as a vector. The difference between two vectors is their
+angle which can be found by taking the cosine of their magnitudes.</p>
+<p>In the Jaccard similarity, the values of the ratings do not matter. Similar user’s are just users that have read the
+same books/clicked on the same websites/seen the same movies et cetera, this has some clear drawbacks (just cause they
+read a book it doesn’t necessarily mean they liked it) but it does not explicitly require users’ to have given out
+feedback.</p>
+<p>Last you might want to consider taking the correlation distance (mentioned on content based filtering) for something
+like ratings. In this case, association is described by whether or not the users have rated the same items above or
+bellow their average.</p>
+<p>Up to now we have discussed collaborate filtering by looking at similar users. There is however an alternative approach,
+called Latent Factor Analysis.This method attempts to identify the underlaying factors that caused each user to rate
+each film the way the did, we then use those factors to extrapolate (predict) what their rating would be for the rest
+of the films.</p>
+<p>To achieve this, we need to assume that there is a factor/combination of factors for each reader that makes them rate
+books a specific way. (e.g. a reader is into drama books). We also need to assume that there is a factor/combination of
+factors relevant to each book that result in bad/good rating (e.g. the author is very popular).</p>
+<p>Those underling factors can be identified using PCA. I have dedicated a previous chapter for PCA, but for now all you
+need to know is that we can somehow tell which are the main factors motivating reader to give certain ratings and books
+to receive certain ratings.
+We do not, however, have the values associated with those factors. We only have the outcomes that were produced by
+combining the factors of each user with each product (those are the ratings!). So for every rating we know that
+rating = F reader * F book</p>
+<p>Each user has its own set of equations, and all we need to do is solve for F reader and F book. The issue is, that not
+all the ratings are available for each user, meaning that we will not be able to find the exact numbers. There will
+always be an error,
+In other words rating - (F reader * F book) will not be zero.</p>
+<p>To estimates the factors in the best way we can, we will attempt to find some F reader F book, that minimises the error.
+(There are various techniques for that such as the stochastic gradient dissent that attempts to find a local minimum by
+trial… )</p>
+<p>Once we have those values we can simply use them to fill in any gap in the matrix. For example, lets say we didn’t know
+the rating reader 1 gave for book 12. We had however enough data to calculate a factor 2 for that user and a factor 2
+for that book. The rating would be 4, and so we should recommend book 12 to reader 1. (of course this is a very
+simplified example to describe the underlying mechanics. In reality a lot more factors would be involved and we would
+also need to account for other issues such as overfitting in our equations)</p>
+<p>Apart from measuring our alternatives in terms of algorithms, we should also consider alternatives in terms of data.
+Aside from explicit ratings, costumer feedback takes on many forms such as comments in either the provider’s platform or
+social media. It is possible, through sentimental analysis to capture the essence of those comments and use them to
+train our models and give more precise recommendations. A lot of those methods look at the presence and frequency of
+words and attempt to classify comments as positive or negative. For example the naive Bayer’s algorithm will measure the
+probability of a comment been positive and the probability of it been negative and decide on the one with the highest
+probability. Those probabilities are assigned by compering the presence and frequency of certain words compared to their
+average frequency and the label(negative/positive) available from the training sets (past data, labeled by humans used
+to train the algorithm). There is a lot more to sentimental analysis and its value on recommendation systems. It can
+often be used to deduce additional features/attributes, in the case of books, we could classify books depending on the
+frequency of certain words (e.g. vampires, fairy, solders).</p>
+<p>Last we should not exclude the option of classifying customers themselves. Although, it is generally preferred to adopt
+a product oriented approach, as the product is less complicated and more well defined, we can always recommend products
+that were bought by users that share similar attributes (e.g. sex, age, interests).</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2><span class="header-section-number">7.5</span> Conclusion</h2>
+<p>This is by no means a complete guide on recommendation systems but I hope you were able to understand the concepts and
+appreciate the potential advantages as well as the challenges around them.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="extensions-for-linear-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="basic-statistics-and-probabilities-review.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

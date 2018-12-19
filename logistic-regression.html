@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>3 Logistic Regression | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="3 Logistic Regression | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Logistic Regression | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="linear-regression.html">
+<link rel="next" href="advanced-techniques-for-linear-algorithms.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="logistic-regression" class="section level1">
+<h1><span class="header-section-number">3</span> Logistic Regression</h1>
+<div id="usage" class="section level2">
+<h2><span class="header-section-number">3.1</span> Usage</h2>
+<p>Similar to linear regression (part of the family of Generalised Linear Models). However it is part of a group of models
+called classifiers (tries to group elements/events) and this most often involves qualitative rather than quantitative
+data. Unlike linear regression, which is used mostly chosen for inference (studying the relationship between variables,
+effects of each other, strength and direction), we usually use logistic regression for predicting (or sometimes
+studying) a binary outcome (has only two outcomes, patient has diabetes or not, transaction is fraud or legit). The
+model does that by measuring the probability associated with each of the two and based on a chosen threshold will decide
+on one (e.g if <span class="math inline">\(p &gt; 0.5\)</span> a transaction is fraud). It assigns those probabilities by taking into account the predictors
+we have provided and their approximated coefficients as calculated from the data, that we have trained the model with.
+For example location of the transaction, time or money.</p>
+<p>As with linear regression, quantitative data is handled by assigning a dummy variable boolean (e.g <span class="math inline">\(\text{isFraud} = 1\)</span>,
+<span class="math inline">\(\text{isNotFraud} = 0\)</span>). We are interested in finding how close a point is to <span class="math inline">\(1\)</span> (in other words its probability of
+success (fraud in this case) plotted on the <span class="math inline">\(y\)</span> axis), as measured by the predictors (<span class="math inline">\(x\)</span>, <span class="math inline">\(z\)</span> … axis). The issue is
+that we can get any value between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, as well as values above and bellow that (e.g if the amount of money used
+in a transaction is extremely large we might get something like <span class="math inline">\(p = 2.3\)</span> according to whatever coefficients in
+<span class="math inline">\(y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_nx_n + \epsilon\)</span> are calculated). This is not as useful and
+sometimes does not make sense, that’s why we use a transformation to fit our data exactly between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</p>
+</div>
+<div id="formula" class="section level2">
+<h2><span class="header-section-number">3.2</span> Formula</h2>
+<p>There are various transformation for that, in logistic regression we use the logistic function:
+<span class="math inline">\(P(x) = \frac{e^{(\beta_0 + \beta_1x)}}{1 + e^{\beta_0 + \beta_1X}}\)</span>, where <span class="math inline">\(b0\)</span> and <span class="math inline">\(b1\)</span> are our coefficients, this
+makes an S-shaped curve where the edges are <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. We want to try and bring this in a more linear form, after
+manipulation we can see that:</p>
+<p><span class="math inline">\(\frac{P(x)}{1 - P(x)} = e^{\beta_0 + \beta_1x}\)</span></p>
+<p><span class="math inline">\(\frac{P(x)}{1 - P(x)}\)</span>, is called the the odds. It is the probability of success over the probability of failure. It is
+used for example in horse-racing where if the odds are <span class="math inline">\(\frac{1}{3}\)</span> the horse is likely to win one race but loose <span class="math inline">\(3\)</span>.
+To make our equation more linear we can take the log. We notice that this is basically a linear equation using the log
+of the odds on <span class="math inline">\(y\)</span>-axis <span class="math inline">\(log(\frac{P(x)}{1 - P(x)}) = \beta_0 + \beta_1x\)</span>, this makes things a lot easier (see more
+about why it’s helpful later on)</p>
+</div>
+<div id="maximum-likelihood" class="section level2">
+<h2><span class="header-section-number">3.3</span> Maximum Likelihood</h2>
+<p>Another issue is how we can find the ‘best fit line’, that best describes all our data points. In linear regression we
+used the least squares approach. This required measuring the residuals (distance of our points to the line) and trying
+to minimise that value by moving the line. However the distance of the points from a random line (close to the real) in
+linear regression is somehow constant, the error has a constant standard deviation. In logistic regression when a
+predictor reaches extreme points the distance will tend to <span class="math inline">\(\pm \infty\)</span>. For example if we try and fit a line for the
+probability of a transaction been fraud based on the money involved; a line close to the best fit would have very large
+distance on the points where the amount of money involved in a transaction is large, or where it is very little. For
+that reason the method of maximum likelihood is preferred.</p>
+<p>We use the following steps to do that:</p>
+<ol style="list-style-type: decimal">
+<li><p>Take a random straight line (a candidate ’best fit, just like in regression), that we think describes our points well</p></li>
+<li><p>Use the <span class="math inline">\(P(x) = \frac{e^{(\beta_0 + \beta_1x)}}{1 + e^{\beta_0 + \beta_1X}}\)</span> (given above) to transform that street
+line to the S-shaped curve that plots the probability from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> for each of our <span class="math inline">\(x\)</span></p></li>
+<li><p>We can now use those calculated <span class="math inline">\(P(x)\)</span> foe each of our <span class="math inline">\(x\)</span> to access how good this candidate line is. For each <span class="math inline">\(x\)</span>
+we can get the ‘predicted’ by the curve <span class="math inline">\(y\)</span> (<span class="math inline">\(P(x)\)</span>), which in this case is also called the ‘likelihood’ (in this case)</p></li>
+<li><p>We then calculate the likelihood for ALL of the success cases (<span class="math inline">\(P(x)\)</span>) and unsuccessful cases (<span class="math inline">\(1 - P(x)\)</span>) (e.g
+probability, given by <span class="math inline">\(y\)</span> value, of a fraud transaction actually been fraud, and probability, again as calculated by our
+model of a legit transaction been not fraud). Whether a point is a success of not, we know from the data we have already
+collected. To get the total, we just need to multiply everything. In a way this calculates ‘how likely we are’ to
+predicting everything correctly, so the higher that is the better.</p></li>
+<li><p>In reality we prefer to calculate the <span class="math inline">\(\log\)</span> of that probability instead. ‘It just so happens’ that the <span class="math inline">\(\log\)</span> of the
+maximum of the <span class="math inline">\(\log\)</span> of the likelihood is the same as the maximum of the likelihood. The reason why the <span class="math inline">\(\log\)</span> is
+favoured stems from the fact that it is easier to differentiate a product. When looking for the max of an equation, we
+differentiate that equation and look for where it is equal to <span class="math inline">\(0\)</span>. If we take the <span class="math inline">\(\log\)</span> of the equation we turn a
+difficult problem of differentiating into differentiating a sum since <span class="math inline">\(\log(a \times b) = \log(a) + \log(b)\)</span>, which is
+easy to solve.</p></li>
+<li><p>Finally, we choose the candidate line (which has our coefficients), that results in the higher <span class="math inline">\(\log\)</span> likelihood.
+(Software like R does this very very easily using ‘smart algorithms’)</p></li>
+</ol>
+</div>
+<div id="r-squared-1" class="section level2">
+<h2><span class="header-section-number">3.4</span> R-squared</h2>
+<p>But if we can’t calculate the residuals (distance of the predicted <span class="math inline">\(y\)</span> (from our line) to the true <span class="math inline">\(y\)</span> (from our points)
+how do we calculate the R-squared and p-values. well this is not as simple as in linear regression and there are dozens
+different ways to do it. An easy and common way, supported by R, is the MacFadden’s Pseudo R-squared, this is very
+similar to how its calculated in linear regression.</p>
+<p>If we remember, R-squared is a value measuring how much of the variation in <span class="math inline">\(y\)</span> is explained by our model, which
+indicates how well it fits the data. To find that value we calculate the total variation not described by the line, by
+dividing a measure of the distance of our points to the line, to the distance of our points to the mean. The we take one
+minus the outcome. This basically will show how much better our model is from just predicting using the mean, no
+predictors involved. So all we need to do is find a different way of calculating how fit the model is to the data and
+what the predictions would be if we used the mean instead. Well we already have the first, the <span class="math inline">\(\log\)</span> of the likelihood
+for our curve (LL(fit)), exactly explains how close our predictions are to the true <span class="math inline">\(y\)</span>. We can get the probability of a
+case been successful, without accounting for any predictors, simple by the definition of probabilities
+<span class="math inline">\(P(\text{of success}) = \frac{\text{successful cases}}{\text{total cases}}\)</span>.</p>
+<p>Using that as the <span class="math inline">\(p(x)\)</span> for ALL of our values we can can get the log of the likelihood as before (LL(overall)). We can
+then compare the two and see how much better our model is. Just like in linear regression the resulting R-square will be
+from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span>.</p>
+</div>
+<div id="the-saturated-and-null-models" class="section level2">
+<h2><span class="header-section-number">3.5</span> The Saturated and Null Models</h2>
+<p>We know that the R-squared always takes values from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span>. This helps us make objective conclusions on how well our
+model performs and compare the performance of different models. We know that it is given by
+<span class="math inline">\(1 - \frac{\text{some measure of fitness of our model}}{\text{some measure of fitness of a &#39;bad&#39; model}}\)</span>, to show how
+much ‘better’ our model is. In linear regression our model’s fitness is measured by the distance of the points to our
+line. This will only ever go as far as zero, since the perfect model will have zero distance. In linear regression we
+take the <span class="math inline">\(\log\)</span> of the likelihood using the product of all the probabilities, a probability will only ever go as far as
+<span class="math inline">\(1\)</span> resulting in <span class="math inline">\(\log(1) = 0\)</span>. What this means is that we had no need to provide an upper bound, all we needed was a
+lower bound, a measure of ‘bad’ performance which was making prediction by just using a mean, since the perfect model
+would always result having a zero as the nominator and giving us a R-squared of <span class="math inline">\(1 - 0 = 1\)</span>, a perfect fit.</p>
+<p>However this is not always the case, in many other models the calculation of R-squared could result in any number, and
+this would not provide any clear indication of whether our model is doing well or not. This is why we need an upper
+bound. That upper bound is just a model that fits perfectly all our data points and is called the Saturated model. It
+requires all the data points as parameters to be able to make a model that perfectly fits them all and maximises the
+likelihood. If you are wondering why don’t we just use that model, if it maximises the likelihood, the answer is that it
+usually does not follow the format we are looking for. It is not genericised (it suffers from overfitting) and will not
+allow us to make any accurate predictions or study relationships. In a way, it is just a random line that crosses all
+the data points and does not really show any patterns, cannot be described by an algorithm and may result in unnecessary
+over-complications. The opposite of the saturated model is the Null model, a model that uses only one parameter (for
+example the mean in the linear regression), we already used that as the lower bound. The model that we are trying to
+measure the performance of by comparing it to the null and saturated is called the Proposed model.</p>
+<p>The general form of R-squared can be described by
+<span class="math inline">\(1 - \frac{\text{a measure of bad fit} - \text{a measure of fit of our model}}{\text{a measure of bad fit} - \text{a measure of perfect fit}}\)</span>,
+which will always result is <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span>, since Null model is the minimum and Saturated the Maximum. ‘it just so happened’
+that up to now the measure of perfect fit was zero so it could be omitted.</p>
+</div>
+<div id="residual-and-null-deviance" class="section level2">
+<h2><span class="header-section-number">3.6</span> Residual and Null Deviance</h2>
+<p>When we get the summary statistics of a logistic regression model, R outputs something called Residual and Null
+Deviance. Those are nothing more that just more performance measurements for our model, which are derived by comparing
+how far our proposed model is from the Null (bad) model and how close it is to the Saturated (perfect) model. More
+specifically:</p>
+<ul>
+<li><span class="math inline">\(\text{Residual Deviance} = 2(\text{log of likelihood of Saturated} - \text{log of likelihood of proposed})\)</span></li>
+<li><span class="math inline">\(\text{Null deviance} = 2(\text{log of likelihood of proposed} - \text{log of likelihood of null})\)</span></li>
+</ul>
+<p>Those two output a chi-square value that can be used to calculate a p-value which indicates whether our proposed model
+is significantly far from the Null and Saturated model. We want those outputs to be as small as possible. When we try
+and optimise our model by adding and removing predictors we should take note of the effect on those values!</p>
+</div>
+<div id="p-values" class="section level2">
+<h2><span class="header-section-number">3.7</span> p-values</h2>
+<p>For p-values we can simply use the chi-square distribution (see chapter chi-square test). The chi-square value equals
+2(LL(fit)-LL(overall)) and the degrees of freedom are the difference in the parameters of LL(fit) and LL(overall). From
+those you can calculate the area under the graph which will give the probability of getting such values randomly, if
+there is no correlation between your predictors and reaction.</p>
+</div>
+<div id="introductory-demonstration-in-r" class="section level2">
+<h2><span class="header-section-number">3.8</span> Introductory Demonstration in R</h2>
+<p>We will use the Titanic data to see if we can use the given attributes as predictors that determine whether or not a
+passenger survived.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;titanic&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(titanic)
+<span class="kw">data</span>(<span class="st">&quot;titanic_train&quot;</span>)
+
+<span class="co"># Set our data</span>
+data &lt;-<span class="st"> </span>titanic_train
+
+<span class="co"># Replace missing values for Age with mean</span>
+data<span class="op">$</span>Age[<span class="kw">is.na</span>(data<span class="op">$</span>Age)] =<span class="st"> </span><span class="kw">mean</span>(data<span class="op">$</span>Age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Remove attributes that are not valuable</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(Cabin, PassengerId, Ticket, Name))
+
+<span class="co"># Use factors for the following attributes:</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;Survived&quot;</span>,<span class="st">&quot;Pclass&quot;</span>,<span class="st">&quot;Sex&quot;</span>,<span class="st">&quot;Embarked&quot;</span>)){
+  data[,i] =<span class="st"> </span><span class="kw">as.factor</span>(data[,i])
+}
+
+<span class="co"># Creates a general linear model (family = binomial specifies logistic</span>
+<span class="co"># regression)</span>
+gml.fit =<span class="st"> </span><span class="kw">glm</span>(Survived<span class="op">~</span>., <span class="dt">data =</span> data, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span><span class="st">&#39;logit&#39;</span>))
+<span class="co"># We can see our estimated coefficients and associated p-values</span>
+<span class="kw">summary</span>(gml.fit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = Survived ~ ., family = binomial(link = &quot;logit&quot;), 
+##     data = data)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.6235  -0.6098  -0.4222   0.6100   2.4512  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  16.414388 610.558089   0.027  0.97855    
+## Pclass2      -0.924047   0.297882  -3.102  0.00192 ** 
+## Pclass3      -2.149626   0.297749  -7.220 5.21e-13 ***
+## Sexmale      -2.709611   0.201336 -13.458  &lt; 2e-16 ***
+## Age          -0.039320   0.007888  -4.984 6.21e-07 ***
+## SibSp        -0.322143   0.109545  -2.941  0.00327 ** 
+## Parch        -0.095061   0.119028  -0.799  0.42450    
+## Fare          0.002261   0.002462   0.918  0.35842    
+## EmbarkedC   -12.311604 610.557974  -0.020  0.98391    
+## EmbarkedQ   -12.341443 610.558025  -0.020  0.98387    
+## EmbarkedS   -12.757357 610.557962  -0.021  0.98333    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1186.66  on 890  degrees of freedom
+## Residual deviance:  783.74  on 880  degrees of freedom
+## AIC: 805.74
+## 
+## Number of Fisher Scoring iterations: 13</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Getting the R-squared</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;DescTools&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;DescTools&#39;</span>)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;DescTools&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:car&#39;:
+## 
+##     Recode</code></pre>
+<pre><code>## The following object is masked from &#39;package:Ecfun&#39;:
+## 
+##     BoxCox</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># You will notice this is relatively low, it not easy to predict the survival of</span>
+<span class="co"># a passenger only given a few details about them a lot of random factors are</span>
+<span class="co"># involved. There are also a lot of limitations in our model.</span>
+<span class="kw">PseudoR2</span>(gml.fit)</code></pre>
+<pre><code>##  McFadden 
+## 0.3395424</code></pre>
+<p>We notice that this is a multivariate logistic regression, that takes the form of:
+<span class="math inline">\(log(\frac{p(x)}{1 - p(x)}) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_nx_n + \epsilon\)</span></p>
+</div>
+<div id="limitations" class="section level2">
+<h2><span class="header-section-number">3.9</span> Limitations</h2>
+<div id="confounding" class="section level3">
+<h3><span class="header-section-number">3.9.1</span> Confounding</h3>
+<p>We often use logistic regression (and other models) to study the effects of various variables on an the occurrence of an
+event. We will use the following examples:</p>
+<ul>
+<li>How does smoking affect the probability of a patient developing lung diseases</li>
+<li>How does the fact that an individual is a student affect their probability of defaulting in the bank account</li>
+</ul>
+<p>When we conduct such a study measuring how many smokers have developed lung disease versus how many non smokers, and how
+many students have defaulted versus how many non-students, we will most probably find a positive relationship. We cannot
+however, blindly trust the bivariate analysis, I mean unless we managed to get a perfectly random and balanced across
+all ages, sexes, incomes … sample there is a good chance that our results are partially the result of other variables
+masked under the ones we have chosen to study. For example studies have shown that there are more older people that are
+smokers, also older people tend to be more prone to diseases. So when we only use smoker/non smoker part of why our
+coefficient for that predictor would be so high is because smokers are also older people. This is called bias due to
+confounding and occurs when confounders (such as age) are not included in our model. If we take the example of students,
+when we only use student/non-student to predict the probability of someone defaulting we will find a positive
+correlation. However, studies have shown that students with the same income as non-students are less likely to default.
+Here the confounder is income, it just so happens that students will tend to have lower income, which makes them prone
+to defaulting. Therefore not including this in our models could result in biased predictions.</p>
+<p>In the older days, where creating such models was more difficult due to computing power and software not been as readily
+available people used ‘stratifying’ in order to reduce the effects of confounding. They would have to separate their
+data in subsets (strata) that were free of confounders. For example split by age groups or by student/non student. Then
+they would conduct the estimation of coefficients separately for each group and use techniques such us pooling or
+weighted averaging (if it made sense) to get an overall estimation of the coefficients.</p>
+<p>If you are interested to learn more about this you can watch this video from a Harvard lecture:
+<a href="https://www.youtube.com/watch?v=hNZVFMVKVlc" class="uri">https://www.youtube.com/watch?v=hNZVFMVKVlc</a></p>
+<p>For reference, if we were to strictly define what a confounder is, it would be a variable that satisfies the following
+conditions:</p>
+<ul>
+<li>Confounders has to be related to one of the significant predictors (e.g older people tend to be smokers more than
+younger)</li>
+<li>It has to able be independently related to the reaction (e.g. age is also on its own a significant predictor of
+someone developing a disease)</li>
+<li>It is not part of the casual pathway (e.g smoking does not cause you to be old)</li>
+</ul>
+</div>
+<div id="multicollinearity-1" class="section level3">
+<h3><span class="header-section-number">3.9.2</span> Multicollinearity</h3>
+<p>Logistic regression also assumes no or little multicollinearity among the predictors. (see previous chapter)</p>
+</div>
+<div id="interaction-terms-1" class="section level3">
+<h3><span class="header-section-number">3.9.3</span> Interaction terms</h3>
+<p>Exactly the same as with linear regression (see previous chapter). Including the product (combination) of certain
+predictors could optimise the model. <span class="math inline">\(\log(\frac{P(x)}{1 - P(x)}) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_1x_2\)</span></p>
+</div>
+<div id="heteroscedasticity-not-relevant" class="section level3">
+<h3><span class="header-section-number">3.9.4</span> Heteroscedasticity (not relevant)</h3>
+<p>In logistic regression, we except a probability to be systematically further away from the predicted <span class="math inline">\(y\)</span>, in other words
+homoscedasticity is not an assumption in this case. This is why we are unable to use least squares to find our best
+fitting line on the first place, since the residuals (distance of our points to the line) are reaching <span class="math inline">\(\mp\infty\)</span>.</p>
+</div>
+</div>
+<div id="measuring-performance-using-confusion-matrix" class="section level2">
+<h2><span class="header-section-number">3.10</span> Measuring Performance Using Confusion matrix</h2>
+<p>Let’s use another example. Predicting whether or not a patient is diabetic. Our sample data set contains attributes such
+as BMI, age and measurements of glucose concentration, as well as a boolean that indicates whether or not each patient
+is diabetic. We hope to use those attributes as predictors for the patients diabetic condition. This time we will use
+one other technique for measuring how well our model preforms in giving accurate predictions. It is a common technique
+used in various models and not just logistic regression. Basically we will split the data that we have in two, the
+training data and the testing data. Our training data will be <span class="math inline">\(80%\)</span> of the total and it will be used to estimate the
+coefficients and draw the S-curve by assigning probabilities (in other words training our model). The test data will be
+then fed to the trained model (without the attribute that gives out if a patient is diabetic) and our model will give a
+prediction for each of the row. That prediction will be according to a threshold we have assigned, for example we may
+choose that if the probability of a patient been diabetic is <span class="math inline">\(p \geq 0.5\)</span> then we predict they are diabetic. Since we
+actually know if the patients in the test data are diabetic or not, we can compare the actual to the predicted outcomes
+and get a <span class="math inline">\(%\)</span> accuracy. We will see how this is done in detail, as well as how we can optimise the chosen threshold for
+our specific problem.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can use a csv that is available online for our data, we can load this in R</span>
+<span class="co"># using the following code:</span>
+
+data &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&quot;http://www2.compute.dtu.dk/courses/02819/pima.csv&quot;</span>,
+                 <span class="dt">head =</span> <span class="ot">TRUE</span>,
+                 <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</code></pre>
+<div id="splitting-the-data" class="section level3">
+<h3><span class="header-section-number">3.10.1</span> Splitting the Data</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First we need to split our data, we do this with the use of caTools library</span>
+<span class="co"># (there are other ways too).</span>
+<span class="co"># The following creates an array of TRUE/FALSE values for every row in our data</span>
+<span class="co"># set, where TRUE is 80% of the data. It does this &#39;randomly&#39;, later on we will</span>
+<span class="co"># see techniques for spreading the success and failure rates proportionally</span>
+<span class="co"># across training and testing data.</span>
+<span class="kw">library</span>(caTools)
+split &lt;-<span class="st"> </span><span class="kw">sample.split</span>(data, <span class="dt">SplitRatio =</span> <span class="fl">0.8</span>)
+split</code></pre>
+<pre><code>## [1]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Transform to factors</span>
+data<span class="op">$</span>type &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data<span class="op">$</span>type)
+<span class="co"># We then split the data using that array, where TRUE is for the training and</span>
+<span class="co"># FALSE is for the testing</span>
+trainingData &lt;-<span class="st"> </span><span class="kw">subset</span>(data, split <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)
+testingData &lt;-<span class="st"> </span><span class="kw">subset</span>(data, split <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)
+
+<span class="co"># Create the model using the TRAINING data</span>
+model &lt;-<span class="st"> </span><span class="kw">glm</span>(type <span class="op">~</span>., trainingData, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&#39;logit&#39;</span>))
+<span class="co"># Review our model</span>
+<span class="kw">summary</span>(model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = type ~ ., family = binomial(link = &quot;logit&quot;), data = trainingData)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.2185  -0.6092  -0.3336   0.5978   2.3026  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -9.179437   1.419568  -6.466 1.00e-10 ***
+## X           -0.003374   0.001879  -1.796  0.07248 .  
+## npreg        0.130182   0.069738   1.867  0.06194 .  
+## glu          0.040785   0.006404   6.368 1.91e-10 ***
+## bp          -0.013902   0.014822  -0.938  0.34828    
+## skin         0.002866   0.023919   0.120  0.90463    
+## bmi          0.096078   0.034326   2.799  0.00513 ** 
+## ped          1.308363   0.545403   2.399  0.01644 *  
+## age          0.013224   0.021088   0.627  0.53062    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 326.38  on 258  degrees of freedom
+## Residual deviance: 214.83  on 250  degrees of freedom
+## AIC: 232.83
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># As expected BMI and glu are significant (you can try and remove the predictors</span>
+<span class="co"># with a larger p-value but do this incrementally and note the effect it has on</span>
+<span class="co"># the Null and Deviance residuals (see above) )</span></code></pre>
+</div>
+<div id="visualisations" class="section level3">
+<h3><span class="header-section-number">3.10.2</span> Visualisations</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We will use only glu to plot our graphs easier</span>
+gml.fitGlu =<span class="st"> </span><span class="kw">glm</span>(type <span class="op">~</span><span class="st"> </span>glu,
+                 <span class="dt">data =</span> trainingData,
+                 <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span><span class="st">&#39;logit&#39;</span>))
+<span class="kw">summary</span>(gml.fitGlu)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = type ~ glu, family = binomial(link = &quot;logit&quot;), 
+##     data = trainingData)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.2557  -0.6869  -0.4769   0.6493   2.3822  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -6.211176   0.757805  -8.196 2.48e-16 ***
+## glu          0.044028   0.005866   7.505 6.13e-14 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 326.38  on 258  degrees of freedom
+## Residual deviance: 246.37  on 257  degrees of freedom
+## AIC: 250.37
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First we will plot the best fitting line of probability of survival over age</span>
+<span class="co"># We need to get the probabilities for each row</span>
+p &lt;-<span class="st"> </span><span class="kw">predict</span>(gml.fitGlu, trainingData, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+<span class="co"># Get the log of the odds, which is our y</span>
+y &lt;-<span class="st"> </span><span class="kw">log</span>(p<span class="op">/</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p))
+<span class="co"># Substitute with our calculated coefficients for the x axis</span>
+x &lt;-<span class="st"> </span><span class="fl">-5.940285</span> <span class="op">+</span><span class="st"> </span><span class="fl">0.042616</span>  <span class="op">*</span><span class="st"> </span>trainingData<span class="op">$</span>glu
+<span class="kw">plot</span>(x, y)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Now let&#39;s transform it to the S-shaped curve with y from 0 to 1.</span>
+<span class="co"># This is just the logistic function where i have substituted the coefficient</span>
+<span class="co"># for the intercept for our x with the ones calculated from our model summary.</span>
+f &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
+  <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="fl">5.940285</span> <span class="op">+</span><span class="st"> </span>(<span class="fl">0.042616</span> <span class="op">*</span><span class="st"> </span>x )))}
+x &lt;-<span class="st"> </span>trainingData<span class="op">$</span>glu
+<span class="co"># This scales the graph</span>
+x &lt;-<span class="st"> </span><span class="dv">-500</span> <span class="op">:</span><span class="st"> </span><span class="dv">700</span>
+<span class="kw">plot</span>(x, <span class="kw">f</span>(x), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
+</div>
+<div id="confusion-matrix-calculations" class="section level3">
+<h3><span class="header-section-number">3.10.3</span> Confusion Matrix Calculations</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The predict() function allows us to feed new data in the trained model and</span>
+<span class="co"># receive a probability of each patient being diabetic; we will use this on our</span>
+<span class="co"># testing data.</span>
+
+<span class="co"># type = response outputs the probability of each patient been diabetic, we save</span>
+<span class="co"># the array of probabilities on pdata</span>
+pdata &lt;-<span class="st"> </span><span class="kw">predict</span>(model, testingData, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+
+<span class="co"># We will use those probabilities to predict whether the patient is diabetic or</span>
+<span class="co"># not according to our model, given a threshold (p &gt; 0.55 in this case) and then</span>
+<span class="co"># compare the outcomes to the real values. We already know if those patients are</span>
+<span class="co"># actually diabetic. We will compare the predicted to the actual values using a</span>
+<span class="co"># confusion matrix.</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We will use the Caret library for that</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;caret&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## 
+## Attaching package: &#39;caret&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:DescTools&#39;:
+## 
+##     MAE, RMSE</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create two arrays that contain TRUE or FALSE for each row (is diabetic TRUE,</span>
+<span class="co"># is not diabetic FALSE) one for the predicted data and one for the actual, in</span>
+<span class="co"># order to compare them in R they need to be type factors (enumerations) and</span>
+<span class="co"># have of the same levels (take on the same values)</span>
+
+<span class="co"># For the predicted TRUE is a row of probability &gt; 0.55</span>
+predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(pdata <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.55</span>)
+<span class="co"># For the actual data, either or not a patient is diabetic is given by yes or</span>
+<span class="co"># no, so true is yes</span>
+real &lt;-<span class="st"> </span><span class="kw">as.factor</span>(testingData<span class="op">$</span>type <span class="op">==</span><span class="st"> &quot;Yes&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use caret to compute a confusion matrix</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;e1071&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">cm &lt;-<span class="st"> </span><span class="kw">confusionMatrix</span>(<span class="dt">data =</span> predicted, <span class="dt">reference =</span> real)
+cm</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction FALSE TRUE
+##      FALSE    44   12
+##      TRUE      4   13
+##                                           
+##                Accuracy : 0.7808          
+##                  95% CI : (0.6686, 0.8692)
+##     No Information Rate : 0.6575          
+##     P-Value [Acc &gt; NIR] : 0.01560         
+##                                           
+##                   Kappa : 0.4729          
+##  Mcnemar&#39;s Test P-Value : 0.08012         
+##                                           
+##             Sensitivity : 0.9167          
+##             Specificity : 0.5200          
+##          Pos Pred Value : 0.7857          
+##          Neg Pred Value : 0.7647          
+##              Prevalence : 0.6575          
+##          Detection Rate : 0.6027          
+##    Detection Prevalence : 0.7671          
+##       Balanced Accuracy : 0.7183          
+##                                           
+##        &#39;Positive&#39; Class : FALSE           
+## </code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see that this has outputted a table describing the following in each</span>
+<span class="co"># cell:</span>
+
+<span class="co"># | Predicted | Actual | Name                |</span>
+<span class="co"># |-----------|--------|---------------------|</span>
+<span class="co"># | True      | True   | True Positive (TP)  |</span>
+<span class="co"># | True      | False  | False Positive (FP) |</span>
+<span class="co"># | False     | False  | True Negative (TN)  |</span>
+<span class="co"># | False     | True   | False Negative (FN) |</span>
+<span class="co">#</span>
+<span class="co"># If predict a patient is diabetic when they are not that&#39;s a False Positive,</span>
+<span class="co"># also known as a type 1 error</span>
+<span class="co">#</span>
+<span class="co"># If we predict a patient is not diabetic when they are that&#39;s a False Negative;</span>
+<span class="co"># also known as a type 2 error.</span>
+<span class="co">#</span>
+<span class="co"># Prediction: True</span>
+<span class="co">#               |</span>
+<span class="co">#               V</span>
+<span class="co">#         False Positive</span>
+<span class="co">#         ^</span>
+<span class="co">#         |</span>
+<span class="co"># Actual: False</span></code></pre>
+</div>
+<div id="measuring-accuracy" class="section level3">
+<h3><span class="header-section-number">3.10.4</span> Measuring Accuracy</h3>
+<p>It has also outputted some metrics on the performance of our model, lets explain them:</p>
+<ul>
+<li><p>Sensitivity (also known as true positive, recall or hit rate) measures how well your model does in predicting positive
+values (predicting that the patient is diabetic when they actually are), given by:
+<span class="math inline">\(\frac{\text{TP}}{\text{TP} + \text{FN}}\)</span></p></li>
+<li><p>Specificity (also known as true negative rate) measures how well your model does in predicting negative values,
+(predicting that the patient is not diabetic when they actually aren’t), given by:
+<span class="math inline">\(\frac{\text{TN}}{\text{TN} + \text{FP}}\)</span></p></li>
+<li><p>Accuracy gives an overall performance measurement on the accuracy of the results on a scale of <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span>, with <span class="math inline">\(1\)</span>
+meaning that the model predicted everything correctly, given by:
+<span class="math inline">\(\frac{\text{TP} + \text{TN}}{\text{TP} + \text{FP} + \text{FN} + \text{TP}}\)</span></p></li>
+</ul>
+<p>There is a big problem with using this metric as a performance indicator. Let’s use an example where we create a model
+that simply always outputs False. We use that model to predict whether or not an individual has a very rare disease that
+is estimated only <span class="math inline">\(1\)</span> on <span class="math inline">\(100\)</span> people have. If we use that model on a very large sample of people (that are already
+diagnosed and know whether or not they have the disease) and then see how our model did, we will measure something like
+a <span class="math inline">\(0.99\)</span> accuracy. That is amazing right, our model is “<span class="math inline">\(99%\)</span> accurate”! This illustrates how this metric is biased by
+what proportions of positive and negative values are available, a model could do well simple by chance like we show in
+our example.</p>
+</div>
+<div id="the-kappa-coefficient" class="section level3">
+<h3><span class="header-section-number">3.10.5</span> The Kappa Coefficient</h3>
+<p>Cohen’s Kappa coefficient is a metric that tries to tackle the problem of bias in the measurement of accuracy. It does
+so by ‘eliminating’ the chance of randomly getting a correct prediction from the equation.</p>
+<p>This ‘chance’ is just given by probability of randomly selecting a true value from the sample plus the probability of
+randomly selecting a false from the sample, since we want to measure both the chance of predicting True when True and
+False when False. In the sample (confusion matrix), we could select a false value either from the total predicted false
+or the total actual false. So we need to multiply the probabilities associated with both. Similarly we could select a
+positive value either from the total predicted positive or the total actually positive.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># From our confusion matrix table we can get:</span>
+<span class="co"># FN + FP</span>
+totalFALSE &lt;-<span class="st"> </span><span class="dv">47</span> <span class="op">+</span><span class="st"> </span><span class="dv">15</span>
+<span class="co"># TP +TN</span>
+totalTRUE &lt;-<span class="st"> </span><span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">7</span>
+<span class="co"># NT + NF</span>
+totalNegative &lt;-<span class="st"> </span><span class="dv">47</span> <span class="op">+</span><span class="st"> </span><span class="dv">5</span>
+<span class="co"># PT + PF</span>
+totalPositive &lt;-<span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="dv">7</span>
+<span class="co"># Everything</span>
+totalSAMPLE &lt;-<span class="st"> </span><span class="dv">47</span> <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="dv">7</span>
+
+P_of_true_from_actual =<span class="st"> </span>(totalTRUE <span class="op">/</span><span class="st"> </span>totalSAMPLE)
+P_of_true_from_predicted =<span class="st"> </span>(totalPositive <span class="op">/</span><span class="st"> </span>totalSAMPLE)
+P_of_false_from_actual =<span class="st"> </span>(totalFALSE <span class="op">/</span><span class="st"> </span>totalSAMPLE)
+P_of_false_from_predicted =<span class="st"> </span>(totalNegative <span class="op">/</span><span class="st"> </span>totalSAMPLE)
+
+P_of_chance_for_TRUE &lt;-<span class="st"> </span>P_of_true_from_actual <span class="op">*</span><span class="st"> </span>P_of_true_from_predicted
+P_of_chance_for_FALSE &lt;-<span class="st"> </span>P_of_false_from_actual <span class="op">*</span><span class="st"> </span>P_of_false_from_predicted
+P_of_chance &lt;-<span class="st"> </span>P_of_chance_for_TRUE <span class="op">+</span><span class="st"> </span>P_of_chance_for_FALSE
+
+<span class="co"># We can see that our P_of_chance is very high, this is because we have more</span>
+<span class="co"># samples of False, there are more people that are NOT diagnosed with diabetes.</span>
+P_of_chance</code></pre>
+<pre><code>## [1] 0.6369613</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># To get the Kappa coefficient we would use the fallowing formula...</span>
+
+<span class="co"># First we need to select accuracy from our confusion matric metrics</span>
+accuracy &lt;-<span class="st"> </span>cm<span class="op">$</span>overall[<span class="st">&#39;Accuracy&#39;</span>][[<span class="dv">1</span>]][<span class="dv">1</span>]
+<span class="co">#Kappa is given by:</span>
+Kappa &lt;-<span class="st"> </span>(accuracy <span class="op">-</span><span class="st"> </span>P_of_chance)<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>P_of_chance)
+<span class="co">#we can see this is the same value given by R in the confusion matrix</span>
+Kappa</code></pre>
+<pre><code>## [1] 0.396268</code></pre>
+<p>So how do we interpret Kappa, this is a bit vague and there is no clear answer but we can see some examples:</p>
+<ul>
+<li><span class="math inline">\(1\)</span> means our model is prefect</li>
+<li><span class="math inline">\(0\)</span> means it as good as chance</li>
+<li>Any negative value means it does worse than chance</li>
+<li>Anything close to <span class="math inline">\(0.3\)</span> and above is relatively good</li>
+<li>Values of <span class="math inline">\(0.8\)</span> and above are extremely rare</li>
+</ul>
+</div>
+</div>
+<div id="optimising-the-threshold" class="section level2">
+<h2><span class="header-section-number">3.11</span> Optimising the Threshold</h2>
+<p>Changing the threshold will affect our models sensitivity and specificity. If we had a very low threshold where <span class="math inline">\(p\)</span> is
+close to <span class="math inline">\(0\)</span>, then almost always we would predict that a patient was diabetic. This means that we would predict
+correctly True when True, but also True when False, in other words we would have a very high true positive rate. If we
+had a very high threshold, close to <span class="math inline">\(p = 1\)</span>, then almost always we would predict that a patient is not diabetic. This
+means we would predict False when False, but also False when True, in other words we would have a very high false
+positive rate.</p>
+<p>Usually we want to balance this and we wind up somewhere in the middle. However, we need to apply domain knowledge and
+think about whether we care more about true positive rate or false positive rate. For example what is the effects of:
+predicting that a patient is diabetic when they aren’t (having more FP), referred to as type I errors versus predicting
+that a patient is not diabetic when they are (having more TN), referred to as type II errors. Usually in such cases we
+would be more concerned for the type 2 errors, since failing to diagnose a diabetes can have a greater impact on the
+patients health, so we might choose a <span class="math inline">\(p\)</span> somewhere lower than <span class="math inline">\(0.5\)</span> maybe <span class="math inline">\(0.4\)</span>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can visualise how changing our threshold affects the true and false</span>
+<span class="co"># positive rate to help us choose the right p</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;ROCR&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ROCR)</code></pre>
+<pre><code>## Loading required package: gplots</code></pre>
+<pre><code>## 
+## Attaching package: &#39;gplots&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     lowess</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">resForTraining &lt;-<span class="st"> </span><span class="kw">predict</span>(model, trainingData, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+<span class="co"># Choosing a value</span>
+ROCRPred =<span class="st"> </span><span class="kw">prediction</span>(resForTraining,trainingData<span class="op">$</span>type)
+ROCRPref &lt;-<span class="st"> </span><span class="kw">performance</span>(ROCRPred, <span class="st">&quot;tpr&quot;</span>, <span class="st">&quot;fpr&quot;</span>)
+<span class="co"># We want something on the green region between 0.4 and 0.6, but closer to 0.4</span>
+<span class="co"># to ensure less type 2 errors</span>
+<span class="kw">plot</span>(ROCRPref, <span class="dt">colorize =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="advanced-techniques-for-linear-algorithms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

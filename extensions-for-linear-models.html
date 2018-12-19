@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>6 Extensions for linear models | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="6 Extensions for linear models | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 Extensions for linear models | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="dimension-reducing-algorithms.html">
+<link rel="next" href="recommendation-systems.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="extensions-for-linear-models" class="section level1">
+<h1><span class="header-section-number">6</span> Extensions for linear models</h1>
+<div id="introduction-2" class="section level2">
+<h2><span class="header-section-number">6.1</span> Introduction</h2>
+<p>As we have already mentioned, the linear model suffers some serious limitations, which steam from the assumption that the model follows a linear trend. In real life, relations between predictors and reaction are (almost always) more complicated. They can be changing as the predictors take on higher/lower values. When we explained linear regression we also show polynomial regression, which was able to better explain some of those alternations and optimise our models’ performance. In this chapter we will look into other such extensions of the linear models. As a general idea, we will be attempting to capture variations on this relationship, by splitting the data on different ranges of the predictors (where the variation occurs), and fitting a different model on each.</p>
+<p>Following that though, Additive models are useful when:</p>
+<ul>
+<li><p>On the scatterplot we observe that the way the predictor is related to the reaction changes for deferent ranges of the predictor. If you spot various ‘curving’ patterns.</p></li>
+<li><p>In such cases, algorithms such us decision tree based may result in similar or better performance models, with less of the complexity. You may want to use an Additive model, if inference is key in your analysis or as a comparison point in your benchmarking. As always, this will highly depend on your problem, the data you have and your resources. It is advised to try out various models and cross validate them.</p></li>
+</ul>
+</div>
+<div id="step-function" class="section level2">
+<h2><span class="header-section-number">6.2</span> Step Function</h2>
+<p>This method suggests breaking down the model into <em>bins</em>. Each bin will have its own coefficients that are only valid for a certain range of the predictors <span class="math inline">\(X\)</span>. Each bin is assigned a constant <span class="math inline">\(C_1\)</span>, <span class="math inline">\(C_2\)</span>, <span class="math inline">\(C_3\)</span>, <span class="math inline">\(C_k\)</span> which can either be 1 or 0, indicating if the value that <span class="math inline">\(X\)</span> takes, is inside or outside the bin’s range. Doing so allows us to represent the function as follows and solve using least squares.</p>
+<p>$ y_j = _0 + _1 C_1 x_1 + _2 C_2 x_1 + … + _k C_k x_1 + _1 C_1 x_2 + _2 C_2 x_2 + … + _k C_k x_2 + … + _1 C_1 x_j + _2 C_2 x_j + … + _k C_k x_j$</p>
+<p>where for each <span class="math inline">\(x_j\)</span> you can have up to one <span class="math inline">\(C_k=1\)</span> (one or none <span class="math inline">\(C_k\)</span> will be true), since it can only have up to one coefficient depending on which bin it belongs to.</p>
+<p>This method comes with a major disadvantage. Since each bin’s coefficients are derived using only data that is within the bin’s range, we might miss capturing global trends.</p>
+<p>Generally, you would consider using this method if:</p>
+<ul>
+<li><p>The bins you want to split your data into are well defined by nature. For example, this method is popular in disciplines such us biostatistics and epidemiology, where the relationships studied are very different for patients with 5-year differences (bins would split the data for every age group).</p></li>
+<li><p>You have a lot of coefficients out of which some are useful for certain ranges and others are useful for other ranges</p></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we will use the dataset Wage, made by ISLR to fit well for additive models</span>
+<span class="kw">library</span>(ISLR)
+<span class="kw">data</span>(Wage)
+
+<span class="co"># the cut() function will help us split the data in bins. We can select how many bins we want, here we have selected 4. Furthermore, we can set the cut off points, which would be used to place each bin with the option breaks=,. If this is not specified R will choose to place each bin uniformly across the range of x. In this case R has set a bin for every 15.5 year group.</span>
+t &lt;-<span class="kw">table</span>(<span class="kw">cut</span>(Wage<span class="op">$</span>age,<span class="dv">4</span>))
+t</code></pre>
+<pre><code>## 
+## (17.9,33.5]   (33.5,49]   (49,64.5] (64.5,80.1] 
+##         750        1399         779          72</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="kw">cut</span>(age,<span class="dv">4</span>), <span class="dt">data =</span> Wage)
+<span class="co"># here you can see that each age group has its own coefficient estimate.</span>
+<span class="co"># notice that the age group 17.9 to 33.5 does not have a coefficient. For those values prediction would simply be their avarage wage given by the intercept $94.158.</span>
+model</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = wage ~ cut(age, 4), data = Wage)
+## 
+## Coefficients:
+##            (Intercept)    cut(age, 4)(33.5,49]    cut(age, 4)(49,64.5]  
+##                 94.158                  24.053                  23.665  
+## cut(age, 4)(64.5,80.1]  
+##                  7.641</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># let&#39;s see how this looks like</span>
+<span class="kw">library</span>(ggplot2)
+
+x1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">17.9</span>, <span class="fl">33.5</span>, <span class="fl">0.1</span>)
+y1 &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="fl">94.158</span>, <span class="dt">times =</span> <span class="kw">length</span>(x1) )
+
+y2 &lt;-<span class="st"> </span><span class="kw">integer</span>()
+x2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">33.5</span>, <span class="dv">49</span>, <span class="fl">0.1</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x2)){
+  y2[i] &lt;-<span class="st"> </span><span class="fl">94.158</span> <span class="op">+</span><span class="st"> </span><span class="fl">24.053</span> <span class="op">*</span><span class="st"> </span>x2[i]
+}
+
+y3 &lt;-<span class="st"> </span><span class="kw">integer</span>()
+x3 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">49</span>, <span class="fl">64.5</span>, <span class="fl">0.1</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x3)){
+  y3[i] &lt;-<span class="st"> </span><span class="fl">94.158</span> <span class="op">+</span><span class="st"> </span><span class="fl">23.665</span> <span class="op">*</span><span class="st"> </span>x3[i]
+}
+
+y4 &lt;-<span class="st"> </span><span class="kw">integer</span>()
+x4 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">64.5</span>, <span class="fl">80.1</span>, <span class="fl">0.1</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x4)){
+  y4[i] &lt;-<span class="st"> </span><span class="fl">94.158</span> <span class="op">+</span><span class="st"> </span><span class="fl">7.641</span><span class="op">*</span><span class="st"> </span>x4[i]
+}
+
+
+x &lt;-<span class="st"> </span><span class="kw">c</span>(x1,x2, x3, x4)
+y &lt;-<span class="st"> </span><span class="kw">c</span>(y1,y2, y3, y4)
+
+d=<span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+<span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="kw">geom_step</span>(<span class="dt">data=</span>d, <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span>
+<span class="kw">geom_step</span>(<span class="dt">data=</span>d, <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y), <span class="dt">direction=</span><span class="st">&quot;vh&quot;</span>, <span class="dt">linetype=</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="kw">geom_point</span>(<span class="dt">data=</span>d, <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y), <span class="dt">color=</span><span class="st">&quot;red&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-79-1.png" width="672" /></p>
+</div>
+<div id="splines" class="section level2">
+<h2><span class="header-section-number">6.3</span> Splines</h2>
+<p>As we can see from the graph, the endpoints are not fitting well, the model is not ‘smooth’. And although it is clearly not as strict and overgeneralised as a simple linear model, it may not do a great job of describing the relationship between age and wage. If we look at the scatterplot, we can see that a curve rather than a line could be more fitting.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-80-1.png" width="672" /></p>
+<p>We already know that we can use a polynomial in order to fit a curve to the data. We could try various degrees of polynomials and cross validate them to see which performed the best. Polynomials however, have various pitfalls. They usually perform well on quite high degrees. High degrees of polynomials will curve the data too much in unnecessary places and can cause inaccurate analysis, among other issues. Instead we would like to use <em>piecewise polynomial regression</em>, where we would choose a polynomial of smaller degree but achieve optimal performance. In piecewise polynomial regression we fit a model using deferent coefficients for various ranges of <span class="math inline">\(x\)</span>. Quite often the cubic (3rd degree polynomial) performs well, here is what a function for cubic piecewise polynomial regression would look like:</p>
+<p><span class="math inline">\(y_i = \left\{ \begin{array}{ll} \beta_01 + \beta_11x_j + \beta_21x_j^2 + \beta_31x_j^3 &amp; \mbox{if } x_j \geq c \\ \beta_02 + \beta_12x_j + \beta_22x_j^2 + \beta_32x_j^3 &amp; \mbox{if } x_j &lt; c \end{array} \right.\)</span></p>
+<p>Where the range of <span class="math inline">\(x\)</span> is been ‘cut’ on the point <span class="math inline">\(c\)</span>. The point <span class="math inline">\(c\)</span> is called a knot. We can add more knots if we want to increase the flexibility of the model.</p>
+<p>We say that the above function has been split in two <em>bias functions</em> one for <span class="math inline">\(x_j \geq c\)</span> and one for <span class="math inline">\(x_j &lt; c\)</span>.</p>
+<p>When we apply such a regression, we have managed to overcome some of the pitfalls of polynomial regression. However, the model would be discontinuous at the points of the knots, here is an example where we chosen a single knot at age 50.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#split the data at knot=50</span>
+data1 &lt;-<span class="st"> </span>Wage[<span class="kw">which</span>(Wage<span class="op">$</span>age <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>),]
+data2 &lt;-<span class="st"> </span>Wage[<span class="kw">which</span>(Wage<span class="op">$</span>age<span class="op">&gt;</span><span class="dv">50</span>),]
+
+<span class="co">#create the two bias functions</span>
+fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age<span class="op">^</span><span class="dv">2</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age<span class="op">^</span><span class="dv">3</span>), <span class="dt">data =</span> data1)
+fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age<span class="op">^</span><span class="dv">2</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age<span class="op">^</span><span class="dv">3</span>), <span class="dt">data =</span> data2)
+
+<span class="co"># x values for each bias function</span>
+age.grid1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">18</span>,<span class="dt">to=</span><span class="dv">50</span>)
+age.grid2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">50</span>,<span class="dt">to=</span><span class="dv">80</span>)
+
+<span class="co">#y values resulting from each bias function</span>
+y1 &lt;-<span class="st"> </span><span class="kw">predict</span>(fit1,<span class="kw">list</span>(<span class="dt">age=</span>age.grid1))
+y2 &lt;-<span class="st"> </span><span class="kw">predict</span>(fit2,<span class="kw">list</span>(<span class="dt">age=</span>age.grid2))
+
+<span class="co">#plots</span>
+<span class="kw">plot</span>(Wage<span class="op">$</span>wage <span class="op">~</span><span class="st"> </span>Wage<span class="op">$</span>age, <span class="dt">data =</span> Wage,<span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">with</span>(<span class="kw">data.frame</span>(age.grid1), <span class="kw">lines</span>(<span class="dt">x =</span> age.grid1, <span class="dt">y =</span> y1))
+<span class="kw">with</span>(<span class="kw">data.frame</span>(age.grid2), <span class="kw">lines</span>(<span class="dt">x =</span> age.grid2, <span class="dt">y =</span> y2))</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-81-1.png" width="672" /></p>
+<p>We now need to ‘smoothen’ the graph. In other words, we want we want the rate of change for its slope (which describes its shape) to be the same at the point of the knots, so as to avoid weird ‘bumps’. This is given by the second derivative. So we can add the condition that the second derivatives of the left and right functions need to be the same, at the point of the knot (50 in this example). Adding this constraint will create what is called a <em>natural</em> spline. There are other ways to smoothen the graph such us a <em>clamp</em>, where instead we require the first derivatives to be equal to zero.</p>
+<p>Here is what happens when we add this condition</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#library for fitting cubic splines</span>
+<span class="kw">library</span>(splines)
+model &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="kw">bs</span>(age,<span class="dt">knots=</span><span class="kw">c</span>(<span class="dv">50</span>)), <span class="dt">data=</span>Wage)
+
+<span class="co"># x values</span>
+agelims &lt;-<span class="st"> </span><span class="kw">range</span>(Wage<span class="op">$</span>age)
+age.grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from=</span>agelims[<span class="dv">1</span>],<span class="dt">to=</span>agelims[<span class="dv">2</span>])
+
+<span class="co"># resulting y values</span>
+pred&lt;-<span class="st"> </span><span class="kw">predict</span>(model,<span class="kw">list</span>(<span class="dt">age=</span>age.grid),<span class="dt">se=</span>T)
+
+<span class="co">#plot</span>
+<span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(age.grid, pred<span class="op">$</span>fit, <span class="dt">lwd=</span><span class="dv">2</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-82-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># if you are not sure how many knots to place and where, you can instead choose your degrees of freedom, the knots are placed uniformly by R:</span>
+
+model &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="kw">ns</span>(age, <span class="dt">df=</span><span class="dv">4</span>), <span class="dt">data=</span>Wage)
+pred &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">newdata =</span> <span class="kw">list</span>(<span class="dt">age=</span>age.grid), <span class="dt">se=</span>T)
+<span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(age.grid, pred<span class="op">$</span>fit, <span class="dt">lwd=</span><span class="dv">2</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># if we increase the degrees of freedom we allow for more &#39;wiggle&#39; room and risk overfitting</span>
+
+model &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="kw">ns</span>(age, <span class="dt">df=</span><span class="dv">30</span>), <span class="dt">data=</span>Wage)
+pred &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">newdata =</span> <span class="kw">list</span>(<span class="dt">age=</span>age.grid), <span class="dt">se=</span>T)
+<span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(age.grid, pred<span class="op">$</span>fit, <span class="dt">lwd=</span><span class="dv">2</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-83-2.png" width="672" /></p>
+</div>
+<div id="smoothing-splines" class="section level2">
+<h2><span class="header-section-number">6.4</span> Smoothing splines</h2>
+<p>Smoothing splines is another way we can fit a curve to our data. Just like we did when fitting a line to the data, we will try to fit a curve that minimises the residual error ( a curve that is the closest to all points). Of course with a curve, we can always fit all the data perfectly, using potentially a very ‘wiggly’ curve that goes around all the points. Such a curve will have extreme problems of overfitting. Instead, what we really want to do is find a curve that fits the data well but also minimises overfitting.</p>
+<p>We can achieve this in a similar manner to ridge regression, adding a penalty of weight <span class="math inline">\(\lambda\)</span> to the function that minimises RSS. This penalty will be associated with how ‘wiggly’ the line is, since we are trying to find the best fitting ‘smooth’ curve. We have explain that smoothness of the curve can be associated with the second derivative of the curve’s function. This brings us to the function we will be minimising (don’t worry too much about the representation):</p>
+<p><span class="math inline">\(\sum_{n=1}^{n} (y_i - g(x_i)^2) + \lambda \int g&#39;&#39;(t)^2\,dt.\)</span></p>
+<p>As you would expect, <span class="math inline">\(\lambda\)</span> is found using cross validation.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># smooth splines using cross validation</span>
+model &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">cv=</span> <span class="ot">TRUE</span>)</code></pre>
+<pre><code>## Warning in smooth.spline(Wage$age, Wage$wage, cv = TRUE): cross-validation
+## with non-unique &#39;x&#39; values seems doubtful</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(model,<span class="dt">lwd=</span><span class="dv">2</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-84-1.png" width="672" /></p>
+</div>
+<div id="local-regression" class="section level2">
+<h2><span class="header-section-number">6.5</span> Local Regression</h2>
+<p>If all fails, there is the alternative of fitting a curve to your data using the local regression. This method creates the curve incrementally. It chooses its place at some point <span class="math inline">\(x\)</span>, by considering the location of the closets observations around that place. It resembles the algorithm k-nearest-neighbours (discussed in future chapters).</p>
+<p>Let’s see exactly how this is achieved:</p>
+<ol style="list-style-type: decimal">
+<li><p>First we need to define the size of the window. That is how many closest observations we want the method to account for, when defining each new point of the curve. We will call this number <span class="math inline">\(k\)</span></p></li>
+<li><p>Then we want to define the new points of the curve. We do that by moving the original observation’s location to a new location. We start from the first observation and we find the k-closest observations to it.</p></li>
+<li><p>To find its new position we perform least squares on the k-closest points (including the original point). The original point is referred to us the vocal point. The closest those k points are, the more weight is given to them on the regression. They have more influence on the position of the best fit line. The vocal point has the most weight.</p></li>
+<li><p>We project the vocal point on the best fit line. The projection is the fist point of the curve we are trying to draw</p></li>
+<li><p>We repeat steps 2,3 and 4 for all the observations, in order to find all the points of our curve.</p></li>
+<li><p>We could now draw a ‘best fit curve’ by connecting all those new points. However, that curve may have a lot of ‘wiggle’, so we want to follow some additional steps in order to smoothen it.</p></li>
+<li><p>The ‘wiggles’ would be the result of points that are too hight/low compared to the average, and are influencing the position of the best fit line each time too much (remember leverage points). TO reduce their effect, we add additional weights based on how far the original points are to the projected ones. Points that are moved too much will have higher weights.</p></li>
+<li><p>We repeat the process of finding new points from the original observations using least squares. However, this time we also account for the additional new weights.</p></li>
+<li><p>Now we can fit a smoother curve in our data, by connecting the new points</p></li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li><p>The process of regularisation (smoothening) may need to be repeated a couple of times in order to reach the desired level of smoothness.</p></li>
+<li><p>We may want to fit parabolas instead of lines on each window of data. Parabolas tend to work better on data that indicates a lot of curving patterns. In R you can use the function lowess() for a line and loess() for a parabola (or a line, it defaults to parabola)</p></li>
+<li><p>In theory we can perform Local Regression for multiple <span class="math inline">\(x\)</span> predictors. However, when the dimensions are increasing the observations will become more sparse amongst them. This means that there would be greater distances between them and not enough nearby observations for each dimension. You need to ensure you have enough observations. In general local regression is performed with 3 or 4 predictors as a max.</p></li>
+</ul>
+<p>watch <a href="https://www.youtube.com/watch?v=Vf7oJ6z2LCc" class="uri">https://www.youtube.com/watch?v=Vf7oJ6z2LCc</a> for a good visual explanation by Josh Starmer.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># fitting parabolas</span>
+<span class="co"># spam associates with degree of smoothing and is related to the window size selected proportional to the data</span>
+fit1 =<span class="st"> </span><span class="kw">loess</span>(wage<span class="op">~</span>age,<span class="dt">span=</span>.<span class="dv">2</span>,<span class="dt">data=</span>Wage)
+fit2 =<span class="st"> </span><span class="kw">loess</span>(wage<span class="op">~</span>age,<span class="dt">span=</span>.<span class="dv">5</span>,<span class="dt">data=</span>Wage)
+
+<span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(age.grid,<span class="kw">predict</span>(fit1,<span class="kw">data.frame</span>(<span class="dt">age=</span>age.grid)),<span class="dt">lwd=</span><span class="dv">2</span>)
+<span class="kw">lines</span>(age.grid,<span class="kw">predict</span>(fit2,<span class="kw">data.frame</span>(<span class="dt">age=</span>age.grid)),<span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>)
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;Span =0.2&quot;</span>, <span class="st">&quot;Span=0.5&quot;</span>), <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;orange&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">cex=</span>.<span class="dv">8</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-85-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># fitting lines</span>
+<span class="co"># f is similar to span, the greater f gives more smoothness</span>
+<span class="kw">plot</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">col=</span><span class="st">&quot;#CCBADC&quot;</span>)
+<span class="kw">lines</span>(<span class="kw">lowess</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage, <span class="dt">f=</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>), <span class="dt">col=</span><span class="dv">2</span>)
+<span class="kw">lines</span>(<span class="kw">lowess</span>(Wage<span class="op">$</span>age, Wage<span class="op">$</span>wage,<span class="dt">f=</span><span class="dv">1</span><span class="op">/</span><span class="dv">8</span>))
+<span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;f=2/3&quot;</span>, <span class="st">&quot;f=1/4&quot;</span>), <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;red&quot;</span>,<span class="st">&quot;black&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">cex=</span>.<span class="dv">8</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-85-2.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dimension-reducing-algorithms.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="recommendation-systems.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

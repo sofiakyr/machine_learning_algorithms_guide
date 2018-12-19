@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>2 Linear Regression | Machine Learning Algorithms Guide</title>
+  <meta name="description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="2 Linear Regression | Machine Learning Algorithms Guide />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  <meta name="github-repo" content="chicsof/machine_learning_algorithms_guide" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Linear Regression | Machine Learning Algorithms Guide />
+  
+  <meta name="twitter:description" content="In this guide we will analyse some of the most commonly used and powerful machine learning algorithms. We will walk through the intuition behind each algorithm, the required mathematical background, as well as its implementation in R, in a step by step approach." />
+  
+
+<meta name="author" content="Sofia Kyriazidi">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="logistic-regression.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-130184920-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Machine Learning Algorithms Guide</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-the-model"><i class="fa fa-check"></i><b>2.1</b> Creating the Model</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#r-squared"><i class="fa fa-check"></i><b>2.2</b> R-squared</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>2.4</b> Prediction Intervals</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#we-can-plot-prediction-and-confidence-intervals"><i class="fa fa-check"></i><b>2.4.1</b> we can plot prediction and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#heteroscedasticity"><i class="fa fa-check"></i><b>2.5</b> Heteroscedasticity</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#outliers"><i class="fa fa-check"></i><b>2.6</b> Outliers</a></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#multicollinearity"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.7.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="linear-regression.html"><a href="linear-regression.html#sample-correlation-coefficient-to-true-value"><i class="fa fa-check"></i><b>2.7.2</b> Sample Correlation Coefficient to True Value</a></li>
+<li class="chapter" data-level="2.7.3" data-path="linear-regression.html"><a href="linear-regression.html#correlation-matrix"><i class="fa fa-check"></i><b>2.7.3</b> Correlation Matrix</a></li>
+<li class="chapter" data-level="2.7.4" data-path="linear-regression.html"><a href="linear-regression.html#variance-inflation"><i class="fa fa-check"></i><b>2.7.4</b> Variance Inflation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>2.8</b> Interaction terms</a></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-predictors"><i class="fa fa-check"></i><b>2.9</b> Non-linear Transformations of Predictors</a></li>
+<li class="chapter" data-level="2.10" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors"><i class="fa fa-check"></i><b>2.10</b> Qualitative Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>3</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#usage"><i class="fa fa-check"></i><b>3.1</b> Usage</a></li>
+<li class="chapter" data-level="3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#formula"><i class="fa fa-check"></i><b>3.2</b> Formula</a></li>
+<li class="chapter" data-level="3.3" data-path="logistic-regression.html"><a href="logistic-regression.html#maximum-likelihood"><i class="fa fa-check"></i><b>3.3</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="3.4" data-path="logistic-regression.html"><a href="logistic-regression.html#r-squared-1"><i class="fa fa-check"></i><b>3.4</b> R-squared</a></li>
+<li class="chapter" data-level="3.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-saturated-and-null-models"><i class="fa fa-check"></i><b>3.5</b> The Saturated and Null Models</a></li>
+<li class="chapter" data-level="3.6" data-path="logistic-regression.html"><a href="logistic-regression.html#residual-and-null-deviance"><i class="fa fa-check"></i><b>3.6</b> Residual and Null Deviance</a></li>
+<li class="chapter" data-level="3.7" data-path="logistic-regression.html"><a href="logistic-regression.html#p-values"><i class="fa fa-check"></i><b>3.7</b> p-values</a></li>
+<li class="chapter" data-level="3.8" data-path="logistic-regression.html"><a href="logistic-regression.html#introductory-demonstration-in-r"><i class="fa fa-check"></i><b>3.8</b> Introductory Demonstration in R</a></li>
+<li class="chapter" data-level="3.9" data-path="logistic-regression.html"><a href="logistic-regression.html#limitations"><i class="fa fa-check"></i><b>3.9</b> Limitations</a><ul>
+<li class="chapter" data-level="3.9.1" data-path="logistic-regression.html"><a href="logistic-regression.html#confounding"><i class="fa fa-check"></i><b>3.9.1</b> Confounding</a></li>
+<li class="chapter" data-level="3.9.2" data-path="logistic-regression.html"><a href="logistic-regression.html#multicollinearity-1"><i class="fa fa-check"></i><b>3.9.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="3.9.3" data-path="logistic-regression.html"><a href="logistic-regression.html#interaction-terms-1"><i class="fa fa-check"></i><b>3.9.3</b> Interaction terms</a></li>
+<li class="chapter" data-level="3.9.4" data-path="logistic-regression.html"><a href="logistic-regression.html#heteroscedasticity-not-relevant"><i class="fa fa-check"></i><b>3.9.4</b> Heteroscedasticity (not relevant)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-performance-using-confusion-matrix"><i class="fa fa-check"></i><b>3.10</b> Measuring Performance Using Confusion matrix</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="logistic-regression.html"><a href="logistic-regression.html#splitting-the-data"><i class="fa fa-check"></i><b>3.10.1</b> Splitting the Data</a></li>
+<li class="chapter" data-level="3.10.2" data-path="logistic-regression.html"><a href="logistic-regression.html#visualisations"><i class="fa fa-check"></i><b>3.10.2</b> Visualisations</a></li>
+<li class="chapter" data-level="3.10.3" data-path="logistic-regression.html"><a href="logistic-regression.html#confusion-matrix-calculations"><i class="fa fa-check"></i><b>3.10.3</b> Confusion Matrix Calculations</a></li>
+<li class="chapter" data-level="3.10.4" data-path="logistic-regression.html"><a href="logistic-regression.html#measuring-accuracy"><i class="fa fa-check"></i><b>3.10.4</b> Measuring Accuracy</a></li>
+<li class="chapter" data-level="3.10.5" data-path="logistic-regression.html"><a href="logistic-regression.html#the-kappa-coefficient"><i class="fa fa-check"></i><b>3.10.5</b> The Kappa Coefficient</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="logistic-regression.html"><a href="logistic-regression.html#optimising-the-threshold"><i class="fa fa-check"></i><b>3.11</b> Optimising the Threshold</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html"><i class="fa fa-check"></i><b>4</b> Advanced techniques for linear algorithms</a><ul>
+<li class="chapter" data-level="4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>4.1.1</b> Bias Variance Trade Off</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#improved-performance-indicators-adjusted-r-squared-and-alternatives"><i class="fa fa-check"></i><b>4.2</b> Improved performance indicators (adjusted R-squared and alternatives)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>4.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="4.2.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#alternatives"><i class="fa fa-check"></i><b>4.2.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation"><i class="fa fa-check"></i><b>4.3</b> Cross Validation</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#cross-validation-in-action"><i class="fa fa-check"></i><b>4.3.1</b> Cross Validation in action</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#selecting-the-optimal-predictors-for-the-model"><i class="fa fa-check"></i><b>4.4</b> Selecting the optimal predictors for the model</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#best-subset-selection"><i class="fa fa-check"></i><b>4.4.1</b> Best subset selection</a></li>
+<li class="chapter" data-level="4.4.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#stepwise-selection"><i class="fa fa-check"></i><b>4.4.2</b> Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#shrinkageregularisation-methods"><i class="fa fa-check"></i><b>4.5</b> Shrinkage/Regularisation methods</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#ridge-regression"><i class="fa fa-check"></i><b>4.5.1</b> Ridge regression</a></li>
+<li class="chapter" data-level="4.5.2" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#lasso-regression"><i class="fa fa-check"></i><b>4.5.2</b> Lasso regression</a></li>
+<li class="chapter" data-level="4.5.3" data-path="advanced-techniques-for-linear-algorithms.html"><a href="advanced-techniques-for-linear-algorithms.html#elastic-net-regression"><i class="fa fa-check"></i><b>4.5.3</b> Elastic Net Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html"><i class="fa fa-check"></i><b>5</b> Dimension Reducing Algorithms</a><ul>
+<li class="chapter" data-level="5.1" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>5.1</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="5.2" data-path="dimension-reducing-algorithms.html"><a href="dimension-reducing-algorithms.html#linear-discriminant-analysis-lda"><i class="fa fa-check"></i><b>5.2</b> Linear Discriminant Analysis (LDA)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html"><i class="fa fa-check"></i><b>6</b> Extensions for linear models</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#introduction-2"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#step-function"><i class="fa fa-check"></i><b>6.2</b> Step Function</a></li>
+<li class="chapter" data-level="6.3" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#splines"><i class="fa fa-check"></i><b>6.3</b> Splines</a></li>
+<li class="chapter" data-level="6.4" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#smoothing-splines"><i class="fa fa-check"></i><b>6.4</b> Smoothing splines</a></li>
+<li class="chapter" data-level="6.5" data-path="extensions-for-linear-models.html"><a href="extensions-for-linear-models.html#local-regression"><i class="fa fa-check"></i><b>6.5</b> Local Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="recommendation-systems.html"><a href="recommendation-systems.html"><i class="fa fa-check"></i><b>7</b> Recommendation Systems</a><ul>
+<li class="chapter" data-level="7.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-similar-books.-content-based-filtering"><i class="fa fa-check"></i><b>7.1</b> Recommending similar books. Content based filtering</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#what-is-similarity"><i class="fa fa-check"></i><b>7.1.1</b> What is similarity?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#how-can-we-find-similar-books"><i class="fa fa-check"></i><b>7.1.2</b> How can we find similar books?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-books-that-were-liked-by-similar-users-collaborative-filtering"><i class="fa fa-check"></i><b>7.2</b> Recommending books that were liked by ‘similar’ users, Collaborative filtering</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#similar-users"><i class="fa fa-check"></i><b>7.2.1</b> Similar users?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="recommendation-systems.html"><a href="recommendation-systems.html#recommending-items-that-are-often-bought-together-mining-item-association-rules"><i class="fa fa-check"></i><b>7.3</b> Recommending items that are often bought together (mining item association rules)</a></li>
+<li class="chapter" data-level="7.4" data-path="recommendation-systems.html"><a href="recommendation-systems.html#further-discussions"><i class="fa fa-check"></i><b>7.4</b> Further Discussions:</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="recommendation-systems.html"><a href="recommendation-systems.html#optimisations"><i class="fa fa-check"></i><b>7.4.1</b> Optimisations</a></li>
+<li class="chapter" data-level="7.4.2" data-path="recommendation-systems.html"><a href="recommendation-systems.html#alternatives-1"><i class="fa fa-check"></i><b>7.4.2</b> Alternatives</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="recommendation-systems.html"><a href="recommendation-systems.html#conclusion"><i class="fa fa-check"></i><b>7.5</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html"><i class="fa fa-check"></i><b>8</b> Basic Statistics and Probabilities Review</a><ul>
+<li class="chapter" data-level="8.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-probabilities"><i class="fa fa-check"></i><b>8.1</b> A useful cheatsheet in Probabilities</a></li>
+<li class="chapter" data-level="8.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#a-useful-cheatsheet-in-distributions"><i class="fa fa-check"></i><b>8.2</b> A useful cheatsheet in Distributions</a></li>
+<li class="chapter" data-level="8.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#basic-probability-exercises"><i class="fa fa-check"></i><b>8.3</b> Basic probability exercises</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#coin-tossing"><i class="fa fa-check"></i><b>8.3.1</b> Coin tossing:</a></li>
+<li class="chapter" data-level="8.3.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#the-famous-birthday-problem"><i class="fa fa-check"></i><b>8.3.2</b> The famous birthday problem:</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#understanding-p-values"><i class="fa fa-check"></i><b>8.4</b> Understanding P-values</a></li>
+<li class="chapter" data-level="8.5" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-problems"><i class="fa fa-check"></i><b>8.5</b> Confidence Intervals Problems</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#confidence-intervals-with-t-values"><i class="fa fa-check"></i><b>8.5.1</b> Confidence Intervals with t-values</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test"><i class="fa fa-check"></i><b>8.6</b> Chi-squared test</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-manually-step-by-step-example"><i class="fa fa-check"></i><b>8.6.1</b> Chi-squared test manually step by step example</a></li>
+<li class="chapter" data-level="8.6.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-squared-test-with-contigency-tables-manual-step-by-step-example"><i class="fa fa-check"></i><b>8.6.2</b> Chi-squared test with contigency tables, manual step-by-step example</a></li>
+<li class="chapter" data-level="8.6.3" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#chi-square-goodness-of-fit-in-r"><i class="fa fa-check"></i><b>8.6.3</b> Chi-square goodness of fit in R</a></li>
+<li class="chapter" data-level="8.6.4" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#fishers-exact-test-in-r"><i class="fa fa-check"></i><b>8.6.4</b> Fisher’s Exact test in R</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#anova"><i class="fa fa-check"></i><b>8.7</b> Anova</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#two-way-anova-with-interaction-testing"><i class="fa fa-check"></i><b>8.7.1</b> Two-way ANOVA with interaction testing</a></li>
+<li class="chapter" data-level="8.7.2" data-path="basic-statistics-and-probabilities-review.html"><a href="basic-statistics-and-probabilities-review.html#manual-step-by-step-example"><i class="fa fa-check"></i><b>8.7.2</b> Manual step-by-step example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning Algorithms Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression" class="section level1">
+<h1><span class="header-section-number">2</span> Linear Regression</h1>
+<div id="creating-the-model" class="section level2">
+<h2><span class="header-section-number">2.1</span> Creating the Model</h2>
+<p>Linear regression is useful for studying the the effect of predictors (dependant variable, <span class="math inline">\(x\)</span> values) to a reaction
+(independent variable, <span class="math inline">\(y\)</span> value). This is called interference, the coefficient of each predictor will show the strength
+and direction of that predictor (how much of an effect it has and whether it is a positive or negative relationship). It
+may also be used for predicting the <span class="math inline">\(y\)</span> for specified <span class="math inline">\(x\)</span> values. It is of the form:
+<span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n + \epsilon\)</span>, where <span class="math inline">\(\beta_0\)</span> is the intercept to the <span class="math inline">\(y\)</span>
+axis, <span class="math inline">\(\beta_1\)</span> to <span class="math inline">\(\beta_n\)</span> are the coefficients, <span class="math inline">\(x\)</span> are the predictors and <span class="math inline">\(\epsilon\)</span> is some error. We gather a
+sample of data which we use to estimate our coefficients. The coefficients are estimated using the least squared method.
+We plot a line of the form <span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n + \epsilon\)</span>, that minimises
+the distance of our true <span class="math inline">\(y\)</span> values for each <span class="math inline">\(x\)</span> from the predicted by that line <span class="math inline">\(y\)</span> (basically the line that is on
+average closer to each data point). That line represent the mean/expected value for each <span class="math inline">\(x\)</span>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We will create a linear model in this example</span>
+<span class="co"># Libraries</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;MASS&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;ISLR&quot;</span>)</code></pre>
+<p>We will use the Boston dataset, it contains medv, a value for the mean house value and various other attributes such
+as rm rooms in the house and age of the house, we want to make a linear regression model that uses those values as
+predictors to predict the response, value of the house.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
+<span class="kw">library</span>(ISLR)</code></pre>
+<p>You can show the help page for the Boston dataset.</p>
+<pre class="sourceCode r"><code class="sourceCode r">?Boston</code></pre>
+<p>Not all the available attributes always make for good predictors. For example we might have something like the first
+name of the landlord which does not change the price as much. We say that those attributes will not have a significant
+coefficient; their coefficient will be close to zero.</p>
+<p>To identify the predictors that can give us the best price prediction we can start by bringing in one by one our
+attributes and comparing performance (forward approach), or starting with all and removing one by one (backward), or
+even a mix.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We will start with the first approach and analyse our model</span>
+<span class="co"># We are bringing in rm (rooms)</span>
+<span class="co"># This creates a linear model for medv as a function of rm</span>
+lm.rm_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span>rm, <span class="dt">data =</span> Boston)
+<span class="co"># This will give us the basic information of the model, such as the coefficient</span>
+<span class="co"># of our predictors and the intercept</span>
+<span class="kw">summary</span>(lm.rm_fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ rm, data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -23.346  -2.547   0.090   2.986  39.433 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -34.671      2.650  -13.08   &lt;2e-16 ***
+## rm             9.102      0.419   21.72   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.616 on 504 degrees of freedom
+## Multiple R-squared:  0.4835, Adjusted R-squared:  0.4825 
+## F-statistic: 471.8 on 1 and 504 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We can see that rm is of high significance, it has a very small p-value (this means there is only a very small
+probability that the <span class="math inline">\(H_0\)</span> (see the hypothesis testing chapter if you’re unfamiliar with the null hypothesis), rm has no
+effect on price is true). We also get the intercept and coefficient of the fit line so we can see that the approximated
+line is of the form: <span class="math inline">\(y = 9x - 35\)</span>.</p>
+</div>
+<div id="r-squared" class="section level2">
+<h2><span class="header-section-number">2.2</span> R-squared</h2>
+<p>We can use the R-square value (coefficient of determination), as a performance indicator. It measures the percentage of
+variance of our points, that can be described by the regression line. To find that value we calculate the total
+variation not described by the line: by dividing a measure of the distance of our points to the line, to a measure of
+the distance of our points from the mean. The rest of the variation will be described by our model so we can simple take
+1 minus the result. This basically will show how much better our model is from just predicting using the mean.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can get the measure of the disctance of our points to the line by</span>
+<span class="co"># calculating the sum of squared error.</span>
+<span class="co"># That is how far our points are from the line (how far the true y for each x is</span>
+<span class="co"># from estimated by the line y):</span>
+<span class="co"># Since we previously calculated our coefficients for the line we can use the</span>
+<span class="co"># following to get the y estimated by the line.</span>
+yForX &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+  <span class="dv">9</span> <span class="op">*</span><span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="dv">35</span>
+}
+<span class="co"># (We could also use the built in function &#39;predict&#39; but this makes it simpler</span>
+<span class="co"># for now.)</span>
+
+<span class="co"># The squared error would be their squared sum, where Boston$medv is the actual</span>
+<span class="co"># y.</span>
+SELine &lt;-<span class="st"> </span><span class="kw">sum</span>((Boston<span class="op">$</span>medv <span class="op">-</span><span class="st"> </span><span class="kw">yForX</span>(Boston<span class="op">$</span>rm)) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)
+SELine</code></pre>
+<pre><code>## [1] 22541.65</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The measure of the distance of our points from the mean is given by the</span>
+<span class="co"># squared difference of each y from the mean of y.</span>
+meanOfY &lt;-<span class="st"> </span><span class="kw">mean</span>(Boston<span class="op">$</span>medv)
+SEy &lt;-<span class="st"> </span><span class="kw">sum</span>((Boston<span class="op">$</span>medv <span class="op">-</span><span class="st"> </span>meanOfY) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)
+SEy</code></pre>
+<pre><code>## [1] 42716.3</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Now we can calculate the percentage of the total variation not described by</span>
+<span class="co"># our line.</span>
+DescribedByLine &lt;-<span class="st"> </span>SELine <span class="op">/</span><span class="st"> </span>SEy
+DescribedByLine</code></pre>
+<pre><code>## [1] 0.5277061</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># So the R-square, the percentage not described would be:</span>
+rSquared &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>DescribedByLine
+<span class="co"># We can easily extract this calculation with R using the following:</span>
+<span class="kw">summary</span>(lm.rm_fit)<span class="op">$</span>r.squared</code></pre>
+<pre><code>## [1] 0.4835255</code></pre>
+<p>If about <span class="math inline">\(40\%\)</span> of the mean is described by the rm, the rest is various other predictors that we have not accounted for
+and the fact that the actual relation may not exactly be linear. This is described partially by (the irreducible error)
+where <span class="math inline">\(y\)</span> (the house value) <span class="math inline">\(= f(x)\)</span> (some function that described it) <span class="math inline">\(+ \epsilon\)</span> (some random error).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># To check how linear the actual relation is we can plot the graph</span>
+<span class="kw">plot</span>(
+  Boston<span class="op">$</span>medv,
+  Boston<span class="op">$</span>rm,
+  <span class="dt">xlab =</span> <span class="st">&quot;rm&quot;</span>,
+  <span class="dt">ylab =</span> <span class="st">&quot;medv&quot;</span>
+)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># So if we bring more variable we expect this to increase</span>
+<span class="co"># This is a multi-variant regression which would like:</span>
+<span class="co"># y = b1*x1 + b2*x2 + b3*x3 ... + bn*xn + c</span>
+lm.fitAll &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span>., <span class="dt">data =</span> Boston)
+<span class="co"># We can see that the model now described about 74% of the variation, using a</span>
+<span class="co"># couple more significant coefficients, such as crime in the area, taxes and so</span>
+<span class="co"># on.</span>
+<span class="kw">summary</span>(lm.fitAll)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ ., data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.595  -2.730  -0.518   1.777  26.199 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  3.646e+01  5.103e+00   7.144 3.28e-12 ***
+## crim        -1.080e-01  3.286e-02  -3.287 0.001087 ** 
+## zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+## indus        2.056e-02  6.150e-02   0.334 0.738288    
+## chas         2.687e+00  8.616e-01   3.118 0.001925 ** 
+## nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+## rm           3.810e+00  4.179e-01   9.116  &lt; 2e-16 ***
+## age          6.922e-04  1.321e-02   0.052 0.958229    
+## dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+## rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+## tax         -1.233e-02  3.760e-03  -3.280 0.001112 ** 
+## ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+## black        9.312e-03  2.686e-03   3.467 0.000573 ***
+## lstat       -5.248e-01  5.072e-02 -10.347  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.745 on 492 degrees of freedom
+## Multiple R-squared:  0.7406, Adjusted R-squared:  0.7338 
+## F-statistic: 108.1 on 13 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We should note that a multivariate model is far superior than regressing each predictor with the price using individual
+models, since a change in price could be the result of other predictors or combinations of predictors. Separate models
+could result in inaccurate calculations of significant coefficients.</p>
+</div>
+<div id="confidence-intervals" class="section level2">
+<h2><span class="header-section-number">2.3</span> Confidence Intervals</h2>
+<p><strong>They help us find a range within which the true regression line of the population would be.</strong></p>
+<p>This is because we have used a SAMPLE to approximate the true coefficients and draw our regression line. Doing that
+creates some error, our true mean is <span class="math inline">\(\pm\)</span> that error, this is called the confidence interval. It is important to get
+the confidence interval for each of our estimated coefficients in order to determine how significant their true values
+are (how far from zero).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The intercept and coefficient are approximated using a sample of nrow(Boston)</span>
+<span class="co"># samples. We cannot say that those values equal the true ones. There is an</span>
+<span class="co"># error in using a sample to draw conclusions, called the standard error. The</span>
+<span class="co"># true value would be our coefficient +/- the error, this is given by the</span>
+<span class="co"># confidence interval.</span>
+<span class="co"># In R we can get this by:</span>
+<span class="kw">confint</span>(lm.rm_fit)</code></pre>
+<pre><code>##                  2.5 %     97.5 %
+## (Intercept) -39.876641 -29.464601
+## rm            8.278855   9.925363</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets see how this is calculated for the coefficient of rm.</span>
+<span class="co"># First we need to calculate the residual standard error.</span>
+<span class="co"># (Residual means, what is left after we are done explaining the value of a</span>
+<span class="co"># point using our regression line, so the error.)</span>
+<span class="co"># It measures how far our actual values are from the regression line so it is</span>
+<span class="co"># given by: the square root of the sum of all the differences of the estimated y</span>
+<span class="co"># values to the actual y values squared, divided by total values minus 1, lets</span>
+<span class="co"># apply this:</span>
+standError &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sum</span>((<span class="kw">yForX</span>(Boston<span class="op">$</span>rm) <span class="op">-</span><span class="st"> </span>Boston<span class="op">$</span>medv) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>) <span class="op">/</span>
+<span class="st">                       </span>(<span class="kw">nrow</span>(Boston) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))
+<span class="co"># We can see this value matches the one given by R on the summery statistics of</span>
+<span class="co"># our model.</span>
+standError</code></pre>
+<pre><code>## [1] 6.681088</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># In order to get the specific standard error due to the rm coefficient we need</span>
+<span class="co"># to divide by the difference due to x for rm.</span>
+xFory &lt;-<span class="st"> </span><span class="cf">function</span>(y){
+  (y <span class="op">+</span><span class="st"> </span><span class="dv">35</span>) <span class="op">/</span><span class="st"> </span><span class="dv">9</span>
+}
+<span class="co"># Given by this formula</span>
+COSE &lt;-<span class="st"> </span>standError <span class="op">/</span><span class="st"> </span>(<span class="kw">sqrt</span>(<span class="kw">sum</span>((<span class="kw">xFory</span>(Boston<span class="op">$</span>medv) <span class="op">-</span><span class="st"> </span>Boston<span class="op">$</span>rm) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)))
+<span class="co"># This matches the value calculated from R by:</span>
+<span class="kw">coef</span>(<span class="kw">summary</span>(lm.rm_fit))[, <span class="st">&quot;Std. Error&quot;</span>]</code></pre>
+<pre><code>## (Intercept)          rm 
+##   2.6498030   0.4190266</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Knowing that we can construct a confidence interval, we will use a 97.5% to</span>
+<span class="co"># match the one used by R for the coefficient true value. This would be our</span>
+<span class="co"># value 9 +/- a critical value (driven by the confidence interval selected)</span>
+<span class="co"># multiplied by the standard error.</span>
+
+<span class="co"># We use a t value for our critical value since we do not know standard</span>
+<span class="co"># deviation, our error is an estimate, the t value can be found in a table, or</span>
+<span class="co"># using software. To find it we need to know the degrees of freedom (total rows</span>
+<span class="co"># -2) and our selected confidence interval.</span>
+t &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="fl">0.975</span>, <span class="dt">df =</span> <span class="kw">nrow</span>(Boston) <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)
+t</code></pre>
+<pre><code>## [1] 1.964682</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># So the confidence interval would be:</span>
+<span class="co"># get the calculated coefficient</span>
+coef &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">summary</span>(lm.rm_fit)<span class="op">$</span>coefficients[<span class="dv">2</span>, <span class="dv">1</span>])
+coef</code></pre>
+<pre><code>## [1] 9.102109</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">left &lt;-<span class="st"> </span>coef <span class="op">+</span><span class="st"> </span>t <span class="op">*</span><span class="st"> </span>COSE
+left</code></pre>
+<pre><code>## [1] 9.888954</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">right &lt;-<span class="st"> </span>coef <span class="op">-</span><span class="st"> </span>t <span class="op">*</span><span class="st"> </span>COSE
+right</code></pre>
+<pre><code>## [1] 8.315264</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Left and right matches the confidence intervals given by R</span>
+<span class="kw">confint</span>(lm.rm_fit)</code></pre>
+<pre><code>##                  2.5 %     97.5 %
+## (Intercept) -39.876641 -29.464601
+## rm            8.278855   9.925363</code></pre>
+</div>
+<div id="prediction-intervals" class="section level2">
+<h2><span class="header-section-number">2.4</span> Prediction Intervals</h2>
+<p>Those are intervals for an INDIVIDUAL point, unlike confidence intervals that are used for the mean/expected value (of
+all <span class="math inline">\(y\)</span>’s that have that <span class="math inline">\(x\)</span>). It tries to answer, what is the particular value of <span class="math inline">\(y\)</span> given some <span class="math inline">\(x\)</span>. They are useful
+when predicting a new <span class="math inline">\(y\)</span>, from given <span class="math inline">\(x\)</span> values. They have wider range than confidence intervals. That is because not
+only do they depend on the mean error but also the individual random <span class="math inline">\(\epsilon\)</span> error <span class="math inline">\(y = f(x) + \epsilon\)</span>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see that the prediction intervals are wider when comparing them in R</span>
+<span class="kw">predict</span>(lm.rm_fit, <span class="dt">newdata =</span> <span class="kw">list</span>(<span class="dt">rm =</span> <span class="dv">8</span>), <span class="dt">interval =</span> <span class="st">&quot;confidence&quot;</span>)</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 38.14625 36.62041 39.67209</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">predict</span>(lm.rm_fit, <span class="dt">newdata =</span> <span class="kw">list</span>(<span class="dt">rm =</span> <span class="dv">8</span>), <span class="dt">interval =</span> <span class="st">&quot;prediction&quot;</span>)</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 38.14625 25.05835 51.23415</code></pre>
+<p>To calculate the prediction we use a similar approach to confidence intervals, however this time the error is both
+dependant on the standard error (variation of the mean) and the error of each individual point due to <span class="math inline">\(\epsilon\)</span> (the
+fact that our model is not a perfect fit for the truth). in other words, our mean (expected value of <span class="math inline">\(y\)</span> for an <span class="math inline">\(x\)</span>
+given by the regression) is not accurate and our point is not guaranteed to be exactly the same as the mean), this error
+is given by adding those to up.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We already have the standard error, so we can find the total error relevant to</span>
+<span class="co"># our specific x point given by SEpedY.</span>
+<span class="co"># We will use the example where rm = 8:</span>
+rooms &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(Boston<span class="op">$</span>rm)
+SEpedY &lt;-<span class="st"> </span><span class="kw">sqrt</span>(standError <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(Boston)) <span class="op">+</span>
+<span class="st">               </span>((<span class="dv">8</span> <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(rooms)) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>((rooms <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(rooms)) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)))
+SEpedY</code></pre>
+<pre><code>## [1] 6.72696</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can now get the prediction intervals for rm = 2 by:</span>
+PredictLeft &lt;-<span class="st"> </span><span class="kw">yForX</span>(<span class="dv">8</span>) <span class="op">-</span><span class="st"> </span>t <span class="op">*</span><span class="st"> </span>SEpedY
+PredictLeft</code></pre>
+<pre><code>## [1] 23.78366</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">PredictRight &lt;-<span class="st"> </span><span class="kw">yForX</span>(<span class="dv">8</span>) <span class="op">+</span><span class="st"> </span>t <span class="op">*</span><span class="st"> </span>SEpedY
+PredictRight</code></pre>
+<pre><code>## [1] 50.21634</code></pre>
+<p>Left and right matches the prediction intervals given by R</p>
+<div id="we-can-plot-prediction-and-confidence-intervals" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> we can plot prediction and confidence intervals</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(Boston, <span class="kw">aes</span>(<span class="dt">x =</span> rm, <span class="dt">y =</span> medv)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> lm, <span class="dt">se =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">temp_var &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.rm_fit, <span class="dt">interval =</span> <span class="st">&quot;prediction&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">new_df &lt;-<span class="st"> </span><span class="kw">cbind</span>(Boston, temp_var)
+
+<span class="kw">ggplot</span>(new_df, <span class="kw">aes</span>(rm, medv)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> lwr), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> upr), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> lm, <span class="dt">se =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>The shaded area shows where the true regression line of the population would be with a <span class="math inline">\(95\%\)</span> confidence. The fact that
+it is wider on the ages just means that the standard error for the intercept is higher than that of the coefficient of
+our <span class="math inline">\(x\)</span> (rm). If we imagine moving the line along the shaded area we notice that the intercept changes more than the
+slope. The line represents the mean values of <span class="math inline">\(y\)</span> for every <span class="math inline">\(x\)</span>, however the particular <span class="math inline">\(x\)</span> we are studying may not
+exactly fall into the mean. This is where the dotted red lines are useful. <span class="math inline">\(95\%\)</span> of the values will fall within the
+dotted lines (prediction interval).</p>
+</div>
+</div>
+<div id="heteroscedasticity" class="section level2">
+<h2><span class="header-section-number">2.5</span> Heteroscedasticity</h2>
+<p>One important assumption we have taken when calculating confidence and prediction intervals is that the variance of the
+errors is constant (equal scatter of the data points). However the variance may change as the response (<span class="math inline">\(y\)</span>) is
+changing. We have heteroscedasticity, when that change is systematic, follows a pattern. Typically, it produces a
+distinctive fan or cone shape in residual plots. It can also impact the accuracy of the coefficients.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># For this example we will use the cars dataset instead, as our data does not</span>
+<span class="co"># have clear indications of heteroscedasticity not enough variance to justify</span>
+<span class="co"># changes in data.</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;Ecdat&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Ecdat)
+<span class="co"># Load our data set</span>
+<span class="kw">data</span>(<span class="st">&quot;Bwages&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;Ecdat&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">?Bwages</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">lm.het_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span><span class="st"> </span>school, <span class="dt">data =</span> Males)
+<span class="co"># We can use the following visualizations</span>
+<span class="co"># Scatterplot</span>
+<span class="co"># We can see a cone shape which may indicate heteroscedasticity.</span>
+<span class="kw">plot</span>(Bwages<span class="op">$</span>edu, Bwages<span class="op">$</span>wage)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Residuals/fitted is of interest</span>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))
+<span class="kw">plot</span>(lm.het_fit)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># It indicates heteroscedasticity, as there is a curve, the X values do not look</span>
+<span class="co"># random.</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Breusch-Pagan test for a more algorithmic approach</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;lmtest&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lmtest)</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># p value is very small so we can reject the H0, there is heteroscedasticity</span>
+<span class="kw">bptest</span>(lm.het_fit)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  lm.het_fit
+## BP = 4.3708, df = 1, p-value = 0.03656</code></pre>
+<p>So what do we do? We can try and identify why this is happening, why the variance increase with the education and
+include this change in our model in order to optimise it.</p>
+<p>From domain knowledge we can say that individuals with higher education, have more choice in what to do. For example
+they may prioritise making money or having a more relaxed job.
+So we can calculate the rate at which it increases and add this as a coefficient of x that describes the variance: for
+<span class="math inline">\(y_i = \beta_0 + \beta_1x_i + \epsilon_i\)</span> (where <span class="math inline">\(\epsilon_i\)</span> is the error)
+<span class="math inline">\(Var(\epsilon_i|x_i) = \sigma^2 \times kx_i\)</span>, and not just the standard deviation <span class="math inline">\(\sigma^2\)</span>, this is called weighted
+regression/least squares WLS. The difference in WLS from OLS (ordinary least squares) is that how much a point can
+affect the position of the best fit line is not equal, it is dependant on the variance associated with the particular
+<span class="math inline">\(x\)</span> if it is a point of high variance it will affect the line less, if it is of low variance it will have a greater
+affect. As a result we get a better model.</p>
+<p>Other approaches where the heteroscedasticity is less systematic we can try data transformations such as <span class="math inline">\(\log\)</span>, or
+<span class="math inline">\(\sqrt{}\)</span> or even a Box-Cox transformation. However, we have to keep in mind how this affects our original model.</p>
+</div>
+<div id="outliers" class="section level2">
+<h2><span class="header-section-number">2.6</span> Outliers</h2>
+<p>Points that are far from the predicted <span class="math inline">\(y\)</span> values (maybe due to errors in taking the measurements or very
+extreme/special cases) they may not always massively affect the best fit line, however they could have a significant
+effect in the calculations of errors because they are very far from the predicted <span class="math inline">\(y\)</span>, the R-squared value would
+decrease if we had more information about the data and how it was gathered, or maybe additional domain knowledge to
+interpret the outcomes, we could potentially just remove them or adjust them towards the mean.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see a few of them in the plot</span>
+<span class="kw">plot</span>(Boston<span class="op">$</span>rm, Boston<span class="op">$</span>medv)
+<span class="kw">abline</span>(lm.rm_fit, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simple way to find outliers on a set of a single variable is the univariate</span>
+<span class="co"># approach.</span>
+<span class="co"># Outliers are defined as values below or above 1.5*IQR (Inter Quartile Range =</span>
+<span class="co"># Q3 - Q1).</span>
+<span class="co"># We can visualise that in a boxplot where everything out of the whiskers is</span>
+<span class="co"># treated as an outlier.</span>
+<span class="kw">boxplot</span>(Boston<span class="op">$</span>rm, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-21-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can list them using the following code</span>
+outlier_values &lt;-<span class="st"> </span><span class="kw">boxplot.stats</span>(Boston<span class="op">$</span>rm)<span class="op">$</span>out</code></pre>
+<p>There are also a few multi-variant approaches in defining outliers. For example the Cooks Distance which measures the
+influence of a row on the sample to the line. In general, points that have about 4 times the mean may be classified as
+influential. Those are also called leverage points, they may not affect the R-square value as much as other outlier but
+affect the fit of the regression line.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can calculate them in R using the following code, for 2 or more variables</span>
+cooksd &lt;-<span class="st"> </span><span class="kw">cooks.distance</span>(lm.rm_fit)
+influential &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">names</span>(cooksd)[(cooksd <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(cooksd, <span class="dt">na.rm =</span> T))])
+BostonSubSet &lt;-<span class="st"> </span><span class="kw">c</span>(Boston<span class="op">$</span>rm, Boston<span class="op">$</span>medv)
+BostonSubSet[influential]</code></pre>
+<pre><code>##  [1] 7.489 7.802 8.375 7.929 7.831 7.875 7.853 8.034 7.686 8.297 7.923
+## [12] 8.780 3.561 3.863 4.970 6.683 7.016 6.216 5.875 4.138 7.313 6.968
+## [23] 4.138 4.628 7.393</code></pre>
+</div>
+<div id="multicollinearity" class="section level2">
+<h2><span class="header-section-number">2.7</span> Multicollinearity</h2>
+<p>When dealing with multivariate regression, some of the values may describe each other. For example, if in our case we
+were to add house condition and house age as two separate factors, we might find that there is some relation between age
+and condition (we are unsure how strong that relation is), but in some cases we might need to consider whether or not we
+should include both the two (or three or more) variables in our regression. This could have a negative affect on the
+stability of our results. There will be issues in identifying the effect of each individual predictor, and changes in
+<span class="math inline">\(x\)</span> would result in greater (than the true) changes in <span class="math inline">\(y\)</span> since the same effect is now accounted in multiple
+predictors.</p>
+<div id="correlation" class="section level3">
+<h3><span class="header-section-number">2.7.1</span> Correlation</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can first look at some bivariate approaches (measuring the correlation of</span>
+<span class="co"># each pair of two predictors) the correlation factor is a simple way of doing</span>
+<span class="co"># this, a value from -1 to 1 showing direction and strength of the relationship.</span>
+?cor</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identical so cor = 1, positive linear relationship</span>
+<span class="kw">cor</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Negative cor = -1</span>
+<span class="kw">cor</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">5</span><span class="op">:</span><span class="dv">1</span>)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Less correlation cor &lt; 1</span>
+<span class="kw">cor</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>))</code></pre>
+<pre><code>## [1] 0.9701425</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets use the example of tax and criminal activity</span>
+<span class="co"># Variables need to be numerical to be compared</span>
+<span class="kw">typeof</span>(Boston<span class="op">$</span>crim)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(Boston<span class="op">$</span>tax)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(Boston<span class="op">$</span>crim, Boston<span class="op">$</span>tax)</code></pre>
+<pre><code>## [1] 0.5827643</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This is calculated using the following formula</span>
+x &lt;-<span class="st"> </span>Boston<span class="op">$</span>crim
+y &lt;-<span class="st"> </span>Boston<span class="op">$</span>tax
+meanX &lt;-<span class="st"> </span><span class="kw">mean</span>(x)
+meanY &lt;-<span class="st"> </span><span class="kw">mean</span>(y)
+
+nominator &lt;-<span class="st"> </span><span class="kw">sum</span>((x <span class="op">-</span><span class="st"> </span>meanX) <span class="op">*</span><span class="st"> </span>(y <span class="op">-</span><span class="st"> </span>meanY))
+denominator &lt;-<span class="st"> </span><span class="kw">sum</span>((x <span class="op">-</span><span class="st"> </span>meanX) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>((y <span class="op">-</span><span class="st"> </span>meanY) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)
+r &lt;-<span class="st"> </span>nominator <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(denominator)
+<span class="co"># We can see this matches exactly with the value given by cor() function</span>
+r</code></pre>
+<pre><code>## [1] 0.5827643</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># A few things to note about the formula:</span>
+<span class="co"># The equation is bound by 1</span>
+<span class="co"># If there is a positive correlation where xi &gt; meanX and yi &gt; meanY then, form</span>
+<span class="co"># the formula we can see that we will have some positive outcome, the other way</span>
+<span class="co"># around we will get a negative value. If there is no relationship, the x is not</span>
+<span class="co"># described by the y then the sum of (x - meanX) will approximately cancel out</span>
+<span class="co"># with the sum of (y - meanY) and we will get a very small value.</span></code></pre>
+</div>
+<div id="sample-correlation-coefficient-to-true-value" class="section level3">
+<h3><span class="header-section-number">2.7.2</span> Sample Correlation Coefficient to True Value</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We have calculated a the correlation coefficient of a sample, we need to test</span>
+<span class="co"># if that is enough evidence to prove that the true correlation coefficient is</span>
+<span class="co"># far from zero (Ha).</span>
+
+<span class="co"># In R we can easily complete a two tail test on our Hypothesis</span>
+<span class="kw">cor.test</span>(Boston<span class="op">$</span>crim, Boston<span class="op">$</span>tax)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  Boston$crim and Boston$tax
+## t = 16.099, df = 504, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.5221186 0.6375464
+## sample estimates:
+##       cor 
+## 0.5827643</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># What the cor.test does is it calculates a p-value for the cor coefficient we</span>
+<span class="co"># have just calculated, to show what would the probability of getting such a</span>
+<span class="co"># number at random (if the H0 was true and there is no correlation) if that</span>
+<span class="co"># probability is very small usually less than 0.05 we can reject the H0.</span>
+<span class="co"># We can calculate it using the following steps (see project hypothesis testing</span>
+<span class="co"># for the theory):</span>
+t &lt;-<span class="st"> </span>(r <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">nrow</span>(Boston) <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>r <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)
+<span class="co"># Area &gt; t and Area &lt; t</span>
+p &lt;-<span class="st"> </span><span class="kw">pt</span>(<span class="dt">q =</span> t <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">df =</span> (<span class="kw">nrow</span>(Boston) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">     </span><span class="kw">pt</span>(<span class="dt">q =</span> <span class="op">-</span>t <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">df =</span> (<span class="kw">nrow</span>(Boston) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">lower.tail =</span> <span class="ot">TRUE</span>)</code></pre>
+</div>
+<div id="correlation-matrix" class="section level3">
+<h3><span class="header-section-number">2.7.3</span> Correlation Matrix</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># To get the complete correlation matrix for (all the pairs)</span>
+<span class="kw">cor</span>(Boston)</code></pre>
+<pre><code>##                crim          zn       indus         chas         nox
+## crim     1.00000000 -0.20046922  0.40658341 -0.055891582  0.42097171
+## zn      -0.20046922  1.00000000 -0.53382819 -0.042696719 -0.51660371
+## indus    0.40658341 -0.53382819  1.00000000  0.062938027  0.76365145
+## chas    -0.05589158 -0.04269672  0.06293803  1.000000000  0.09120281
+## nox      0.42097171 -0.51660371  0.76365145  0.091202807  1.00000000
+## rm      -0.21924670  0.31199059 -0.39167585  0.091251225 -0.30218819
+## age      0.35273425 -0.56953734  0.64477851  0.086517774  0.73147010
+## dis     -0.37967009  0.66440822 -0.70802699 -0.099175780 -0.76923011
+## rad      0.62550515 -0.31194783  0.59512927 -0.007368241  0.61144056
+## tax      0.58276431 -0.31456332  0.72076018 -0.035586518  0.66802320
+## ptratio  0.28994558 -0.39167855  0.38324756 -0.121515174  0.18893268
+## black   -0.38506394  0.17552032 -0.35697654  0.048788485 -0.38005064
+## lstat    0.45562148 -0.41299457  0.60379972 -0.053929298  0.59087892
+## medv    -0.38830461  0.36044534 -0.48372516  0.175260177 -0.42732077
+##                  rm         age         dis          rad         tax
+## crim    -0.21924670  0.35273425 -0.37967009  0.625505145  0.58276431
+## zn       0.31199059 -0.56953734  0.66440822 -0.311947826 -0.31456332
+## indus   -0.39167585  0.64477851 -0.70802699  0.595129275  0.72076018
+## chas     0.09125123  0.08651777 -0.09917578 -0.007368241 -0.03558652
+## nox     -0.30218819  0.73147010 -0.76923011  0.611440563  0.66802320
+## rm       1.00000000 -0.24026493  0.20524621 -0.209846668 -0.29204783
+## age     -0.24026493  1.00000000 -0.74788054  0.456022452  0.50645559
+## dis      0.20524621 -0.74788054  1.00000000 -0.494587930 -0.53443158
+## rad     -0.20984667  0.45602245 -0.49458793  1.000000000  0.91022819
+## tax     -0.29204783  0.50645559 -0.53443158  0.910228189  1.00000000
+## ptratio -0.35550149  0.26151501 -0.23247054  0.464741179  0.46085304
+## black    0.12806864 -0.27353398  0.29151167 -0.444412816 -0.44180801
+## lstat   -0.61380827  0.60233853 -0.49699583  0.488676335  0.54399341
+## medv     0.69535995 -0.37695457  0.24992873 -0.381626231 -0.46853593
+##            ptratio       black      lstat       medv
+## crim     0.2899456 -0.38506394  0.4556215 -0.3883046
+## zn      -0.3916785  0.17552032 -0.4129946  0.3604453
+## indus    0.3832476 -0.35697654  0.6037997 -0.4837252
+## chas    -0.1215152  0.04878848 -0.0539293  0.1752602
+## nox      0.1889327 -0.38005064  0.5908789 -0.4273208
+## rm      -0.3555015  0.12806864 -0.6138083  0.6953599
+## age      0.2615150 -0.27353398  0.6023385 -0.3769546
+## dis     -0.2324705  0.29151167 -0.4969958  0.2499287
+## rad      0.4647412 -0.44441282  0.4886763 -0.3816262
+## tax      0.4608530 -0.44180801  0.5439934 -0.4685359
+## ptratio  1.0000000 -0.17738330  0.3740443 -0.5077867
+## black   -0.1773833  1.00000000 -0.3660869  0.3334608
+## lstat    0.3740443 -0.36608690  1.0000000 -0.7376627
+## medv    -0.5077867  0.33346082 -0.7376627  1.0000000</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># To visualize this</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;corrplot&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(corrplot)</code></pre>
+<pre><code>## corrplot 0.84 loaded</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">corrplot</span>(<span class="kw">cor</span>(Boston))</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can also see each scatter plot using the following:</span>
+<span class="co"># We will study correlation between the following predictors, to not overflow</span>
+<span class="co"># the graphs.</span>
+lm.fitMultivariet &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>crim, <span class="dt">data =</span> Boston)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;GGally&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GGally)
+<span class="kw">ggpairs</span>(lm.fitMultivariet)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+<div id="variance-inflation" class="section level3">
+<h3><span class="header-section-number">2.7.4</span> Variance Inflation</h3>
+<p>Scatterplots and correlation matrixes are useful, however they only look at the relations between pairs (bi-variate), we
+can use variance inflation VIF to account for interaction within multiple attributes.</p>
+<p>The idea here is to find whether a combination of predictors can describe another predictor <span class="math inline">\(x_i\)</span>, to find that we can
+run a regression line for each <span class="math inline">\(x_i\)</span>, <span class="math inline">\(x_i = d_0 + d_1x_{2i} + d_2x_{3i} \ldots\)</span> , where <span class="math inline">\(x_{2i}\)</span>, <span class="math inline">\(x_{3i} \ldots\)</span> are
+the rest of the predictors. We can then asses the fitness of that line using the R-squared value. If the line is a good
+fit then that predictor is well described by the rest of the predictors and we have multicollinearity.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets take the example of tax</span>
+<span class="co"># First we regress the tax as a function of the rest of the predictors</span>
+lm.tax &lt;-<span class="st"> </span><span class="kw">lm</span>(tax<span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>medv, <span class="dt">data =</span> Boston)
+<span class="co"># We can then get the r squared</span>
+Rsquared &lt;-<span class="st"> </span><span class="kw">summary</span>(lm.tax)<span class="op">$</span>r.squared
+<span class="co"># The variance inflation value is given by the following equation, where if VIF</span>
+<span class="co"># is large, usually greater than 5, we can say there is multicollinearity</span>
+<span class="co"># present.</span>
+VIF &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>Rsquared)
+<span class="co"># We can see that in this case the VIF is quite large, this is explained by the</span>
+<span class="co"># fact that predictors that are location related ones, rooms and house age, how</span>
+<span class="co"># green the area is, criminal activity, surrounding population social/economical</span>
+<span class="co"># statues and so on, that are used for predicting house price are also ideal for</span>
+<span class="co"># predicting tax.</span>
+VIF</code></pre>
+<pre><code>## [1] 9.008554</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Last we can get the VIF values in R using the following code</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;car&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(car)</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## 
+## Attaching package: &#39;carData&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:Ecdat&#39;:
+## 
+##     Mroz</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vif</span>(lm.fitAll)</code></pre>
+<pre><code>##     crim       zn    indus     chas      nox       rm      age      dis 
+## 1.792192 2.298758 3.991596 1.073995 4.393720 1.933744 3.100826 3.955945 
+##      rad      tax  ptratio    black    lstat 
+## 7.484496 9.008554 1.799084 1.348521 2.941491</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets see what happens to our original line if we remove tax</span>
+lm.fitAllMinusTax &lt;-<span class="st"> </span><span class="kw">update</span>(lm.fitAll, <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>tax)
+<span class="kw">summary</span>(lm.fitAll)<span class="op">$</span>r.squared</code></pre>
+<pre><code>## [1] 0.7406427</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(lm.fitAllMinusTax)<span class="op">$</span>r.squared</code></pre>
+<pre><code>## [1] 0.7349714</code></pre>
+<p>The R-squared has slightly gone down. However, tax is a result of factors that we have accounted (e.g location) a change
+in those factors would affect tax, and price would be affected both by the change in tax (which is only the result of
+the original change) and by the original change, multiplying its affects and ‘inflating’ the true price value. For
+example a change is the location of the house would result in an increase in the tax and therefore an increase in the
+price greater than the true. What would be interesting to do is find out why we are loosing some fitness when we remove
+the tax, as seen for the R-squared. Are there other factors describing the tax, that we have not included? Could we use
+them for the price prediction instead of tax?</p>
+<p>Statistically, we can find out if the change in a restricted model (where a variable is removed, in this case a model
+without tax) is significant using the F-statistic.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First we would calculate the SSR (regression sum of squared errors) for the</span>
+<span class="co"># unrestricted and restricted model.</span>
+<span class="kw">summary</span>(lm.fitAll)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ ., data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.595  -2.730  -0.518   1.777  26.199 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  3.646e+01  5.103e+00   7.144 3.28e-12 ***
+## crim        -1.080e-01  3.286e-02  -3.287 0.001087 ** 
+## zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+## indus        2.056e-02  6.150e-02   0.334 0.738288    
+## chas         2.687e+00  8.616e-01   3.118 0.001925 ** 
+## nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+## rm           3.810e+00  4.179e-01   9.116  &lt; 2e-16 ***
+## age          6.922e-04  1.321e-02   0.052 0.958229    
+## dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+## rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+## tax         -1.233e-02  3.760e-03  -3.280 0.001112 ** 
+## ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+## black        9.312e-03  2.686e-03   3.467 0.000573 ***
+## lstat       -5.248e-01  5.072e-02 -10.347  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.745 on 492 degrees of freedom
+## Multiple R-squared:  0.7406, Adjusted R-squared:  0.7338 
+## F-statistic: 108.1 on 13 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">SSRun &lt;-<span class="st"> </span><span class="kw">anova</span>(lm.fitAll)[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]
+SSRre &lt;-<span class="st"> </span><span class="kw">anova</span>(lm.fitAllMinusTax)[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot; Sum Sq&quot;</span>]
+<span class="co"># The f stat is given by:</span>
+n &lt;-<span class="st"> </span><span class="kw">nrow</span>(Boston)
+p &lt;-<span class="st"> </span><span class="kw">length</span>(Boston)
+Fstat &lt;-<span class="st"> </span>((SSRre <span class="op">-</span><span class="st"> </span>SSRun) <span class="op">/</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span>(SSRun <span class="op">/</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span>p <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))
+<span class="co"># From the f distribution we can find a critical value that represents the point</span>
+<span class="co"># separating the curve to the rejection area of a = 0.05 like we do with t</span>
+<span class="co"># distribution (see hypothesis testing repo).</span>
+Fcrit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, p, n <span class="op">-</span><span class="st"> </span>p <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
+<span class="co"># The Fstat falls under the rejection area and so we can accept the H0, removing</span>
+<span class="co"># the tax does produce a significant change.</span>
+<span class="co"># We can do this in r simply using the following code.</span>
+<span class="kw">anova</span>(lm.fitAll, lm.fitAllMinusTax)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: medv ~ crim + zn + indus + chas + nox + rm + age + dis + rad + 
+##     tax + ptratio + black + lstat
+## Model 2: medv ~ crim + zn + indus + chas + nox + rm + age + dis + rad + 
+##     ptratio + black + lstat
+##   Res.Df   RSS Df Sum of Sq      F   Pr(&gt;F)   
+## 1    492 11079                                
+## 2    493 11321 -1   -242.26 10.758 0.001112 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<div id="interaction-terms" class="section level2">
+<h2><span class="header-section-number">2.8</span> Interaction terms</h2>
+<p>Interaction terms just refers to the effect that certain combinations of predictors can have on the <span class="math inline">\(y\)</span>. Sometimes we
+can optimise our regression model by accounting for the effect of predictor combinations, we can add their products
+multiplied by a coefficient that shows the effect of the combination
+(<span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3x_1x_2 + \epsilon\)</span>). A good example of where this is useful is the
+synergy effect, studied when analysing the effects of advertising using different means (TV, web, radio, …). It was
+found that it was most effective to spread the advertising budget across multiple means, rather than focusing it on the
+most profitable one. To measure such affects, interaction terms are necessary.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simple way to do this in R for interaction of crim and tax</span>
+lm.simpleInteraction &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>crim <span class="op">*</span><span class="st"> </span>tax, <span class="dt">data =</span> Boston)
+<span class="co"># We get the coefficient of the interaction and its significance the same way we</span>
+<span class="co"># get any other coefficient.</span>
+<span class="kw">summary</span>(lm.simpleInteraction)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ crim + tax + crim * tax, data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.553  -4.704  -2.180   2.928  33.470 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 32.319598   1.097800  29.440  &lt; 2e-16 ***
+## crim        -3.942555   1.534637  -2.569   0.0105 *  
+## tax         -0.021070   0.002633  -8.002 8.57e-15 ***
+## crim:tax     0.005634   0.002301   2.449   0.0147 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.996 on 502 degrees of freedom
+## Multiple R-squared:  0.2486, Adjusted R-squared:  0.2441 
+## F-statistic: 55.37 on 3 and 502 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Easier way to write the above</span>
+lm.simpleInteraction2 &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span>crim <span class="op">*</span><span class="st"> </span>tax, <span class="dt">data =</span> Boston)
+<span class="kw">summary</span>(lm.simpleInteraction2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ crim * tax, data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.553  -4.704  -2.180   2.928  33.470 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 32.319598   1.097800  29.440  &lt; 2e-16 ***
+## crim        -3.942555   1.534637  -2.569   0.0105 *  
+## tax         -0.021070   0.002633  -8.002 8.57e-15 ***
+## crim:tax     0.005634   0.002301   2.449   0.0147 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.996 on 502 degrees of freedom
+## Multiple R-squared:  0.2486, Adjusted R-squared:  0.2441 
+## F-statistic: 55.37 on 3 and 502 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This returns all two-way interactions</span>
+lm.allPairsInteractions &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>. <span class="op">*</span><span class="st"> </span>., <span class="dt">data =</span> Boston)
+<span class="co"># We can see that the R-squared when using the 2-way interactions has increased.</span>
+<span class="kw">summary</span>(lm.allPairsInteractions)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ . * ., data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.9374 -1.5344 -0.1068  1.2973 17.8500 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   -1.579e+02  6.800e+01  -2.323 0.020683 *  
+## crim          -1.707e+01  6.554e+00  -2.605 0.009526 ** 
+## zn            -7.529e-02  4.580e-01  -0.164 0.869508    
+## indus         -2.819e+00  1.696e+00  -1.663 0.097111 .  
+## chas           4.451e+01  1.952e+01   2.280 0.023123 *  
+## nox            2.006e+01  7.516e+01   0.267 0.789717    
+## rm             2.527e+01  5.699e+00   4.435 1.18e-05 ***
+## age            1.263e+00  2.728e-01   4.630 4.90e-06 ***
+## dis           -1.698e+00  4.604e+00  -0.369 0.712395    
+## rad            1.861e+00  2.464e+00   0.755 0.450532    
+## tax            3.670e-02  1.440e-01   0.255 0.798978    
+## ptratio        2.725e+00  2.850e+00   0.956 0.339567    
+## black          9.942e-02  7.468e-02   1.331 0.183833    
+## lstat          1.656e+00  8.533e-01   1.940 0.053032 .  
+## crim:zn        4.144e-01  1.804e-01   2.297 0.022128 *  
+## crim:indus    -4.693e-02  4.480e-01  -0.105 0.916621    
+## crim:chas      2.428e+00  5.710e-01   4.251 2.63e-05 ***
+## crim:nox      -1.108e+00  9.285e-01  -1.193 0.233425    
+## crim:rm        2.163e-01  4.907e-02   4.409 1.33e-05 ***
+## crim:age      -3.083e-03  3.781e-03  -0.815 0.415315    
+## crim:dis      -1.903e-01  1.060e-01  -1.795 0.073307 .  
+## crim:rad      -6.584e-01  5.815e-01  -1.132 0.258198    
+## crim:tax       3.479e-02  4.287e-02   0.812 0.417453    
+## crim:ptratio   4.915e-01  3.328e-01   1.477 0.140476    
+## crim:black    -4.612e-04  1.793e-04  -2.572 0.010451 *  
+## crim:lstat     2.964e-02  6.544e-03   4.530 7.72e-06 ***
+## zn:indus      -6.731e-04  4.651e-03  -0.145 0.885000    
+## zn:chas       -5.230e-02  6.450e-02  -0.811 0.417900    
+## zn:nox         1.998e-03  4.721e-01   0.004 0.996625    
+## zn:rm         -7.286e-04  2.602e-02  -0.028 0.977672    
+## zn:age        -1.249e-06  8.514e-04  -0.001 0.998830    
+## zn:dis         1.097e-02  7.550e-03   1.452 0.147121    
+## zn:rad        -3.200e-03  6.975e-03  -0.459 0.646591    
+## zn:tax         3.937e-04  1.783e-04   2.209 0.027744 *  
+## zn:ptratio    -4.578e-03  7.015e-03  -0.653 0.514325    
+## zn:black       1.159e-04  7.599e-04   0.153 0.878841    
+## zn:lstat      -1.064e-02  4.662e-03  -2.281 0.023040 *  
+## indus:chas    -3.672e-01  3.780e-01  -0.971 0.331881    
+## indus:nox      3.138e+00  1.449e+00   2.166 0.030855 *  
+## indus:rm       3.301e-01  1.327e-01   2.488 0.013257 *  
+## indus:age     -4.865e-04  3.659e-03  -0.133 0.894284    
+## indus:dis     -4.486e-02  6.312e-02  -0.711 0.477645    
+## indus:rad     -2.089e-02  5.020e-02  -0.416 0.677560    
+## indus:tax      3.129e-04  6.034e-04   0.519 0.604322    
+## indus:ptratio -6.011e-02  3.783e-02  -1.589 0.112820    
+## indus:black    1.122e-03  2.034e-03   0.552 0.581464    
+## indus:lstat    5.063e-03  1.523e-02   0.332 0.739789    
+## chas:nox      -3.272e+01  1.243e+01  -2.631 0.008820 ** 
+## chas:rm       -5.384e+00  1.150e+00  -4.681 3.87e-06 ***
+## chas:age       3.040e-02  5.840e-02   0.521 0.602982    
+## chas:dis       9.022e-01  1.334e+00   0.676 0.499143    
+## chas:rad      -7.773e-01  5.707e-01  -1.362 0.173907    
+## chas:tax       4.627e-02  3.645e-02   1.270 0.204930    
+## chas:ptratio  -6.145e-01  6.914e-01  -0.889 0.374604    
+## chas:black     2.500e-02  1.567e-02   1.595 0.111423    
+## chas:lstat    -2.980e-01  1.845e-01  -1.615 0.107008    
+## nox:rm         5.990e+00  5.468e+00   1.095 0.273952    
+## nox:age       -7.273e-01  2.340e-01  -3.108 0.002012 ** 
+## nox:dis        5.694e+00  3.723e+00   1.529 0.126969    
+## nox:rad       -1.994e-01  1.897e+00  -0.105 0.916360    
+## nox:tax       -2.793e-02  1.312e-01  -0.213 0.831559    
+## nox:ptratio   -3.669e+00  3.096e+00  -1.185 0.236648    
+## nox:black     -1.854e-02  3.615e-02  -0.513 0.608298    
+## nox:lstat      1.119e+00  6.511e-01   1.719 0.086304 .  
+## rm:age        -6.277e-02  2.203e-02  -2.849 0.004606 ** 
+## rm:dis         3.190e-01  3.295e-01   0.968 0.333516    
+## rm:rad        -8.422e-02  1.527e-01  -0.552 0.581565    
+## rm:tax        -2.242e-02  9.910e-03  -2.262 0.024216 *  
+## rm:ptratio    -4.880e-01  2.172e-01  -2.247 0.025189 *  
+## rm:black      -4.528e-03  3.351e-03  -1.351 0.177386    
+## rm:lstat      -2.968e-01  4.316e-02  -6.878 2.24e-11 ***
+## age:dis       -1.678e-02  8.882e-03  -1.889 0.059589 .  
+## age:rad        1.442e-02  4.212e-03   3.423 0.000682 ***
+## age:tax       -3.403e-04  2.187e-04  -1.556 0.120437    
+## age:ptratio   -7.520e-03  6.793e-03  -1.107 0.268946    
+## age:black     -7.029e-04  2.136e-04  -3.291 0.001083 ** 
+## age:lstat     -6.023e-03  1.936e-03  -3.111 0.001991 ** 
+## dis:rad       -5.580e-02  7.075e-02  -0.789 0.430678    
+## dis:tax       -3.882e-03  2.496e-03  -1.555 0.120623    
+## dis:ptratio   -4.786e-02  9.983e-02  -0.479 0.631920    
+## dis:black     -5.194e-03  5.541e-03  -0.937 0.349116    
+## dis:lstat      1.350e-01  4.866e-02   2.775 0.005774 ** 
+## rad:tax        3.131e-05  1.446e-03   0.022 0.982729    
+## rad:ptratio   -4.379e-02  8.392e-02  -0.522 0.602121    
+## rad:black     -4.362e-04  2.518e-03  -0.173 0.862561    
+## rad:lstat     -2.529e-02  1.816e-02  -1.392 0.164530    
+## tax:ptratio    7.854e-03  2.504e-03   3.137 0.001830 ** 
+## tax:black     -4.785e-07  1.999e-04  -0.002 0.998091    
+## tax:lstat     -1.403e-03  1.208e-03  -1.162 0.245940    
+## ptratio:black  1.203e-03  3.361e-03   0.358 0.720508    
+## ptratio:lstat  3.901e-03  2.985e-02   0.131 0.896068    
+## black:lstat   -6.118e-04  4.157e-04  -1.472 0.141837    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.852 on 414 degrees of freedom
+## Multiple R-squared:  0.9212, Adjusted R-squared:  0.9039 
+## F-statistic: 53.18 on 91 and 414 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Lets try and explain some of the significant interactions found:</p>
+<ul>
+<li>Combination of chas (close to river) and nox (greenery), that combination may indicate that the house is build in a
+very scenic area and therefore more expensive.</li>
+<li>crim (criminal activity) and lstat (<span class="math inline">\(\%\)</span> lower status of population) may indicate how degraded an area is and
+therefore less expensive</li>
+<li>rm (room per dwelling) and age, that combination may explain a lot of the variance in our dataset since, most recent
+houses tend to have less space yet are more expensive due to modern equipment and built.</li>
+</ul>
+<p>We need to consider which interactions are more significant and make the most sense from domain knowledge. Also keep in
+mind that we need to sustain an efficient and realistic model, not just a model with a very good R-squared value.</p>
+</div>
+<div id="non-linear-transformations-of-predictors" class="section level2">
+<h2><span class="header-section-number">2.9</span> Non-linear Transformations of Predictors</h2>
+<p>A common optimisation technique when dealing with linear regression is polynomial transformation of some the predictor
+(e.g <span class="math inline">\(y = \beta_0 + \beta_1x + \beta_2x^2 + \epsilon\)</span>). This is polynomial regression, and is still a linear model. This
+is useful since often a relationship between variables is non linear, and this may be realised using scatterplots.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Lets use the example of lstat and medv</span>
+<span class="kw">plot</span>(Boston<span class="op">$</span>lstat, Boston<span class="op">$</span>medv)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see that the scatterplot follows a curve, which indicates that</span>
+<span class="co"># polynomials would be effective.</span>
+<span class="co"># Lets compare the two:</span>
+lm.linearRegression &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>lstat, <span class="dt">data =</span> Boston)
+lm.PolynomialRegression &lt;-<span class="st"> </span><span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(lstat <span class="op">^</span><span class="st"> </span><span class="dv">2</span>), <span class="dt">data =</span> Boston)
+<span class="kw">anova</span>(lm.linearRegression, lm.PolynomialRegression)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: medv ~ lstat
+## Model 2: medv ~ lstat + I(lstat^2)
+##   Res.Df   RSS Df Sum of Sq     F    Pr(&gt;F)    
+## 1    504 19472                                 
+## 2    503 15347  1    4125.1 135.2 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The anova tested the H0 where the models both fit the data equally(as</span>
+<span class="co"># explained above). The F-statistic associated produced a very small providing</span>
+<span class="co"># enough evidence to reject the H0.</span>
+
+<span class="co"># We can visualise this:</span>
+newdat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">lstat =</span> <span class="kw">seq</span>(<span class="kw">min</span>(Boston<span class="op">$</span>lstat),
+                                 <span class="kw">max</span>(Boston<span class="op">$</span>lstat),
+                                 <span class="dt">length.out =</span> <span class="dv">100</span>))
+newdat<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.PolynomialRegression, <span class="dt">newdata =</span> newdat)
+<span class="kw">plot</span>(medv <span class="op">~</span><span class="st"> </span>lstat, <span class="dt">data =</span> Boston)
+<span class="kw">with</span>(newdat, <span class="kw">lines</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> pred))
+<span class="kw">abline</span>(<span class="kw">lm</span>(medv<span class="op">~</span><span class="st"> </span>lstat, <span class="dt">data =</span> Boston), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre>
+<p><img src="machine_learning_guide_files/figure-html/unnamed-chunk-36-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># It is clear from the graph that the black line fits the data much better</span></code></pre>
+</div>
+<div id="qualitative-predictors" class="section level2">
+<h2><span class="header-section-number">2.10</span> Qualitative Predictors</h2>
+<p>Up until now we have dealt with numbers; what if one of our predictors was qualitative (e.g. sex, colour, level of
+satisfaction)? To use such a variable in LR we have to assign a dummy number/factor/enumeration, just some sort of
+number that will always be associated with one particular response (e.g female <span class="math inline">\(= 1\)</span>, male <span class="math inline">\(= 0\)</span>).</p>
+<pre class="sourceCode r"><code class="sourceCode r">?Carseats</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R creates dummy values for qualitative predictors automatically</span>
+lm.fitQual &lt;-<span class="st"> </span><span class="kw">lm</span>(Sales <span class="op">~</span>., <span class="dt">data =</span> Carseats)
+<span class="kw">summary</span>(lm.fitQual)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sales ~ ., data = Carseats)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.8692 -0.6908  0.0211  0.6636  3.4115 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      5.6606231  0.6034487   9.380  &lt; 2e-16 ***
+## CompPrice        0.0928153  0.0041477  22.378  &lt; 2e-16 ***
+## Income           0.0158028  0.0018451   8.565 2.58e-16 ***
+## Advertising      0.1230951  0.0111237  11.066  &lt; 2e-16 ***
+## Population       0.0002079  0.0003705   0.561    0.575    
+## Price           -0.0953579  0.0026711 -35.700  &lt; 2e-16 ***
+## ShelveLocGood    4.8501827  0.1531100  31.678  &lt; 2e-16 ***
+## ShelveLocMedium  1.9567148  0.1261056  15.516  &lt; 2e-16 ***
+## Age             -0.0460452  0.0031817 -14.472  &lt; 2e-16 ***
+## Education       -0.0211018  0.0197205  -1.070    0.285    
+## UrbanYes         0.1228864  0.1129761   1.088    0.277    
+## USYes           -0.1840928  0.1498423  -1.229    0.220    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.019 on 388 degrees of freedom
+## Multiple R-squared:  0.8734, Adjusted R-squared:  0.8698 
+## F-statistic: 243.4 on 11 and 388 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can see those dummy values using the following code</span>
+<span class="kw">attach</span>(Carseats)
+<span class="kw">contrasts</span>(ShelveLoc)</code></pre>
+<pre><code>##        Good Medium
+## Bad       0      0
+## Good      1      0
+## Medium    0      1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="logistic-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"google": false,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
